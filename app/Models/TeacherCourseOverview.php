@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Testing\Fluent\Concerns\Has;
+use Spatie\Translatable\HasTranslations;
+
+class TeacherCourseOverview extends Model
+{
+    use HasFactory, HasTranslations;
+    protected $table = "teacher_course_overviews";
+    protected $guarded = [];
+    protected $translatable = ['name'];
+
+    public function course()
+    {
+        return $this->belongsTo(TeacherCourseOverview::class, 'tco_id');
+    }
+
+    public function contents()
+    {
+        return $this->hasMany(TeacherCourseLessonContent::class, 'tcl_id');
+    }
+
+    public function purchaseOptions()
+    {
+        return $this->morphMany(PurchaseOption::class, 'purchaseable');
+    }
+
+    // public function academicYear(): MorphTo
+    // {
+    //     return $this->morphTo('ay');
+    // }
+
+    public function subject()
+    {
+        return $this->belongsTo(subjects::class);
+    }
+
+    public function education()
+    {
+        return $this->morphTo('education');
+    }
+}
