@@ -106,7 +106,7 @@ class Index extends Component
 
         if ($lessonContent) {
             $this->dispatch('message', message: __('Lesson content created successfully.'));
-            $this->addLessonContent($this);
+            $this->addLessonContent($this->lesson_id);
             $this->reset([
                 'lesson_content_ar_name',
                 'lesson_content_en_name',
