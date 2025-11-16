@@ -58,11 +58,9 @@ Route::group(
             Route::get('/educational-center-wallets', EducationalCenterWalletIndex::class)->name('admins.educational-center-wallets.index'); //educational center wallets
             Route::get('/teacher-wallets', TeacherWalletIndex::class)->name('admins.teacher-wallets.index');                                 //teacher wallets
             Route::get('/teacher-courses', TeacherCoursesIndex::class)->name('admins.teacher-courses.index');                                //teacher courses
-
             Route::get('/paytabs/checkout', [PayTabsController::class, 'checkout'])->name('paytabs.checkout');
             Route::post('/paytabs/callback', [PayTabsController::class, 'callback'])->name('paytabs.callback');
             Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
-
             /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
             Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
             Route::post('/logout', function (Request $request) {

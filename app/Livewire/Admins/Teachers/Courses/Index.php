@@ -63,10 +63,19 @@ class Index extends Component
     public $lesson_content_en_name;
     public $image, $old_image, $lesson_content_link;
 
-    protected $listeners = ['refreshCourse' => 'render', 'deleteCourse' => 'delete', 'deleteLesson' => 'deleteLesson'];
+    protected $listeners = ['refreshCourse' => 'render', 'deleteCourse' => 'delete', 'deleteLesson' => 'deleteLesson', 'deleteLessonContent' => 'deleteLessonContent'];
     public ?TeacherCourseOverview $editingCourseOverview = null;
     use WithFileUploads;
 
+    public function deleteLessonContent($id)
+    {
+        $q = TeacherCourseLessonContent::query()->find($id);
+        if ($q) {
+            $q->delete();
+            $this->dispatch('message', message: __('Lesson content deleted successfully.'));
+            $this->addLessonContent($this->lesson_id);
+        }
+    }
 
     public function showLessonContent($id)
     {

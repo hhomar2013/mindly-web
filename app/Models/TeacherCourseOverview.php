@@ -15,9 +15,14 @@ class TeacherCourseOverview extends Model
     protected $guarded = [];
     protected $translatable = ['name'];
 
-    public function course()
+    // public function course()
+    // {
+    //     return $this->belongsTo(TeacherCourseOverview::class, 'tco_id');
+    // }
+
+    public function teacher()
     {
-        return $this->belongsTo(TeacherCourseOverview::class, 'tco_id');
+        return $this->belongsTo(Teacher::class,'teacher_id');
     }
 
     public function contents()
@@ -43,5 +48,10 @@ class TeacherCourseOverview extends Model
     public function education()
     {
         return $this->morphTo('education');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(TeacherCourseReview::class, 'tco_id');
     }
 }

@@ -16,4 +16,9 @@ class Teacher extends Model
     {
         return $this->hasOne(teacher_wallets::class,'teacher_id','id');
     }
+
+    public function city()
+    {
+        return $this->belongsTo(city::class,'city_id','id');
+    }
 }

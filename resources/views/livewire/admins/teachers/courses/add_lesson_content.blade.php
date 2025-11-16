@@ -120,7 +120,7 @@
                                       <button class="btn btn-success btn-rounded" wire:click="showLessonContent({{ $lesson_content->id }})">
                                         <i class="fas fa-eye"></i>     
                                     </button>
-                                    <button class="btn btn-danger btn-rounded" onclick="confirmDelete({{ $lesson_content->id }})">
+                                    <button class="btn btn-danger btn-rounded" onclick="confirmDelete({{ $lesson_content->id }} , 'deleteLessonContent')">
                                         <i class="fas fa-trash"></i>     
                                     </button>
                                 </div>
