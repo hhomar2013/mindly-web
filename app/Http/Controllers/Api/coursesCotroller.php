@@ -25,15 +25,15 @@ class coursesCotroller extends Controller
                         'teacher_name_ar' => $course->teacher->getTranslation('name', 'ar'),
                         'teacher_name_en' => $course->teacher->getTranslation('name', 'en'),
                         'teacher_image' => $course->teacher->image,
-                        'governor' => ($course->teacher->city && $course->teacher->city->Governorates) ? [
-                            'id' => $course->teacher->city->Governorates->id,
-                            'name_ar' => $course->teacher->city->Governorates->getTranslation('name', 'ar'),
-                            'name_en' => $course->teacher->city->Governorates->getTranslation('name', 'en'),
+                        'governor' => ($course->teacher->cities && $course->teacher->cities->Governorates) ? [
+                            'id' => $course->teacher->cities->Governorates->id,
+                            'name_ar' => $course->teacher->cities->Governorates->getTranslation('name', 'ar'),
+                            'name_en' => $course->teacher->cities->Governorates->getTranslation('name', 'en'),
                         ] : null,
-                        'city' => $course->teacher->city ? [
-                            'id' => $course->teacher->city->id,
-                            'name_ar' => $course->teacher->city->getTranslation('name', 'ar'),
-                            'name_en' => $course->teacher->city->getTranslation('name', 'en'),
+                        'city' => $course->teacher->cities ? [
+                            'id' => $course->teacher->cities->id,
+                            'name_ar' => $course->teacher->cities->getTranslation('name', 'ar'),
+                            'name_en' => $course->teacher->cities->getTranslation('name', 'en'),
                         ] : null,
                     ],
                 ];
@@ -70,10 +70,10 @@ class coursesCotroller extends Controller
                             'name_ar' => $Overview->teacher->city->Governorates->getTranslation('name', 'ar'),
                             'name_en' => $Overview->teacher->city->Governorates->getTranslation('name', 'en'),
                         ] : null,
-                        'city' => $Overview->teacher->city ? [
-                            'id' => $Overview->teacher->city->id,
-                            'name_ar' => $Overview->teacher->city->getTranslation('name', 'ar'),
-                            'name_en' => $Overview->teacher->city->getTranslation('name', 'en'),
+                        'city' => $Overview->teacher->cities ? [
+                            'id' => $Overview->teacher->cities->id,
+                            'name_ar' => $Overview->teacher->cities->getTranslation('name', 'ar'),
+                            'name_en' => $Overview->teacher->cities->getTranslation('name', 'en'),
                         ] : null,
                     ],
                 ] : null,
