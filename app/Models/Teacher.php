@@ -14,11 +14,23 @@ class Teacher extends Model
 
     public function wallet()
     {
-        return $this->hasOne(teacher_wallets::class,'teacher_id','id');
+        return $this->hasOne(teacher_wallets::class, 'teacher_id', 'id');
     }
+
+ 
 
     public function cities()
     {
-        return $this->belongsTo(City::class,'city_id','id');
+        return $this->belongsTo(City::class, 'city_id', 'id');
+    }
+
+    public function codeList()
+    {
+        return $this->hasMany(code_list_head::class, 'teacher_id', 'id');
+    }
+
+    public function teacherCourseOverview()
+    {
+        return $this->hasMany(TeacherCourseOverview::class, 'teacher_id', 'id');
     }
 }

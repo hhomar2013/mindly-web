@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PayTabsController;
 use App\Livewire\Admins\Cities\Index as CitiesIndex;
+use App\Livewire\Admins\CodeList\CodeListIndex;
 use App\Livewire\Admins\ContentTypes\Index as ContentTypesIndex;
 use App\Livewire\Admins\Countries\Index as CountriesIndex;
 use App\Livewire\Admins\DashboardComponent;
@@ -13,6 +14,7 @@ use App\Livewire\Admins\Subjects\SubjectIndex;
 use App\Livewire\Admins\Teachers\Courses\Index as TeacherCoursesIndex;
 use App\Livewire\Admins\Teachers\Index as TeachersIndex;
 use App\Livewire\Admins\Teachers\Wallet\Index as TeacherWalletIndex;
+use App\Livewire\Admins\TypeOfSubscription\TosIndex;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,9 +60,11 @@ Route::group(
             Route::get('/educational-center-wallets', EducationalCenterWalletIndex::class)->name('admins.educational-center-wallets.index'); //educational center wallets
             Route::get('/teacher-wallets', TeacherWalletIndex::class)->name('admins.teacher-wallets.index');                                 //teacher wallets
             Route::get('/teacher-courses', TeacherCoursesIndex::class)->name('admins.teacher-courses.index');                                //teacher courses
+            Route::get('/type-of-subscriptions', TosIndex::class)->name('admins.tos.index');
             Route::get('/paytabs/checkout', [PayTabsController::class, 'checkout'])->name('paytabs.checkout');
             Route::post('/paytabs/callback', [PayTabsController::class, 'callback'])->name('paytabs.callback');
             Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
+            Route::get('/code-list', CodeListIndex::class)->name('admins.code-list.index');
             /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
             Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
             Route::post('/logout', function (Request $request) {

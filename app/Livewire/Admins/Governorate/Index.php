@@ -7,7 +7,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
-class Index extends Component
+class Index extends Component 
 {
     use \Livewire\WithPagination;
     use WithFileUploads;

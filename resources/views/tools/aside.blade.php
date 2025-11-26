@@ -131,6 +131,36 @@ fixed-start ms-4
                 </a> <!-- End Education Center Wallets -->
             </li><!-- End Educational Centers Management -->
 
+
+            {{-- Code List Managemenrt --}}
+            <li class="nav-item mt-3">
+                <h6 class="p-2 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
+                    <i class="fa-solid fa-qrcode"></i>&nbsp;
+                    {{ __('Codes lists management') }}
+                </h6>
+            </li>{{-- End Code List Management --}}
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is(app()->getLocale() . '/code-list') ? 'active' : '' }}"
+                    href="{{ route('admins.code-list.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center ms-1 d-flex align-items-center justify-content-center">
+                        @if (request()->is(app()->getLocale() . '/code-list'))
+                            <i class="fa-regular fa-circle-dot text-dark text-sm opacity-10"></i>
+                        @else
+                            <i class="fa-regular fa-circle text-dark text-sm opacity-10"></i>
+                        @endif
+                    </div>
+                    <span class="nav-link-text ms-1">{{ __('Code List') }}</span>
+                </a> <!-- End Code List -->
+
+            </li><!-- End Code List Management -->
+
+
+
+
+
+
             {{-- Settings Title --}}
             <li class="nav-item mt-3">
                 <h6 class="p-2 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
@@ -191,7 +221,7 @@ fixed-start ms-4
             </li><!-- End Content Types -->
 
 
-                 <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link {{ request()->is(app()->getLocale() . '/subjects') ? 'active' : '' }}"
                     href="{{ route('admins.subjects.index') }}">
                     <div
@@ -201,6 +231,18 @@ fixed-start ms-4
                     <span class="nav-link-text ms-1">{{ __('Subjects') }}</span>
                 </a>
             </li><!-- End Subjects -->
+
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is(app()->getLocale() . '/type-of-subscriptions') ? 'active' : '' }}"
+                    href="{{ route('admins.tos.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center ms-1 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-file-invoice-dollar text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">{{ __('Type of Subscriptions') }}</span>
+                </a>
+            </li><!-- End Type of Subscription -->
 
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#level-one" aria-expanded="false" aria-controls="level-one"
@@ -227,3 +269,16 @@ fixed-start ms-4
     </div>
 
 </aside>
+{{-- 
+@push('js')
+    <script>
+        $(document).ready(function() {
+            let $activeItem = $('.nav-link.active');
+            if ($activeItem.length) {
+                $('#sidenav-collapse-main').animate({
+                    scrollTop: $activeItem.position().top - 100
+                }, 600);
+            }
+        });
+    </script>
+@endpush --}}

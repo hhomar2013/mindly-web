@@ -149,5 +149,9 @@
     <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.1.0') }}"></script>
     @include('tools.confimDelete')
     @stack('js')
+
+
+
 </body>
+
 </html>

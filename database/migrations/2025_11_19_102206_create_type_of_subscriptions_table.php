@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('type_of_subscriptions', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('purchase_option_id')->constrained()->cascadeOnDelete();
-
-            $table->enum('status', ['pending','paid','canceled'])->default('pending');
-            $table->timestamp('paid_at')->nullable();
-
+            $table->string('name');
+            $table->integer('duration')->comment('Duration in months');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('type_of_subscriptions');
     }
 };

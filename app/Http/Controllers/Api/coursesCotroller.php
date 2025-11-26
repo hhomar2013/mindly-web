@@ -54,6 +54,18 @@ class coursesCotroller extends Controller
             foreach ($course as $lessons) {
                 $Overview = $lessons->CourseOverview;
             }
+
+
+            if ($course->isEmpty()) {
+                return response()->json([
+                    'message' => 'Course not found',
+                    'data' => null
+                ], 404);
+            }
+
+            // جيب الـ Overview من أول عنصر
+            $Overview = $course->first()?->CourseOverview;
+
             $data = [
                 'Overview' => $Overview ? [
                     'id' => $Overview->id,
@@ -100,16 +112,19 @@ class coursesCotroller extends Controller
                         }),
                     ];
                 }),
-                'reviews' => $Overview->reviews ? [
+                'reviews' => ($Overview && $Overview->reviews) ? [
                     'count' => $Overview->reviews->count(),
                     'student' => $Overview->reviews->map(function ($review) {
-                        return [
-                            'id' => $review->student->id,
-                            'name' => $review->student->name,
-                            'rating' => $review->star_number,
-                            'image' => $review->student->image ? asset('storage/' . $review->student->image) : null,
-                            'comment' => $review->content,
-                        ];
+                        if ($review->student) {
+                            return [
+                                'id' => $review->student->id,
+                                'name' => $review->student->name,
+                                'rating' => $review->star_number,
+                                'image' => $review->student->image ? asset('storage/' . $review->student->image) : null,
+                                'comment' => $review->content,
+                            ];
+                        }
+                        return ['No Reviews Found yet'];
                     }),
                 ] : null,
             ];
