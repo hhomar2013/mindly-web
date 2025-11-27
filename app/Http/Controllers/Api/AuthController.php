@@ -11,7 +11,9 @@ use App\Models\SecondarySubBranch;
 use App\Models\SecondaryTrack;
 use App\Models\StageGrade;
 use App\Models\Students;
+use App\Models\StudentsLogs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -23,6 +25,8 @@ class AuthController extends Controller
     // ✅ Register new student
     public function register(Request $request)
     {
+
+
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'email'            => 'required|email|unique:students,email',
@@ -35,6 +39,7 @@ class AuthController extends Controller
             'date_of_birth'    => 'nullable|date',
             'type_of_study'    => 'nullable|string|max:255',
             'gender'           => 'nullable|in:male,female',
+            'mobile_name'      => 'nullable|string|max:255',
         ]);
 
         $student = Students::create([
@@ -51,55 +56,25 @@ class AuthController extends Controller
             'gender'         => $validated['gender'] ?? null,
             'education'      => $validated['education'] ?? null,
         ]);
-
-        $token = $student->createToken('auth_token')->plainTextToken;
-
-        // return response()->json([
-        //     'status'  => true,
-        //     'message' => 'Student registered successfully',
-        //     'token'   => $token,
-        //     'student' => $student,
-        // ]);
+        if ($student) {
+            $token = $student->createToken('auth_token')->plainTextToken;
 
 
-
-
-        return response()->json([
-            'message' => 'Registration successful',
-            'token'   => $token,
-            'student' => $student,
-        ], 201);
+            $studentLog = StudentsLogs::query()->create([
+                'student_id' => $student->id,
+                'mobile_name' => $request->mobile_name,
+                'action' => 'register First Login'
+            ]);
+            if ($studentLog) {
+                return response()->json([
+                    'message' => 'Registration successful',
+                    'token'   => $token,
+                    'student' => $student,
+                ], 201);
+            }
+        }
     }
 
-    // ✅ Login student
-    // public function login(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'email'    => 'required|email',
-    //         'password' => 'required|string',
-    //     ]);
-
-    //     $student = Students::where('email', $validated['email'])->first();
-
-    //     if (! $student || ! Hash::check($validated['password'], $student->password)) {
-    //         throw ValidationException::withMessages([
-    //             'email' => ['The provided credentials are incorrect.'],
-    //         ]);
-    //         return response()->json([
-    //             'status'  => false,
-    //             'message' => 'Invalid credentials',
-    //         ], 401);
-    //     }
-
-    //     $token = $student->createToken('auth_token')->plainTextToken;
-
-    //     return response()->json([
-    //         'status'  => true,
-    //         'message' => 'Login successful',
-    //         'token'   => $token,
-    //         'student' => $student,
-    //     ]);
-    // }
 
     public function login(Request $request)
     {
@@ -111,11 +86,28 @@ class AuthController extends Controller
         $student = Students::where('email', $request->email)->first();
 
         if (!$student || !Hash::check($request->password, $student->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json([
+                'message' => 'Invalid credentials'
+            ], 401);
+        } else {
+            $get_student_log = StudentsLogs::query()
+                ->where('student_id', $student->id)
+                ->where('is_active', true)
+                ->latest()->first();
+            if ($get_student_log) {
+                // User is already logged in from another device
+                return response()->json([
+                    'message' => 'You are already logged in from another device'
+                ], 409);
+            }
+            // Log the login attempt
+            StudentsLogs::query()->create([
+                'student_id' => $student->id,
+                'mobile_name' => $request->mobile_name ?? 'Unknown',
+                'action' => 'Login'
+            ]);
         }
-
         $token = $student->createToken('student_token')->plainTextToken;
-
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,
@@ -156,11 +148,21 @@ class AuthController extends Controller
     // ✅ Logout student (revoke token)
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+
+        $user = $request->user();
+        $studentLog = StudentsLogs::query()->where('student_id', $user->id)
+            ->where('is_active', true)
+            ->latest()->first();
+
+        if ($studentLog && $studentLog->exists()) {
+            $studentLog->update(['action' => 'logout', 'is_active' => false]);
+            $user->currentAccessToken()->delete();
+        }
 
         return response()->json([
             'status'  => true,
             'message' => 'Logged out successfully',
+            // 'student_log' => $studentLog
         ]);
     }
 
@@ -263,12 +265,30 @@ class AuthController extends Controller
                 'education_type' => $morphClass, // اسم الكلاس الكامل
             ]);
 
+            $studentLog = StudentsLogs::query()->create([
+                'student_id' => $student->id,
+                'mobile_name' => $request->mobile_name,
+                'action' => 'register First Login'
+            ]);
+
+            $token = null;
+            if ($studentLog) {
+                $token = $student->createToken('auth_token')->plainTextToken;
+            }
             DB::commit();
 
-            return response()->json(['message' => 'Student created successfully', 'student' => $student], 201);
+            return response()->json([
+                'message' => 'Student created successfully',
+                'token' => $token,
+                'student' => $student,
+                'Student_log' => $studentLog
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'An error occurred during student registration.', 'details' => $e->getMessage()], 422);
+            return response()->json([
+                'error' => 'An error occurred during student registration.',
+                'details' => $e->getMessage()
+            ], 422);
         }
     }
 

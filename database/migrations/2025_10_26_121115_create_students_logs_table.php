@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
             $table->string('mobile_name');
+            $table->string('action')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

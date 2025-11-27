@@ -9,6 +9,7 @@ use App\Livewire\Admins\DashboardComponent;
 use App\Livewire\Admins\EducationalCenter\Index as EducationalCenter;
 use App\Livewire\Admins\EducationalCenter\Wallet\Index as EducationalCenterWalletIndex;
 use App\Livewire\Admins\Governorate\Index as GovernorateIndex;
+use App\Livewire\Admins\Pdf\CodeList\CodeListPdf;
 use App\Livewire\Admins\SocialMediaTypes\Index as SocialMediaTypesIndex;
 use App\Livewire\Admins\Subjects\SubjectIndex;
 use App\Livewire\Admins\Teachers\Courses\Index as TeacherCoursesIndex;
@@ -65,6 +66,7 @@ Route::group(
             Route::post('/paytabs/callback', [PayTabsController::class, 'callback'])->name('paytabs.callback');
             Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
             Route::get('/code-list', CodeListIndex::class)->name('admins.code-list.index');
+            Route::get('pdf/code-list/{id}', CodeListPdf::class)->name('pdf.code-list');
             /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
             Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
             Route::post('/logout', function (Request $request) {

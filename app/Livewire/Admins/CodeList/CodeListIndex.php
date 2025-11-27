@@ -37,13 +37,17 @@ class CodeListIndex extends Component
     public $totalPrice = 0;
     public $isBalanceEnough = false;
     public $showCodesList = [];
+    public $selectedCodeLitsId;
     use switchActions, QrGeneration;
+
+
+
 
     public function showCodes($id)
     {
+        $this->selectedCodeLitsId = $id;
         $this->action = 'show-codes';
         $this->showCodesList = code_list_body::query()->where('code_list_head_id', $id)->get();
-
         foreach ($this->showCodesList as $item) {
             $item->qr_code = $this->generateQrBase64($item->code);
         }
@@ -98,16 +102,16 @@ class CodeListIndex extends Component
         $teacher->wallet->balance -= $this->totalPrice;
         $teacher->wallet->save();
 
-        $teacher_wallet_transaction =  teacher_wallet_transactions::query()->create([
+        $teacher_wallet_transaction = teacher_wallet_transactions::query()->create([
             'teacher_wallet_id' => $teacher->wallet->id,
             'amount' => $this->totalPrice,
             'type' => 'debit',
-            'source' => 'إنشاء قائمة اكواد مكونه من ' . count($total_code_count) . ' كود',
+            'source' => 'إنشاء قائمة اكواد مكونه من ' . $total_code_count . ' كود',
             'balance_after' => $teacher->wallet->balance,
         ]);
 
         $this->dispatch('message', message: __('Teacher balance decreased successfully!'));
-    }
+    }   
 
     public function calculateTotalPrice()
     {
