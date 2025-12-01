@@ -22,59 +22,6 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // ✅ Register new student
-    public function register(Request $request)
-    {
-
-
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'            => 'required|email|unique:students,email',
-            'password'         => ['required', Password::min(6)],
-            'phone'            => 'nullable|string|max:20',
-            'parent_phone'     => 'nullable|string|max:20',
-            'governorate_id'   => 'required|exists:governors,id',
-            'city_id'          => 'required|exists:cities,id',
-            'address'          => 'nullable|string|max:255',
-            'date_of_birth'    => 'nullable|date',
-            'type_of_study'    => 'nullable|string|max:255',
-            'gender'           => 'nullable|in:male,female',
-            'mobile_name'      => 'nullable|string|max:255',
-        ]);
-
-        $student = Students::create([
-            'name'           => $validated['name'],
-            'email'          => $validated['email'],
-            'password'       => Hash::make($validated['password']),
-            'phone'          => $validated['phone'] ?? null,
-            'parent_phone'   => $validated['parent_phone'] ?? null,
-            'governorate_id' => $validated['governorate_id'],
-            'city_id'        => $validated['city_id'],
-            'address'        => $validated['address'] ?? null,
-            'date_of_birth'  => $validated['date_of_birth'] ?? null,
-            'type_of_study'  => $validated['type_of_study'] ?? null,
-            'gender'         => $validated['gender'] ?? null,
-            'education'      => $validated['education'] ?? null,
-        ]);
-        if ($student) {
-            $token = $student->createToken('auth_token')->plainTextToken;
-
-
-            $studentLog = StudentsLogs::query()->create([
-                'student_id' => $student->id,
-                'mobile_name' => $request->mobile_name,
-                'action' => 'register First Login'
-            ]);
-            if ($studentLog) {
-                return response()->json([
-                    'message' => 'Registration successful',
-                    'token'   => $token,
-                    'student' => $student,
-                ], 201);
-            }
-        }
-    }
-
 
     public function login(Request $request)
     {
@@ -167,7 +114,7 @@ class AuthController extends Controller
     }
 
     // ✅ Store student
-    public function store(Request $request)
+    public function store(Request $request, \App\Services\OtpService $otpService)
     {
         $educationMap = config('education_phases');
         $educationTypeKey = $request->education_type_key;
@@ -260,28 +207,30 @@ class AuthController extends Controller
                 'date_of_birth' => $request->date_of_birth ?? null,
                 'type_of_study' => $request->type_of_study ?? null,
                 'gender' => $request->gender ?? null,
-                // حقول العلاقة المتعددة الأشكال (Morph Keys)
                 'education_id'   => $morphId,
-                'education_type' => $morphClass, // اسم الكلاس الكامل
+                'education_type' => $morphClass,
             ]);
 
-            $studentLog = StudentsLogs::query()->create([
-                'student_id' => $student->id,
-                'mobile_name' => $request->mobile_name,
-                'action' => 'register First Login'
-            ]);
+            $otpService->sendOtp($student->email);
 
-            $token = null;
-            if ($studentLog) {
-                $token = $student->createToken('auth_token')->plainTextToken;
-            }
+            // $studentLog = StudentsLogs::query()->create([
+            //     'student_id' => $student->id,
+            //     'mobile_name' => $request->mobile_name,
+            //     'action' => 'register First Login'
+            // ]);
+
+            // $token = null;
+            // if ($studentLog) {
+            //     $token = $student->createToken('auth_token')->plainTextToken;
+            // }
             DB::commit();
 
             return response()->json([
                 'message' => 'Student created successfully',
-                'token' => $token,
+                // 'token' => $token,
                 'student' => $student,
-                'Student_log' => $studentLog
+                'otp_sent' => 'OTP has been sent to the student\'s email. Please check your inbox and enter the code to verify your account. You will be redirected to the OTP verification page shortly.',
+                // 'Student_log' => $studentLog
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\TeacherCourseLesson;
 use App\Models\TeacherCourseOverview;
+use App\Models\TeacherCourseReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class coursesCotroller extends Controller
 {
@@ -139,5 +141,27 @@ class coursesCotroller extends Controller
                 'data' => null
             ], 404);
         }
+    }
+
+    //Store Reviews 
+    public function storeReview(Request $request)
+    {
+        $request->validate([
+            'course_id' => 'required|exists:teacher_course_overviews,id',
+            'star_number' => 'required|numeric|between:1,5',
+            'content' => 'required|string',
+        ]);
+
+        $review = TeacherCourseReview::create([
+            'tco_id' => $request->course_id,
+            'student_id' => $request->student_id,
+            'star_number' => $request->star_number,
+            'content' => $request->content,
+        ]);
+
+        return response()->json([
+            'message' => 'Review added successfully ✔️👌',
+            'data' => $review,
+        ], 201);
     }
 }

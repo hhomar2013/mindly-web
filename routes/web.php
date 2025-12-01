@@ -67,6 +67,7 @@ Route::group(
             Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
             Route::get('/code-list', CodeListIndex::class)->name('admins.code-list.index');
             Route::get('pdf/code-list/{id}', CodeListPdf::class)->name('pdf.code-list');
+            
             /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
             Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
             Route::post('/logout', function (Request $request) {
@@ -78,5 +79,12 @@ Route::group(
         });
     }
 );
+
+Route::get('/test-gmail', function () {
+    \Illuminate\Support\Facades\Mail::raw('Testing Gmail SMTP', function ($msg) {
+        $msg->to('hhomar2013@gmail.com')->subject('Gmail SMTP Test');
+    });
+    return 'Mail Sent to hhomar2013@gmail.com! Check your inbox for the test email. If you don\'t see it, check your spam folder.';
+});
 
 require __DIR__ . '/auth.php';

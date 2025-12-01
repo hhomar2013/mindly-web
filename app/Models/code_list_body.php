@@ -12,7 +12,7 @@ class code_list_body extends Model
     protected $guarded = [];
     // protected $appends = ['qr_code'];
 
- 
+
     protected static function boot()
     {
         parent::boot();
@@ -30,9 +30,14 @@ class code_list_body extends Model
         return (string) random_int((int)$min, (int)$max);
     }
 
-       public function getQrCodeAttribute()
+    public function getQrCodeAttribute()
     {
         return $this->generateQrBase64($this->code);
     }
 
+
+    public function tos()
+    {
+        return $this->belongsTo(type_of_subscriptions::class, 'type_of_subscription_id', 'id');
+    }
 }

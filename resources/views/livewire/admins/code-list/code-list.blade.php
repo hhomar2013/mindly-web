@@ -13,7 +13,7 @@
     <div class="row">
         @forelse ($showCodesList as $showCodesListVal)
             <div class="col-lg-2 p-2">
-                <div class="card  shadow-lg">
+                <div class="card  shadow-lg {{ $showCodesListVal->tos->color }}">
                     <div class="card-body">
                         <div class="row  ">
                             <img src="{{ asset('assets/img/mindly.png') }}" alt=""
@@ -22,10 +22,11 @@
                                 style="width:14rem; height: 8rem;" />
                             <br>
                             {{-- <hr style="border: black 2px solid "> --}}
-                            <h6 class="text-center">{{ $showCodesListVal->code }}</h6>
+                            <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->code }}</h6>
+                            <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->tos->name }}</h6>
                         </div>
                         <div class="card-footer text-start">
-                            <hr style="border: black 2px solid ">
+                            <hr style="border: black 2px solid">
 
                             <strong class="mb-0"
                                 style="font-size: 12px; line-height: 1.2; white-space: normal; word-wrap: break-word; max-width: 100%;">

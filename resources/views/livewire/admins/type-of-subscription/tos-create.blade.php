@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label for="type">{{ __('Duration in months') }}</label>
                     <input type="number" name="" id=""
-                        class="form-control @error('duration') is-invalid @enderror"  min="1"
+                        class="form-control @error('duration') is-invalid @enderror" min="1"
                         wire:model="duration" />
                     @error('duration')
                         <span class="text-danger">{{ $message }}</span>
@@ -34,6 +34,23 @@
                 </div>
 
 
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="color">{{ __('Color') }}</label>
+                    <select name="color" id="" class="form-control @error('color') is-invalid @enderror"
+                        wire:model="color">
+                       <option value="">{{ __('Select Color') }}</option>
+                       <option class="text-white bg-primary" value="text-white bg-primary">
+                     {{ __('Blue') }}
+                    </option>
+                       <option class="text-white bg-success" value="text-white bg-success">{{ __('Green') }}</option> 
+                    </select>
+                    @error('color')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
         </div>
         <button type="submit" class="btn btn-primary mt-3">

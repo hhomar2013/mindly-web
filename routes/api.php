@@ -14,6 +14,7 @@ Route::prefix('v1')->group(function () {
         Route::post('store', [AuthController::class, 'store']);
         Route::post('login', [AuthController::class, 'login']);
         Route::middleware(['force.json', 'auth:sanctum'])->group(function () {
+            Route::post('/reviews', [coursesCotroller::class, 'storeReview']); //reviews
             Route::get('profile', [AuthController::class, 'profile']);
             Route::post('logout', [AuthController::class, 'logout']);
         });
@@ -28,4 +29,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/academic-structure', [AcademicDataController::class, 'getAcademicStructure']); //academic-structure
     Route::get('/courses', [coursesCotroller::class, 'index']); //courses
     Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']); //course_lessons
+
 }); //End Version 1

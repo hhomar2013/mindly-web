@@ -12,17 +12,18 @@
     <div class="card-body" id="printArea">
         <div class="row">
             @forelse ($showCodesList as $showCodesListVal)
-                <div class="col-lg-2 p-2">
-                    <div class="card  shadow-lg">
+                <div class="col-lg-3 p-2">
+                    <div class="card  shadow-lg {{ $showCodesListVal->tos->color }}">
                         <div class="card-body">
                             <div class="row  ">
-                                <img src="{{ asset('assets/img/mindly.png') }}" alt=""
-                                    style="width:14rem; height: 8rem;" />
+                                <img src="{{ asset('assets/img/mindly1.png') }}" alt="" style="width:70%; margin: auto;" />
+                                   <hr>
                                 <img src="data:image/svg+xml;base64,{{ $showCodesListVal->qr_code }}"
-                                    class="text-center" style="width:14rem; height: 8rem;" />
+                                    class="text-center" style="width:100%; height: 10rem;" />
                                 <br>
                                 {{-- <hr style="border: black 2px solid "> --}}
-                                <h6 class="text-center">{{ $showCodesListVal->code }}</h6>
+                                <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->code }}</h6>
+                                <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->tos->name }}</h6>
                             </div>
                             <div class="card-footer text-start">
                                 <hr style="border: black 2px solid ">

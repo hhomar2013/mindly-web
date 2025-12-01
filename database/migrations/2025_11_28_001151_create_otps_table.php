@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('type_of_subscriptions', function (Blueprint $table) {
+        Schema::create('otps', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('duration')->comment('Duration in months');
-            $table->boolean('status')->default(true);
-            $table->string('color')->default('#000000');
+            $table->string('identifier'); 
+            $table->string('otp');
+            $table->timestamp('expires_at');
+            $table->boolean('is_used')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('type_of_subscriptions');
+        Schema::dropIfExists('otps');
     }
 };
