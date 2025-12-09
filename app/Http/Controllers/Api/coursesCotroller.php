@@ -23,10 +23,12 @@ class coursesCotroller extends Controller
                     'name_ar' => $course->getTranslation('name', 'ar'),
                     'name_en' => $course->getTranslation('name', 'en'),
                     'teacher_id' => $course->teacher_id,
+                    'image' => $course->image,
+                    'demoVideo' => $course->optional_link ?? null,
                     'teacher' => [
                         'teacher_name_ar' => $course->teacher->getTranslation('name', 'ar'),
                         'teacher_name_en' => $course->teacher->getTranslation('name', 'en'),
-                        'teacher_image' => $course->teacher->image,
+                        'teacher_image' => $course->teacher->image ? asset('storage/' . $course->teacher->image) : null,
                         'governor' => ($course->teacher->cities && $course->teacher->cities->Governorates) ? [
                             'id' => $course->teacher->cities->Governorates->id,
                             'name_ar' => $course->teacher->cities->Governorates->getTranslation('name', 'ar'),
@@ -78,7 +80,7 @@ class coursesCotroller extends Controller
                     'teacher' => [
                         'teacher_name_ar' => $Overview->teacher->getTranslation('name', 'ar'),
                         'teacher_name_en' => $Overview->teacher->getTranslation('name', 'en'),
-                        'teacher_image' => $Overview->teacher->image,
+                        'teacher_image' => $Overview->teacher->image ? asset('storage/' . $Overview->teacher->image) : null,
                         'governor' => ($Overview->teacher->city && $Overview->teacher->city->Governorates) ? [
                             'id' => $Overview->teacher->city->Governorates->id,
                             'name_ar' => $Overview->teacher->city->Governorates->getTranslation('name', 'ar'),
@@ -104,7 +106,7 @@ class coursesCotroller extends Controller
                                     'id' => $content->contentType->id,
                                     'name_ar' => $content->contentType->getTranslation('name', 'ar'),
                                     'name_en' => $content->contentType->getTranslation('name', 'en'),
-                                    'icon' => asset('storage/' . $content->contentType->icon),
+                                    'icon' =>   $content->contentType->icon ? asset('storage/' . $content->contentType->icon) : null,
                                     'type' => $type,
                                 ] : null,
                                 'name_ar' => $content->getTranslation('name', 'ar'),
@@ -151,7 +153,7 @@ class coursesCotroller extends Controller
             'star_number' => 'required|numeric|between:1,5',
             'content' => 'required|string',
         ]);
-
+        
         $review = TeacherCourseReview::create([
             'tco_id' => $request->course_id,
             'student_id' => $request->student_id,

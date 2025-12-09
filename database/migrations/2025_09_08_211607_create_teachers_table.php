@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('rate')->nullable()->default(0);
             $table->string('description')->nullable();
-            $table->enum('state', ['available', 'not_available'])->default('available');
-            $table->enum('in_out', ['in', 'out'])->default('in');
+            $table->boolean('state')->default(false);
+            $table->boolean('in_out')->default(false);
+            $table->timestamp('rating_system')->nullable()->default(0);
             $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

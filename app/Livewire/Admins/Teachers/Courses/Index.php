@@ -342,6 +342,7 @@ class Index extends Component
             'price' => 'nullable|numeric|min:0',
             'stage_grades_id' => 'exclude_if:secondary_specializations_id,!=,null|nullable|integer',
             'secondary_specializations_id' => 'exclude_if:stage_grades_id,!=,null|nullable|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
 
@@ -378,6 +379,13 @@ class Index extends Component
         $courseOverview->price_note = $this->price_note;
         $courseOverview->description = $this->description;
         $courseOverview->optional_link = $this->optional_link;
+        $imageName = $this->image ? $this->image->store('courses', 'public') : $this->old_image;
+        if ($this->image) {
+
+            $courseOverview->image = $imageName;
+        } elseif ($this->old_image) {
+            $courseOverview->image = $imageName;
+        }
 
 
 
@@ -407,7 +415,8 @@ class Index extends Component
             'secondary_tracks_id',
             'secondary_branch_id',
             'secondary_specializations_id',
-            'secondary_sub_branch_id'
+            'secondary_sub_branch_id',
+            'image'
         ]);
 
         // 7. تحديث قائمة الكورسات
@@ -422,7 +431,9 @@ class Index extends Component
             'secondary_tracks',
             'secondary_branch',
             'secondary_specializations',
-            'secondary_sub_branch'
+            'secondary_sub_branch',
+            'image',
+            'old_image'
         ]);
         // 1. تخزين الكائن في خاصية النموذج
         $this->editingCourseOverview = $course;
@@ -438,6 +449,9 @@ class Index extends Component
         $this->price_note = $course->price_note;
         $this->description = $course->description;
         $this->optional_link = $course->optional_link;
+        if ($course->image) {
+            $this->old_image = $course->image;
+        }
         $this->LoadAcademicForEdit($course->education_id);
         // 4. تحميل بيانات العلاقة المرنة وملء قوائم الإسقاط (Dropdowns)
         // $academicYear = $course->academicYear;

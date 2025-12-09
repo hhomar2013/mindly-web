@@ -11,19 +11,21 @@
 </div>
 <div class="card-body">
     <div class="row">
-        @forelse ($showCodesList as $showCodesListVal)
+        @forelse ($showCodesList->where('is_used',0) as $showCodesListVal)
             <div class="col-lg-2 p-2">
                 <div class="card  shadow-lg {{ $showCodesListVal->tos->color }}">
                     <div class="card-body">
-                        <div class="row  ">
+                        <div class="row ">
                             <img src="{{ asset('assets/img/mindly.png') }}" alt=""
                                 style="width:14rem; height: 8rem;" />
                             <img src="data:image/svg+xml;base64,{{ $showCodesListVal->qr_code }}" class="text-center"
                                 style="width:14rem; height: 8rem;" />
                             <br>
                             {{-- <hr style="border: black 2px solid "> --}}
-                            <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->code }}</h6>
-                            <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->tos->name }}</h6>
+                            <h6 class="text-center {{ $showCodesListVal->tos->color }}">{{ $showCodesListVal->code }}
+                            </h6>
+                            <h6 class="text-center {{ $showCodesListVal->tos->color }}">
+                                {{ $showCodesListVal->tos->name }}</h6>
                         </div>
                         <div class="card-footer text-start">
                             <hr style="border: black 2px solid">

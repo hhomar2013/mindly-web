@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('teacher_id')->constrained()->cascadeOnDelete();
             $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
-            // $table->morphs('ay');
             $table->nullableMorphs('education');
             $table->string('name');
             $table->decimal('price', 10, 2)->nullable();
             $table->string('price_note')->nullable();
             $table->text('description')->nullable();
             $table->string('optional_link')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

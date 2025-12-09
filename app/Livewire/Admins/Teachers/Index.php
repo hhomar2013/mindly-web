@@ -12,6 +12,7 @@ use App\Models\teacher_wallets;
 use App\Models\TeacherSocialMedia;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -22,14 +23,44 @@ class Index extends Component
     use WithFileUploads;
     public $action = 'index';
     public $isEdit = false;
-    public $teacher_id, $name_ar, $name_en, $address, $phone, $image, $old_image, $description;
+    public $teacher_id, $name_ar, $name_en, $address, $phone, $image, $old_image, $description, $in_out = FALSE;
     public $country_id, $governor_id, $city_id;
     public $teacherSMList = [];
-    protected $listeners = ['refreshTeachers' => 'render', 'deleteTeacher' => 'delete', 'addTeacherSM' => 'addTeacherSM'];
+    protected $listeners = ['refreshTeachers' => 'render', 'deleteTeacher' => 'delete', 'addTeacherSM' => 'addTeacherSM', 'rateTeacher' => 'saveRating'];
 
     #[Layout('layouts.app')]
 
+    public function clearRating($id)
+    {
+        $teacher = Teacher::find($id);
+        $teacher->update([
+            'rating_system' => 0
+        ]);
+        $this->dispatch('message', message: __('Rating is deleted successfully!'));
+        $this->dispatch('refreshTeachers');
+    }
 
+    public function rate($teacherId, $value)
+    {
+        $teacher = Teacher::find($teacherId);
+        $teacher->rating_system = $value;
+        $teacher->save();
+
+        $this->dispatch('refreshTeachers');
+    }
+
+    #[On('rateTeacher')]
+    public function saveRating($id, $rating)
+    {
+        $teacher = Teacher::find($id);
+
+        $teacher->update([
+            'rating_system' => $rating
+        ]);
+
+        $this->dispatch('notification', message: 'تم حفظ التقييم');
+        $this->dispatch('refreshTeachers');
+    }
     // public function addTeacherSM($smt_id)
     // {
     //     $this->teacherSMList = [

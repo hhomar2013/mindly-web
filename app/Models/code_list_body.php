@@ -40,4 +40,13 @@ class code_list_body extends Model
     {
         return $this->belongsTo(type_of_subscriptions::class, 'type_of_subscription_id', 'id');
     }
+
+    public function teacherCourseOverview()
+    {
+        return $this->belongsTo(teacherCourseOverview::class, 'teacher_course_overview_id', 'id');
+    }
+
+    public function codeListHead(){
+        return $this->belongsTo(code_list_head::class, 'code_list_head_id', 'id');
+    }
 }

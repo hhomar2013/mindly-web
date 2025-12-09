@@ -101,7 +101,7 @@
                         <div class="form-group">
                             <label for=""> {{ __('Secondary Specializations') }} </label>
                             <select name="" id="" class="form-control"
-                                wire:model.live="secondary_specializations_id" >
+                                wire:model.live="secondary_specializations_id">
                                 <option> {{ __('Select secondary specializations') }} </option>
                                 @foreach ($secondary_specializations as $specializations)
                                     <option value="{{ $specializations->id }}"
@@ -143,55 +143,82 @@
             <div class="card-body">
                 <h5 class="mb-3">{{ __('Course Details') }}</h5>
                 <div class="row">
+                    <div class="col-10">
+                        <div class="col-lg-6 mb-3">
+                            <label for="course_name">{{ __('Course Name') }}</label>
+                            <input type="text" id="course_name" class="form-control" wire:model="course_name"
+                                required>
+                            @error('course_name')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
-                    <div class="col-lg-6 mb-3">
-                        <label for="course_name">{{ __('Course Name') }}</label>
-                        <input type="text" id="course_name" class="form-control" wire:model="course_name" required>
-                        @error('course_name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <div class="col-lg-6 mb-3">
+
+                            <label for="subject_id">{{ __('Subject') }}</label>
+                            <select id="subject_id" class="form-control" wire:model="subject_id">
+                                <option value="">{{ __('Select Subject') }}</option>
+
+                                @foreach ($subjects_all as $subject)
+                                    <option value="{{ $subject->id }}">{{ $subject->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('subject_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <label for="price">{{ __('Price') }}</label>
+                            <input type="number" step="0.01" id="price" class="form-control"
+                                wire:model="price">
+                            @error('price')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-lg-9 mb-3">
+                            <label for="price_note">{{ __('Price Note (Optional)') }}</label>
+                            <input type="text" id="price_note" class="form-control" wire:model="price_note">
+                        </div>
+
+                        <div class="col-lg-12 mb-3">
+                            <label for="description">{{ __('Description') }}</label>
+                            <textarea id="description" class="form-control" rows="3" wire:model="description"></textarea>
+                        </div>
+
+                        <div class="col-lg-12 mb-3">
+                            <label for="optional_link">{{ __('Optional Link') }}</label>
+                            <input type="url" id="optional_link" class="form-control"
+                                wire:model="optional_link">
+                        </div>
                     </div>
 
-                    <div class="col-lg-6 mb-3">
-
-                        <label for="subject_id">{{ __('Subject') }}</label>
-                        <select id="subject_id" class="form-control" wire:model="subject_id">
-                            <option value="">{{ __('Select Subject') }}</option>
-
-                            @foreach ($subjects_all as $subject)
-                                <option value="{{ $subject->id }}">{{ $subject->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('subject_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                    <div class="col-2">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="image" class="btn">{{ __('Course Image') }}
+                                    <input type="file" name="" id="image" wire:model="image"
+                                        hidden><br>
+                                    @if ($image)
+                                        <img src="{{ $image->temporaryUrl() }}"
+                                            style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+                                    @elseif($old_image)
+                                        <img src="{{ asset('storage/' . $old_image) }}"
+                                            style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                        <img src="{{ asset('assets/img/mindly_icon.png') }}"
+                                            style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+                                    @endif
+                                </label>
+                                @error('image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>{{-- image & wire:model="image" --}}
+                        </div>
                     </div>
 
-                    <div class="col-lg-3 mb-3">
-                        <label for="price">{{ __('Price') }}</label>
-                        <input type="number" step="0.01" id="price" class="form-control"
-                            wire:model="price">
-                        @error('price')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="col-lg-9 mb-3">
-                        <label for="price_note">{{ __('Price Note (Optional)') }}</label>
-                        <input type="text" id="price_note" class="form-control" wire:model="price_note">
-                    </div>
-
-                    <div class="col-lg-12 mb-3">
-                        <label for="description">{{ __('Description') }}</label>
-                        <textarea id="description" class="form-control" rows="3" wire:model="description"></textarea>
-                    </div>
-
-                    <div class="col-lg-12 mb-3">
-                        <label for="optional_link">{{ __('Optional Link') }}</label>
-                        <input type="url" id="optional_link" class="form-control" wire:model="optional_link">
-                    </div>
-                </div>
+                </div> {{-- End row --}}
 
                 <div class="text-start">
                     <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">

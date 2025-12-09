@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\PayTabsController;
+use App\Livewire\Admins\Ads\AdsIndex;
 use App\Livewire\Admins\Cities\Index as CitiesIndex;
 use App\Livewire\Admins\CodeList\CodeListIndex;
 use App\Livewire\Admins\ContentTypes\Index as ContentTypesIndex;
 use App\Livewire\Admins\Countries\Index as CountriesIndex;
 use App\Livewire\Admins\DashboardComponent;
+use App\Livewire\Admins\EducationalCenter\Content\ContentIndex;
 use App\Livewire\Admins\EducationalCenter\Index as EducationalCenter;
 use App\Livewire\Admins\EducationalCenter\Wallet\Index as EducationalCenterWalletIndex;
 use App\Livewire\Admins\Governorate\Index as GovernorateIndex;
@@ -67,7 +69,8 @@ Route::group(
             Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
             Route::get('/code-list', CodeListIndex::class)->name('admins.code-list.index');
             Route::get('pdf/code-list/{id}', CodeListPdf::class)->name('pdf.code-list');
-            
+            Route::get('ads', AdsIndex::class)->name('admins.ads.index');
+            Route::get('/educational-center-content', ContentIndex::class)->name('admins.educational-center-content.index');
             /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
             Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
             Route::post('/logout', function (Request $request) {

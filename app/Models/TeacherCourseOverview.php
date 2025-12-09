@@ -15,14 +15,9 @@ class TeacherCourseOverview extends Model
     protected $guarded = [];
     protected $translatable = ['name'];
 
-    // public function course()
-    // {
-    //     return $this->belongsTo(TeacherCourseOverview::class, 'tco_id');
-    // }
-
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class,'teacher_id');
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 
     public function contents()
@@ -35,10 +30,6 @@ class TeacherCourseOverview extends Model
         return $this->morphMany(PurchaseOption::class, 'purchaseable');
     }
 
-    // public function academicYear(): MorphTo
-    // {
-    //     return $this->morphTo('ay');
-    // }
 
     public function subject()
     {
@@ -53,5 +44,11 @@ class TeacherCourseOverview extends Model
     public function reviews()
     {
         return $this->hasMany(TeacherCourseReview::class, 'tco_id');
+    }
+
+
+    public function getImageAttribute($value)
+    {
+        return $value ? asset('storage/' . $value) : null;
     }
 }

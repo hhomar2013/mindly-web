@@ -14,6 +14,8 @@
             <div class="card bg-gradient-primary p-2 text-white text-center min-h-100">
 
                 <div class="card-body text-center">
+                    <img src="{{ $course->image }}"
+                        style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%;">
                     <p class="text-white"> <b>{{ $course->name }}</b> </p>
                     <p class="text-light">
                         {{ __('Subject') }}: <b>{{ $course->subject->name ?? 'N/A' }}</b>

@@ -2,7 +2,7 @@
     <style>
         .form-switch {
             display: inline-flex !important;
-            align-items: anchor-center !important;
+            align-items: center !important;
         }
 
     </style>

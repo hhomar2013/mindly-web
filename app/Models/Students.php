@@ -11,9 +11,9 @@ use Spatie\Translatable\HasTranslations;
 
 class Students extends Model
 {
-    use HasFactory,HasTranslations,HasApiTokens ,Notifiable;
+    use HasFactory, HasTranslations, HasApiTokens, Notifiable;
 
-    
+
     protected $fillable = [
         'name',
         'phone',
@@ -42,4 +42,8 @@ class Students extends Model
         return $this->morphTo();
     }
 
+    public function getImageAttribute($value)
+    {
+        return $value ? asset('storage/' . $value) : null;
+    }
 }

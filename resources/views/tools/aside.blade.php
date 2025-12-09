@@ -129,6 +129,19 @@ fixed-start ms-4
                     </div>
                     <span class="nav-link-text ms-1">{{ __('Educational Center Wallets') }}</span>
                 </a> <!-- End Education Center Wallets -->
+
+                <a class="nav-link {{ request()->is(app()->getLocale() . '/educational-center-content') ? 'active' : '' }}"
+                    href="{{ route('admins.educational-center-content.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center ms-1 d-flex align-items-center justify-content-center">
+                        @if (request()->is(app()->getLocale() . '/educational-center-content'))
+                            <i class="fa-regular fa-circle-dot text-dark text-sm opacity-10"></i>
+                        @else
+                            <i class="fa-regular fa-circle text-dark text-sm opacity-10"></i>
+                        @endif
+                    </div>
+                    <span class="nav-link-text ms-1">{{ __('Educational Center Content') }}</span>
+                </a> <!-- End Education Center contents -->
             </li><!-- End Educational Centers Management -->
 
 
@@ -155,8 +168,6 @@ fixed-start ms-4
                 </a> <!-- End Code List -->
 
             </li><!-- End Code List Management -->
-
-
 
 
 
@@ -219,8 +230,6 @@ fixed-start ms-4
                     <span class="nav-link-text ms-1">{{ __('Content Types') }}</span>
                 </a>
             </li><!-- End Content Types -->
-
-
             <li class="nav-item">
                 <a class="nav-link {{ request()->is(app()->getLocale() . '/subjects') ? 'active' : '' }}"
                     href="{{ route('admins.subjects.index') }}">
@@ -231,8 +240,6 @@ fixed-start ms-4
                     <span class="nav-link-text ms-1">{{ __('Subjects') }}</span>
                 </a>
             </li><!-- End Subjects -->
-
-
             <li class="nav-item">
                 <a class="nav-link {{ request()->is(app()->getLocale() . '/type-of-subscriptions') ? 'active' : '' }}"
                     href="{{ route('admins.tos.index') }}">
@@ -243,7 +250,16 @@ fixed-start ms-4
                     <span class="nav-link-text ms-1">{{ __('Type of Subscriptions') }}</span>
                 </a>
             </li><!-- End Type of Subscription -->
-
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is(app()->getLocale() . '/ads') ? 'active' : '' }}"
+                    href="{{ route('admins.ads.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center ms-1 d-flex align-items-center justify-content-center">
+                        <i class="fa-brands fa-adversal text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">{{ __('Ads') }}</span>
+                </a>
+            </li><!-- End Ads -->
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#level-one" aria-expanded="false" aria-controls="level-one"
                     class="nav-link">
