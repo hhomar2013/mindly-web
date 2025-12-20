@@ -12,7 +12,7 @@ class Index extends Component
 {
     use WithFileUploads;
     public $action = 'index';
-    public $types  = ['video', 'image', 'document', 'link'];
+    public $types  = ['video', 'image', 'document', 'link', 'quiz'];
     public $type_selected = '';
     public $isEdit = false;
     public $name_ar, $name_en, $icon, $contentTypeId, $old_icon;
@@ -66,7 +66,7 @@ class Index extends Component
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'icon' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'type_selected' => 'required|in:video,image,document,link',
+            'type_selected' => 'required|in:video,image,document,link,quiz',
         ]);
         $icon = $this->old_icon ? $this->old_icon : $this->icon->store('content-types', 'public');
         ContentType::create([

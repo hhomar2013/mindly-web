@@ -25,12 +25,21 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
 
-    public function login(Request $request)
+    public function login(Request $request, OtpService $otpService)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
+
+        $isOtpValid = $otpService->verifyOtp($request->email, $request->otp);
+
+        if (!$isOtpValid) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid or expired OTP'
+            ], 422);
+        }
 
         $student = Students::where('email', $request->email)->first();
 
@@ -115,135 +124,7 @@ class AuthController extends Controller
         ]);
     }
 
-    // ✅ Store student
-    // public function store(Request $request, \App\Services\OtpService $otpService)
-    // {
-    //     $educationMap = config('education_phases');
-    //     $educationTypeKey = $request->education_type_key;
 
-    //     // 1. التحقق الأساسي من نوع المرحلة
-    //     if (!isset($educationMap[$educationTypeKey])) {
-    //         return response()->json(['message' => 'Invalid education phase key.'], 422);
-    //     }
-
-    //     $morphClass = $educationMap[$educationTypeKey];
-    //     $morphId = null;
-
-    //     DB::beginTransaction();
-    //     try {
-
-    //         // 2. معالجة بيانات المرحلة التعليمية
-    //         if ($educationTypeKey === 'secondary') {
-    //             // *** حالة الثانوية (النظام الجديد) ***
-
-    //             // أ. التحقق من مفاتيح الثوابت الثانوية
-    //             $request->validate([
-    //                 'secondary_track_key' => ['required', 'exists:secondary_tracks,track_id'],
-    //                 'secondary_grade_key' => ['required', 'exists:secondary_grades,grade_id'],
-    //                 'secondary_branch_key' => ['nullable', 'exists:secondary_branches,branch_id'],
-    //                 'secondary_sub_branch_key' => [
-    //                     'nullable',
-    //                     Rule::exists('secondary_sub_branches', 'sub_branch_id')
-    //                 ],
-    //                 'secondary_specialization_key' => ['nullable', 'exists:secondary_specializations,spec_id'],
-    //             ]);
-
-    //             // ب. استرجاع الـ IDs
-    //             $trackId = SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id');
-    //             $gradeId = SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id');
-    //             $branchId = $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null;
-    //             $specId = $request->secondary_specialization_key ? SecondarySpecialization::where('spec_id', $request->secondary_specialization_key)->value('id') : null;
-    //             $subBranchId = $request->secondary_sub_branch_key
-    //                 ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id')
-    //                 : null;
-    //             // ج. إنشاء السجل الوسيط (الـ Morph Target)
-    //             $secondaryDetail = secondary_student_details::create([
-    //                 'secondary_track_id' => $trackId,
-    //                 'secondary_grade_id' => $gradeId,
-    //                 'secondary_branch_id' => $branchId,
-    //                 'secondary_sub_branch_id' => $subBranchId, // ✅ أضفناه هنا
-    //                 'secondary_specialization_id' => $specId,
-    //             ]);
-    //             $morphId = $secondaryDetail->id;
-    //         } else {
-
-
-    //             // First validate the request
-    //             $validated = $request->validate([
-    //                 'education_id' => ['required', 'string', Rule::exists('stage_grades', 'grade_id')],
-    //             ]);
-
-    //             // Then get the full record using the grade_id
-    //             $grade = StageGrade::where('grade_id', $request->education_id)->first();
-
-    //             // Now you can access the id
-    //             $morphId = $grade->id;
-    //         }
-
-    //         // 3. التحقق من صحة بيانات الطالب الأخرى (يجب تعديلها لتناسب حقولك)
-    //         $request->validate([
-    //             'name' => 'required',
-    //             'email' => 'required|email|unique:students,email',
-    //             'password' => 'required|string|min:6',
-    //             'governorate_id' => 'required|exists:governors,id',
-    //             'city_id' => 'required|exists:cities,id',
-
-    //         ]);
-    //         // $otp =    $otpService->sendOtp($request->email);
-    //         // if ($otp) {
-    //         //     return response()->json([
-    //         //         'message' => 'Student created successfully',
-    //         //         // 'token' => $token,
-    //         //         // 'student' => $student,
-    //         //         'otp_sent' => 'OTP has been sent to the student\'s email. Please check your inbox and enter the code to verify your account. You will be redirected to the OTP verification page shortly.',
-    //         //         // 'Student_log' => $studentLog
-    //         //     ], 201);
-    //         // }
-    //         // 4. جملة الحفظ الموحدة (The Unified Save Statement)
-    //         $student = Students::create([
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'password' => bcrypt($request->password),
-    //             'governorate_id' => $request->governorate_id,
-    //             'city_id' => $request->city_id,
-    //             'address' => $request->address,
-    //             'phone' => $request->phone ?? null,
-    //             'parent_phone' => $request->parent_phone ?? null,
-    //             'date_of_birth' => $request->date_of_birth ?? null,
-    //             'type_of_study' => $request->type_of_study ?? null,
-    //             'gender' => $request->gender ?? null,
-    //             'education_id'   => $morphId,
-    //             'education_type' => $morphClass,
-    //         ]);
-
-    //         // $otpService->sendOtp($student->email);
-
-    //         // $studentLog = StudentsLogs::query()->create([
-    //         //     'student_id' => $student->id,
-    //         //     'mobile_name' => $request->mobile_name,
-    //         //     'action' => 'register First Login'
-    //         // ]);
-
-    //         // $token = null;
-    //         // if ($studentLog) {
-    //         //     $token = $student->createToken('auth_token')->plainTextToken;
-    //         // }
-    //         DB::commit();
-
-    //         return response()->json([
-    //             'message' => 'Student created successfully',
-    //             // 'token' => $token,
-    //             // 'student' => $student,
-    //             // 'Student_log' => $studentLog
-    //         ], 201);
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'error' => 'An error occurred during student registration.',
-    //             'details' => $e->getMessage()
-    //         ], 422);
-    //     }
-    // }
     // ✅ First Send OTP
     public function sendOtp(Request $request)
     {

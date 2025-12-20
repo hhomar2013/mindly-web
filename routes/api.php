@@ -8,24 +8,34 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CountriesController;
 use App\Http\Controllers\Api\coursesCotroller;
 use App\Http\Controllers\Api\enrollController;
+use App\Http\Controllers\Api\QuizController;
+use App\Http\Controllers\Api\TeachersController;
 
 //Version 1F
 Route::prefix('v1')->group(function () {
-    // Students
+    // Students 
     Route::prefix('students')->group(function () {
         Route::post('/send-otp', [AuthController::class, 'sendOtp']);
         Route::post('/store', [AuthController::class, 'store']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::middleware(['force.json', 'auth:sanctum'])->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout']); // Logout
             Route::post('/enroll', [enrollController::class, 'enrollCourse']); //enroll
             Route::get('/my-courses', [enrollController::class, 'index']); //enroll
             Route::post('/reviews', [coursesCotroller::class, 'storeReview']); //reviews
             Route::get('/profile', [AuthController::class, 'profile']);
             Route::post('/update-profile-photo', [AuthController::class, 'updateProfilePhoto']);
-            Route::post('/logout', [AuthController::class, 'logout']);
+            // Route::get('/checkIfEnrolled', [coursesCotroller::class, 'check_user_inrolled']); // check_user_inrolled
+            Route::get('/top-rated-teachers', [TeachersController::class, 'topRatedTeachers']); //top-rateds-teachers
+            Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']); //course_lessons
+            Route::get('/teachers-by-cities', [TeachersController::class, 'teachersByCities']); //teachers-by-cities
+            Route::post('/join-quiz', [QuizController::class, 'joinQuiz']); //quiz
+
         });
     }); //End Students
-
+    Route::prefix('quiz')->group(function () {
+        Route::get('/index', [QuizController::class, 'index']); //quiz
+    });
     // Route::get('/test', function () {
     //     return response()->json(['message' => 'API is working 👌✔️ Welcome to Mindly API!']);
     // });
@@ -34,7 +44,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/countries', [CountriesController::class, 'index']); //countries
     Route::get('/academic-structure', [AcademicDataController::class, 'getAcademicStructure']); //academic-structure
     Route::get('/courses', [coursesCotroller::class, 'index']); //courses
-    Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']); //course_lessons
+
     Route::get('/ads', [adsController::class, 'index']); //ads
 
 }); //End Version 1

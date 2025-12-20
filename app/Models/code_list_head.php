@@ -10,7 +10,7 @@ class code_list_head extends Model
 
     public function teacherCourseOverview()
     {
-        return $this->belongsTo(teacherCourseOverview::class ,'teacher_course_overviews_id');
+        return $this->belongsTo(TeacherCourseOverview::class ,'teacher_course_overviews_id');
     }
 
     public function codeList()

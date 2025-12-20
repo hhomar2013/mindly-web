@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Admins\Teachers\Courses;
 
+use App\Helpers\switchActions;
 use App\Models\ContentType;
 use App\Models\EducationStage;
 use App\Models\EducationSystem;
+use App\Models\exam;
 use App\Models\SecondaryBranch;
 use App\Models\SecondaryGrade;
 use App\Models\SecondarySpecialization;
@@ -18,18 +20,21 @@ use App\Models\TeacherCourseLesson;
 use App\Models\TeacherCourseLessonContent;
 use App\Models\TeacherCourseOverview;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Index extends Component
 {
+    use switchActions;
     public $IsEdit = false;
     public $course_id;
-    public $teacher_id = 0;
+    public ?int $teacher_id = null;
     public $courses = [];
     public $teacher = [];
     public $search = '';
-    public $action = false;
+    #[Url]
+    public string $action;
     public $education_system_id;
     public $education_stages = [];
     public $education_stages_id;
@@ -62,11 +67,21 @@ class Index extends Component
     public $lesson_content_ar_name;
     public $lesson_content_en_name;
     public $image, $old_image, $lesson_content_link;
+    public $teacherQuiz = [];
+    public $quiz_id;
 
     protected $listeners = ['refreshCourse' => 'render', 'deleteCourse' => 'delete', 'deleteLesson' => 'deleteLesson', 'deleteLessonContent' => 'deleteLessonContent'];
     public ?TeacherCourseOverview $editingCourseOverview = null;
-    use WithFileUploads;
+    use WithFileUploads, switchActions;
 
+    public function back($action, $session, $update = false, $array = [])
+    {
+        if (session()->has($session)) {
+            session()->forget($session);
+        }
+        $this->switchAction($action, $update, $array);
+        // $this->dispatch('message', message: session($session));
+    }
     public function deleteLessonContent($id)
     {
         $q = TeacherCourseLessonContent::query()->find($id);
@@ -101,6 +116,7 @@ class Index extends Component
             'content_type_id' => 'required',
         ]);
 
+        $quiz = asset('api/v1/students/join-quiz/' . $this->quiz_id);
         $lessonContent = TeacherCourseLessonContent::query()->create([
             'tcl_id' => $this->lesson_id,
             'ct_id' => $this->content_type_id,
@@ -125,6 +141,10 @@ class Index extends Component
             $this->IsEdit = false;
         }
     }
+    private function getTecherQuiz()
+    {
+        return exam::query()->where('teacher_id', $this->teacher_id)->where('state', 1)->get();
+    }
 
     public function getSelectedContentType()
     {
@@ -134,7 +154,13 @@ class Index extends Component
         } else {
             $this->selectedContentType = null;
         }
+
+        if ($this->selectedContentType == 'quiz') {
+            $this->teacherQuiz = $this->getTecherQuiz();
+        }
     }
+
+
 
     public function setActionData(string $actionName)
     {
@@ -250,11 +276,21 @@ class Index extends Component
     public function getCourses($id)
     {
         $this->action = 'show-course';
+        session(['teacher_id' => $id]);
         $this->teacher_id = $id;
         $this->teacher = Teacher::query()->where('id', $id)->first();
         $course = TeacherCourseOverview::query()->where('teacher_id', $id)->with(['subject', 'education'])->get();
         $this->courses = $course;
     }
+
+
+    private function checkSession($id, $parameter)
+    {
+        if (session()->has($id)) {
+            $this->$parameter(session($id));
+        }
+    }
+
     public function getSecondarySubBranch()
     {
         $this->secondary_sub_branch = [];
@@ -273,6 +309,11 @@ class Index extends Component
 
             $this->resetForm();
         }
+        $this->switchAction("", false, [], ['teacher_id', 'course', 'course_id', 'lesson_id']);
+        $this->checkSession('teacher_id', "getCourses");
+        $this->checkSession('course', "editCourse");
+        $this->checkSession('course_id', "subjectManagment");
+        $this->checkSession('lesson_id', "addLessonContent");
     }
     public function addCourse()
     {
@@ -282,9 +323,11 @@ class Index extends Component
         $this->teacher = Teacher::query()->where('id', $this->teacher_id)->first();
         $this->resetForm('add-course');
     }
-    public function resetForm($action = false)
+    public function resetForm($action = null)
     {
-        $this->action = $action;
+        if ($action !== null) {
+            $this->action = $action;
+        }
         // $this->teacher_id = null;
         // $this->courses = [];
         // $this->teacher = [];
@@ -435,6 +478,7 @@ class Index extends Component
             'image',
             'old_image'
         ]);
+        session(['course' => $course]);
         // 1. تخزين الكائن في خاصية النموذج
         $this->editingCourseOverview = $course;
 
@@ -461,7 +505,9 @@ class Index extends Component
 
     public function subjectManagment($id)
     {
+        $this->reset(['lesson_content_ar_name', 'lesson_content_en_name', 'content_type_id', 'lesson_content_link', 'image']);
         $this->action = 'subject-managment';
+        session(['course_id' => $id]);
         $this->course_id = $id;
         $this->subjectShow = TeacherCourseOverview::query()->where('id', $id)->with('subject')->first();
         $this->lessons = TeacherCourseLesson::query()->where('tco_id', $id)->get();
@@ -515,10 +561,19 @@ class Index extends Component
     public function addLessonContent($id)
     {
         $this->action = 'add-lesson-content';
+        session(['lesson_id' => $id]);
         $this->lesson_id = $id;
         $this->lessons_content = TeacherCourseLessonContent::query()->where('tcl_id', $id)->get();
         $this->contentTypes = ContentType::query()->where('status', 1)->get();
     }
+
+    public function updatedQuizId($value)
+    {
+        $quiz = exam::find($value);
+        $this->lesson_content_ar_name = $quiz?->title;
+        $this->lesson_content_link = $quiz?->id;
+    }
+
 
     private function LoadAcademicForEdit($academicYear)
     {
@@ -556,9 +611,11 @@ class Index extends Component
         $subjects_all = subjects::all();
         $education_system = EducationSystem::all();
         $teachers = Teacher::query()
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('phone', '=', $this->search)
-            ->where(['state' => 'available'])->get();
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%');
+                $query->orWhere('phone', 'like', '%' . $this->search . '%');
+            })
+            ->where(['state' => 1, 'in_out' => 1])->get();
         return view('livewire.admins.teachers.courses.index', compact('teachers', 'education_system', 'subjects_all'));
     }
 }

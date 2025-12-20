@@ -25,10 +25,10 @@ class TeacherCourseOverview extends Model
         return $this->hasMany(TeacherCourseLessonContent::class, 'tcl_id');
     }
 
-    public function purchaseOptions()
-    {
-        return $this->morphMany(PurchaseOption::class, 'purchaseable');
-    }
+    // public function purchaseOptions()
+    // {
+    //     return $this->morphMany(PurchaseOption::class, 'purchaseable');
+    // }
 
 
     public function subject()

@@ -34,6 +34,8 @@
                                 <option value="{{ $type }}">{{ __('Document') }}</option>
                             @elseif ($type == 'link')
                                 <option value="{{ $type }}">{{ __('Link') }}</option>
+                            @elseif ($type == 'quiz')
+                                <option value="{{ $type }}">{{ __('Exam') }}</option>
                             @endif
                         @endforeach
                     </select>

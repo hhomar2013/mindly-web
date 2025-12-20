@@ -17,7 +17,7 @@ class Teacher extends Model
         return $this->hasOne(teacher_wallets::class, 'teacher_id', 'id');
     }
 
- 
+
 
     public function cities()
     {
@@ -32,5 +32,10 @@ class Teacher extends Model
     public function teacherCourseOverview()
     {
         return $this->hasMany(TeacherCourseOverview::class, 'teacher_id', 'id');
+    }
+
+    public function quizes()
+    {
+        return $this->hasMany(exam::class, 'teacher_id', 'id');
     }
 }

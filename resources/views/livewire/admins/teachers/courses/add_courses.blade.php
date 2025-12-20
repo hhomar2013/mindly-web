@@ -3,7 +3,7 @@
         <h3> {{ $teacher->name }} </h3>
     </div>
     <div class="col-lg-8 text-end">
-        <button class="btn btn-danger btn-rounded" wire:click="$set('action','show-course')">
+        <button class="btn btn-danger btn-rounded" wire:click="back('show-course','course')">
             <i class="fas fa-arrow-left"></i>
         </button>
     </div>

@@ -4,7 +4,7 @@
             {{ __('Add New Lesson') }} </button>
     </div>
     <div class="col-lg-8 text-end">
-        <button class="btn btn-danger btn-rounded" wire:click="$set('action','show-course')"> <i
+        <button class="btn btn-danger btn-rounded" wire:click="back('show-course','course_id')"> <i
                 class="fas fa-arrow-left"></i>
         </button>
     </div>

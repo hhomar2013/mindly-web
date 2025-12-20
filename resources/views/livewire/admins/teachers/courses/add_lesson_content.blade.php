@@ -7,8 +7,9 @@
     <div class="col-lg-6 text-end">
 
         @if (!$lesson_id)
-            <button class="btn btn-danger btn-rounded" wire:click="$set('action','subject-managment')"> <i
-                    class="fas fa-arrow-left"></i>
+            <button class="btn btn-danger btn-rounded"
+                wire:click="back('subject-managment','course_id' ,false,['lesson_content_ar_name','lesson_content_en_name','content_type_id','lesson_content_link','image'])">
+                <i class="fas fa-arrow-left"></i>
             </button>
         @else
             <button class="btn btn-danger btn-rounded" wire:click="subjectManagment({{ $subjectShow->id }})"> <i
@@ -83,6 +84,14 @@
                                 @error('image')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
+                            @elseif($selectedContentType == 'quiz')
+                                <label for="quiz_id"> {{ __('Quiz') }} </label>
+                                <select name="" id="" wire:model.live="quiz_id" class="form-control">
+                                    <option value="">{{ __('Select Quiz') }}</option>
+                                    @foreach ($teacherQuiz as $quiz)
+                                        <option value="{{ $quiz->id }}">{{ $quiz->title }}</option>
+                                    @endforeach
+                                </select>
                             @endif
                         </div>
 
@@ -92,11 +101,7 @@
 
                 </div>
                 <div class="card-footer">
-                    {{-- @if ($lesson_)
-                        
 
-                        
-                    @endif --}}
                     <button class="btn btn-primary "> {{ __('save') }} </button>
                 </div>
 
@@ -109,27 +114,32 @@
             <div class="card-header"></div>
 
             <div class="card-body">
-                 <div class="row p-2">
-                @forelse ($lessons_content as $lesson_content)
+                <div class="row p-2">
+                    @forelse ($lessons_content as $lesson_content)
                         <div class="col-lg-3 p-2">
                             <div class="card shadow-lg rounded bg bg-dark bg-opacity-10">
                                 <div class="card-body text-center ">
                                     <h5 class="text-white">{{ $lesson_content->name }}</h5>
                                 </div>
                                 <div class="card-footer">
-                                      <button class="btn btn-success btn-rounded" wire:click="showLessonContent({{ $lesson_content->id }})">
-                                        <i class="fas fa-eye"></i>     
+                                    {{-- <button class="btn btn-primary btn-rounded">
+                                        <i class="fa-solid fa-sheet-plastic"></i>
+                                    </button>&nbsp; --}}
+                                    <button class="btn btn-success btn-rounded"
+                                        wire:click="showLessonContent({{ $lesson_content->id }})">
+                                        <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="btn btn-danger btn-rounded" onclick="confirmDelete({{ $lesson_content->id }} , 'deleteLessonContent')">
-                                        <i class="fas fa-trash"></i>     
+                                    <button class="btn btn-danger btn-rounded"
+                                        onclick="confirmDelete({{ $lesson_content->id }} , 'deleteLessonContent')">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                @empty
-                    <p>{{ __('No Lesson Content Found') }}</p>
-                @endforelse
-                  </div>
+                    @empty
+                        <p>{{ __('No Lesson Content Found') }}</p>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>

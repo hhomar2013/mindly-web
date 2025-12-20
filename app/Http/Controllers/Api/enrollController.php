@@ -51,6 +51,7 @@ class enrollController extends Controller
 
         return response()->json([
             'message' => 'Enrolled courses retrieved successfully ✔️👌',
+            'My Courses' => 'الدروس الخاصه بي',
             'data' => $overviews,
         ], 200);
     }

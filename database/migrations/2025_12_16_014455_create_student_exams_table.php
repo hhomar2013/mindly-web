@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('content_types', function (Blueprint $table) {
+        Schema::create('student_exams', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('note')->nullable();
-            $table->string('icon')->nullable();
-            $table->enum('type', ['video', 'image', 'document', 'link', 'quiz'])->default('video');
-            $table->boolean('status')->default(true);
+            $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+            $table->tinyInteger('score')->default(0);
+            $table->boolean('state')->default(false);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('content_types');
+        Schema::dropIfExists('student_exams');
     }
 };

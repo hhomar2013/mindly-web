@@ -93,6 +93,19 @@ fixed-start ms-4
                     </div>
                     <span class="nav-link-text ms-1">{{ __('Teacher Courses') }}</span>
                 </a> <!-- End Teacher Courses -->
+
+                <a class="nav-link {{ request()->is(app()->getLocale() . '/quiz') ? 'active' : '' }}"
+                    href="{{ route('admins.quiz.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center ms-1 d-flex align-items-center justify-content-center">
+                        @if (request()->is(app()->getLocale() . '/quiz'))
+                            <i class="fa-regular fa-circle-dot text-dark text-sm opacity-10"></i>
+                        @else
+                            <i class="fa-regular fa-circle text-dark text-sm opacity-10"></i>
+                        @endif
+                    </div>
+                    <span class="nav-link-text ms-1"><i class="fa-regular fa-file-pdf"></i>{{ __('Quiz') }}</span>
+                </a> <!-- End Quiz -->
             </li>{{-- End Teacher Management --}}
 
             {{-- Educational Centers Management Title --}}
@@ -130,7 +143,7 @@ fixed-start ms-4
                     <span class="nav-link-text ms-1">{{ __('Educational Center Wallets') }}</span>
                 </a> <!-- End Education Center Wallets -->
 
-                <a class="nav-link {{ request()->is(app()->getLocale() . '/educational-center-content') ? 'active' : '' }}"
+                {{-- <a class="nav-link {{ request()->is(app()->getLocale() . '/educational-center-content') ? 'active' : '' }}"
                     href="{{ route('admins.educational-center-content.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center ms-1 d-flex align-items-center justify-content-center">
@@ -141,7 +154,7 @@ fixed-start ms-4
                         @endif
                     </div>
                     <span class="nav-link-text ms-1">{{ __('Educational Center Content') }}</span>
-                </a> <!-- End Education Center contents -->
+                </a> <!-- End Education Center contents --> --}}
             </li><!-- End Educational Centers Management -->
 
 

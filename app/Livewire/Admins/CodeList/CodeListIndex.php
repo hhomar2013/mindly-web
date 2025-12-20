@@ -238,7 +238,7 @@ class CodeListIndex extends Component
     public function mount()
     {
         $this->codeList = code_list_head::with('teacherCourseOverview.teacher')->get();
-        $this->teachers = Teacher::query()->where('state', 'available')->get();
+        $this->teachers = Teacher::query()->where('state', true)->get();
         $this->typeOfSubscription = type_of_subscriptions::query()->where('status', 1)->get();
     }   //mount
 

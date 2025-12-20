@@ -3,7 +3,8 @@
         <button class="btn btn-success" wire:click="addCourse"> {{ __('Add Course') }} </button>
     </div>
     <div class="col-lg-8 text-end">
-        <button class="btn btn-danger btn-rounded" wire:click="$set('action',false)"> <i class="fas fa-arrow-left"></i>
+        <button class="btn btn-danger btn-rounded" wire:click="back('index','teacher_id')"> <i
+                class="fas fa-arrow-left"></i>
         </button>
     </div>
     <div class="col-lg-12">
