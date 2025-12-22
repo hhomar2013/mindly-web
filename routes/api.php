@@ -13,11 +13,13 @@ use App\Http\Controllers\Api\TeachersController;
 
 //Version 1F
 Route::prefix('v1')->group(function () {
-    // Students 
+    // Students register
     Route::prefix('students')->group(function () {
-        Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+        // Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+        // Route::post('/register', [AuthController::class, 'register']);
         Route::post('/store', [AuthController::class, 'store']);
         Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/loginSendOtp', [AuthController::class, 'loginSendOtp']);
         Route::middleware(['force.json', 'auth:sanctum'])->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']); // Logout
             Route::post('/enroll', [enrollController::class, 'enrollCourse']); //enroll
@@ -25,12 +27,11 @@ Route::prefix('v1')->group(function () {
             Route::post('/reviews', [coursesCotroller::class, 'storeReview']); //reviews
             Route::get('/profile', [AuthController::class, 'profile']);
             Route::post('/update-profile-photo', [AuthController::class, 'updateProfilePhoto']);
-            // Route::get('/checkIfEnrolled', [coursesCotroller::class, 'check_user_inrolled']); // check_user_inrolled
             Route::get('/top-rated-teachers', [TeachersController::class, 'topRatedTeachers']); //top-rateds-teachers
             Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']); //course_lessons
             Route::get('/teachers-by-cities', [TeachersController::class, 'teachersByCities']); //teachers-by-cities
             Route::post('/join-quiz', [QuizController::class, 'joinQuiz']); //quiz
-
+            Route::post('/close-quiz', [QuizController::class, 'closeQuiz']); //quiz
         });
     }); //End Students
     Route::prefix('quiz')->group(function () {

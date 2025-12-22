@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->boolean('state')->default(false);
             $table->boolean('in_out')->default(false);
-            $table->timestamp('rating_system')->nullable()->default(0);
+            $table->tinyInteger('rating_system')->nullable()->default(0);
             $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

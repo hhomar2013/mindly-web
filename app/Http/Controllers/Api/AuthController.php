@@ -25,54 +25,71 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
 
+
+
     public function login(Request $request, OtpService $otpService)
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+        ]);
+
+
+        $student = Students::where('email', $request->email)->first();
+        if (!$student || !Hash::check($request->password, $student->password)) {
+            return response()->json([
+                'message' => 'Invalid credentials'
+            ], 401);
+        } else {
+            $check = $otpService->AnotherDevice($student->id);
+            if ($check) {
+                return response()->json([
+                    'message' => 'You are already logged in from another device'
+                ], 409);
+            }
+        }
+
+        $otp =  $this->sendOtp($request);
+        if ($otp) {
+            return response()->json([
+                'status'  => true,
+                'message' =>  'OTP has been sent to your email. Please check your inbox.',
+            ]);
+        }
+    }
+
+    public function loginSendOtp(Request $request, OtpService $otpService)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required',
+            'mobile_name' => 'required'
         ]);
 
         $isOtpValid = $otpService->verifyOtp($request->email, $request->otp);
-
         if (!$isOtpValid) {
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid or expired OTP'
             ], 422);
         }
+        $student = Students::query()->where('email', $request->email)->first();
 
-        $student = Students::where('email', $request->email)->first();
-
-        if (!$student || !Hash::check($request->password, $student->password)) {
+        // Log the login attempt
+        $save =  StudentsLogs::query()->create([
+            'student_id' => $student->id,
+            'mobile_name' => $request->mobile_name,
+            'action' => 'Login'
+        ]);
+        if ($save) {
+            $token = $student->createToken('student_token')->plainTextToken;
             return response()->json([
-                'message' => 'Invalid credentials'
-            ], 401);
-        } else {
-            $get_student_log = StudentsLogs::query()
-                ->where('student_id', $student->id)
-                ->where('is_active', true)
-                ->latest()->first();
-            if ($get_student_log) {
-                // User is already logged in from another device
-                return response()->json([
-                    'message' => 'You are already logged in from another device'
-                ], 409);
-            }
-            // Log the login attempt
-            StudentsLogs::query()->create([
-                'student_id' => $student->id,
-                'mobile_name' => $request->mobile_name ?? 'Unknown',
-                'action' => 'Login'
+                'message' => 'Login successful',
+                'token' => $token,
+                'student' => $student
             ]);
         }
-        $token = $student->createToken('student_token')->plainTextToken;
-        return response()->json([
-            'message' => 'Login successful',
-            'token' => $token,
-            'student' => $student
-        ]);
     }
-
 
     // ✅ Get logged-in student info
     public function profile(Request $request)
@@ -130,13 +147,20 @@ class AuthController extends Controller
     {
         $otpService = new OtpService();
         $otp = $otpService->sendOtp($request->email);
-        return response()->json([
-            'status'  => true,
-            'message' =>  'OTP has been sent to the student\'s email. Please check your inbox and enter the code to verify your account. You will be redirected to the OTP verification page shortly.',
-        ]);
+        // return response()->json([
+        //     'status'  => true,
+        //     'message' =>  'OTP has been sent to your email. Please check your inbox.',
+        // ]);
+        if ($otp) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    // ✅ Store student
-    public function store(Request $request, OtpService $otpService)
+
+
+    // ✅ Store student Register
+    public function store(Request $request)
     {
         // Validate basic student data
         $request->validate([
@@ -149,14 +173,14 @@ class AuthController extends Controller
         ]);
 
         // 1️⃣ Verify OTP before doing anything
-        $isOtpValid = $otpService->verifyOtp($request->email, $request->otp);
+        // $isOtpValid = $otpService->verifyOtp($request->email, $request->otp);
 
-        if (!$isOtpValid) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid or expired OTP'
-            ], 422);
-        }
+        // if (!$isOtpValid) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Invalid or expired OTP'
+        //     ], 422);
+        // }
 
         DB::beginTransaction();
         try {

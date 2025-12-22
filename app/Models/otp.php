@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class otp extends Model
 {
     protected $guarded = [];
-
-
+    
     protected $casts = [
         'expires_at' => 'datetime',
     ];
