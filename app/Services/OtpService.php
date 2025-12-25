@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Services;
 
 use App\Mail\MailsSendOtpMail;
 use App\Models\otp;
+use App\Models\Students;
 use App\Models\StudentsLogs;
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class OtpService
 {
@@ -47,12 +47,13 @@ class OtpService
             ->where('is_used', false)
             ->where('expires_at', '>', Carbon::now())
             ->first();
-        if (!$otpRecord) {
+        if (! $otpRecord) {
             return false;
         }
         // تحديث الحالة إن OTP تم استخدامه
         $otpRecord->update(['is_used' => true]);
-
+        $student = Students::where('email', $identifier)->first();
+        $student->update(['status' => true]);
         return true;
     }
 

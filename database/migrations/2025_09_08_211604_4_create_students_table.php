@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->string('type_of_study')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
+            $table->boolean('status')->default(false);
             $table->nullableMorphs('education');
             $table->timestamps();
         });
