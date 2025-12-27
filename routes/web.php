@@ -21,6 +21,7 @@ use App\Livewire\Admins\Teachers\Wallet\Index as TeacherWalletIndex;
 use App\Livewire\Admins\TypeOfSubscription\TosIndex;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -32,6 +33,16 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () {
+
+
+        //clear Cache
+        Route::get('/clear-all', function () {
+            Artisan::call('config:clear');
+            Artisan::call('cache:clear');
+            Artisan::call('view:clear');
+            return "All caches cleared!";
+        });
+
 
         Livewire::setUpdateRoute(function ($handle) {
             return Route::post('/livewire/update', $handle);
@@ -85,11 +96,5 @@ Route::group(
     }
 );
 
-Route::get('/test-gmail', function () {
-    \Illuminate\Support\Facades\Mail::raw('Testing Gmail SMTP', function ($msg) {
-        $msg->to('hhomar2013@gmail.com')->subject('Gmail SMTP Test');
-    });
-    return 'Mail Sent to hhomar2013@gmail.com! Check your inbox for the test email. If you don\'t see it, check your spam folder.';
-});
 
 require __DIR__ . '/auth.php';

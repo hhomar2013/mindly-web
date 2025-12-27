@@ -16,6 +16,7 @@ use Livewire\Livewire;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -49,9 +50,23 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/custom/livewire/update', $handle);
+        });
+
+        Livewire::setUpdateRoute(function ($handle) {
             return Route::prefix(LaravelLocalization::setLocale())
                 ->post('livewire/update', $handle)
                 ->middleware('livewire');
+        });
+
+
+        // Livewire::setUpdateRoute(function ($handle) {
+        //     return Route::post('/livewire/update', $handle);
+        // });
+
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)
+                ->middleware(App\Http\Middleware\LocalizeViewPaths::class);
         });
     }
 }
