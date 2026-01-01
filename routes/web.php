@@ -1,0 +1,106 @@
+<?php
+
+use App\Http\Controllers\PayTabsController;
+use App\Livewire\Admins\Ads\AdsIndex;
+use App\Livewire\Admins\Quiz\QuizIndex;
+use App\Livewire\Admins\Cities\Index as CitiesIndex;
+use App\Livewire\Admins\CodeList\CodeListIndex;
+use App\Livewire\Admins\ContentTypes\Index as ContentTypesIndex;
+use App\Livewire\Admins\Countries\Index as CountriesIndex;
+use App\Livewire\Admins\DashboardComponent;
+use App\Livewire\Admins\EducationalCenter\Content\ContentIndex;
+use App\Livewire\Admins\EducationalCenter\Index as EducationalCenter;
+use App\Livewire\Admins\EducationalCenter\Wallet\Index as EducationalCenterWalletIndex;
+use App\Livewire\Admins\Governorate\Index as GovernorateIndex;
+use App\Livewire\Admins\Pdf\CodeList\CodeListPdf;
+use App\Livewire\Admins\SocialMediaTypes\Index as SocialMediaTypesIndex;
+use App\Livewire\Admins\Subjects\SubjectIndex;
+use App\Livewire\Admins\Teachers\Courses\Index as TeacherCoursesIndex;
+use App\Livewire\Admins\Teachers\Index as TeachersIndex;
+use App\Livewire\Admins\Teachers\Wallet\Index as TeacherWalletIndex;
+use App\Livewire\Admins\TypeOfSubscription\TosIndex;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
+Route::group(
+    [
+        'prefix'     => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () {
+        
+        Route::get('/server-time', function () {
+            return [
+                'now' => now()->toDateTimeString(),
+                'timezone' => config('app.timezone'),
+            ];
+        });
+
+        //clear Cache
+        Route::get('/clear-all', function () {
+            Artisan::call('config:clear');
+            Artisan::call('cache:clear');
+            Artisan::call('view:clear');
+            return "All caches cleared!";
+        });
+
+
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle);
+        });
+
+
+        Route::get('storage-link', function () {
+            $target = base_path('storage/app/public');  // المسار الحقيقي داخل مشروعك
+            $link   = base_path('public_html/storage'); // لأن public_html هو public عندك
+            if (file_exists($link)) {
+                return 'Link already exists';
+            }
+            symlink($target, $link);
+            return 'Storage link created successfully!';
+        });
+        Route::middleware('auth:web')->group(function () {
+
+            Route::get('/', function () {
+                return redirect()->intended(Auth::check() ? route('dashboard') : route('login'));
+            });
+            Route::get('dashboard', DashboardComponent::class)->name('dashboard');                                                           //dashboard
+            Route::get('/countries', CountriesIndex::class)->name('admins.countries.index');                                                 //countries
+            Route::get('/governorate', GovernorateIndex::class)->name('admins.governorate.index');                                           //govenorate
+            Route::get('/cities', CitiesIndex::class)->name('admins.cities.index');                                                          //cities
+            Route::get('/educational-center', EducationalCenter::class)->name('admins.educationalCenters.index');                            //eaducational centers
+            Route::get('/teachers', TeachersIndex::class)->name('admins.teachers.index');                                                    //Teachers
+            Route::get('/social-media-types', SocialMediaTypesIndex::class)->name('admins.socialMediaTypes.index');                          //social media types
+            Route::get('/content-types', ContentTypesIndex::class)->name('admins.contentTypes.index');                                       //content types
+            Route::get('/subjects', SubjectIndex::class)->name('admins.subjects.index');                                                    //subjects
+            Route::get('/educational-center-wallets', EducationalCenterWalletIndex::class)->name('admins.educational-center-wallets.index'); //educational center wallets
+            Route::get('/teacher-wallets', TeacherWalletIndex::class)->name('admins.teacher-wallets.index');                                 //teacher wallets
+            Route::get('/teacher-courses', TeacherCoursesIndex::class)->name('admins.teacher-courses.index');                                //teacher courses
+            Route::get('/type-of-subscriptions', TosIndex::class)->name('admins.tos.index');
+            Route::get('/paytabs/checkout', [PayTabsController::class, 'checkout'])->name('paytabs.checkout');
+            Route::post('/paytabs/callback', [PayTabsController::class, 'callback'])->name('paytabs.callback');
+            Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
+            Route::get('/code-list', CodeListIndex::class)->name('admins.code-list.index');
+            Route::get('pdf/code-list/{id}', CodeListPdf::class)->name('pdf.code-list');
+            Route::get('ads', AdsIndex::class)->name('admins.ads.index');
+            Route::get('quiz', QuizIndex::class)->name('admins.quiz.index');
+            // Route::get('/educational-center-content', ContentIndex::class)->name('admins.educational-center-content.index');
+            /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
+            Route::post('/logout', function (Request $request) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login');
+            })->name('logout');
+        });
+    }
+);
+
+
+require __DIR__ . '/auth.php';
