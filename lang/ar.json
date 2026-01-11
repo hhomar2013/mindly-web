@@ -346,6 +346,10 @@
     "Quiz questions deleted successfully!": "تم حذف أسئلة الاختبار بنجاح",
     "You have been successfully registered for the quiz": "تم التسجيل في الاختبار بنجاح",
     "Ads To": "الإعلان موجه إلى",
-    "Select Ads To": "اختر موجه الإعلان"
+    "Select Ads To": "اختر موجه الإعلان",
+    "Ads Internal Or External" : "الإعلان داخلي أو خارجي",
+    "Select in or out" : "أختر داخلي او خارجي",
+    "Internal" : "داخلي",
+    "External" : "خارجي"
 
 }

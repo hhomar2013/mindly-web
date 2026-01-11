@@ -1,0 +1,64 @@
+{
+    "message": "Home Page Sections ✔️",
+    "top_rated_teachers": {
+        "name_en": "Top Rated Teachers",
+        "name_ar": "المدرسين الأكثر شهره",
+        "data": [
+            {
+                "id": 2,
+                "name_ar": "محمد وليد",
+                "name_en": "Mohamed Waled",
+                "image": "http://127.0.0.1:8000/storage/teachers/eWIAP90zvIVDhOa2Y1oAF16Sxf7qrzIdrJDptoJk.png",
+                "rating_system": 5,
+                "Courses Count": 1
+            }
+        ]
+    },
+    "teachers_by_city": {
+        "name_en": "Teachers in your city",
+        "name_ar": "المدرسين الأقرب لمنطقتك",
+        "data": [
+            {
+                "id": 3,
+                "name_ar": "test",
+                "name_en": "test",
+                "image": "http://127.0.0.1:8000/storage/teachers/k8tbirUPaDLpbw7XBhqPg5BgLI1LqJdcUM9daLWG.png",
+                "Courses Count": 0
+            },
+            {
+                "id": 4,
+                "name_ar": "test1",
+                "name_en": "test1",
+                "image": "http://127.0.0.1:8000/storage/teachers/Mk0gjrteKlpA13yFotsRS4I1i4wxW5oOqadQrCY0.jpg",
+                "Courses Count": 0
+            },
+            {
+                "id": 5,
+                "name_ar": "test2",
+                "name_en": "test2",
+                "image": "http://127.0.0.1:8000/storage/teachers/I34jX5gvrYFW1doeXd9yw5VEJmREKR1yL1CmVojS.png",
+                "Courses Count": 0
+            }
+        ]
+    },
+    "ads": {
+        "name_en": "Advertisements",
+        "name_ar": "الإعلانات",
+        "data": [
+            {
+                "type": "sliders",
+                "from": "out",
+                "image": "http://127.0.0.1:8000/storage/ads/KzouFhtNtwR5H0R7eyPTlnV86Zpd4HP6khtjYr5c.jpg",
+                "link": "http://127.0.0.1:8000/ar/ads",
+                "comment": "No Comment"
+            },
+            {
+                "type": "popup",
+                "from": "in",
+                "image": "http://127.0.0.1:8000/storage/ads/oroZOiexqL9FwxaKn5ycm69h5rGP1ejD7MV6A5tP.webp",
+                "link": "/teacher-profile/1",
+                "comment": null
+            }
+        ]
+    }
+}

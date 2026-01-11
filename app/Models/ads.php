@@ -11,4 +11,5 @@ class ads extends Model
     {
         return $this->morphTo();
     }
+
 }

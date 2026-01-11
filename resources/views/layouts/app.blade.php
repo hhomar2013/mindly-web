@@ -27,19 +27,34 @@
         {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
     @endif
 
+
+    <style>
+        .footer {
+            position: fixed;
+            align-items: center;
+            justify-content: center;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bs-dark);
+            z-index: 1000;
+            padding: 10px;
+          
+        }
+    </style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100  {{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
     <div class="min-height-300 bg-dark position-absolute w-100"></div>
     @include('tools.aside')
-    <main class="main-content position-relative border-radius-lg ">
+    <main class="main-content position-relative border-radius-lg " style="height: 100vh">
         <!-- Navbar -->
         @include('tools.nav')
         <!-- End Navbar -->
         <div class="container-fluid py-4 ">
             {{ $slot }}
-            @include('tools.footer')
         </div>
+        @include('tools.footer')
     </main>
 
 

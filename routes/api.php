@@ -35,7 +35,9 @@ Route::prefix('v1')->group(function () {
             Route::get('/teachers-by-cities', [TeachersController::class, 'teachersByCities']); //teachers-by-cities
             Route::post('/join-quiz', [QuizController::class, 'joinQuiz']);                     //quiz
             Route::post('/close-quiz', [QuizController::class, 'closeQuiz']);                   //quiz
-            Route::post('/search', [searchController::class, 'search']);                        //search
+            Route::post('/search', [searchController::class, 'search']);//search
+            Route::get('/home-page', [TeachersController::class, 'homePage']); //home-page
+
         });
     }); //End Students
     Route::prefix('quiz')->group(function () {
@@ -45,7 +47,7 @@ Route::prefix('v1')->group(function () {
     //     return response()->json(['message' => 'API is working 👌✔️ Welcome to Mindly API!']);
     // });
 
-    //Dosen't need token
+                                                                                                //Dosen't need token
     Route::get('/countries', [CountriesController::class, 'index']);                            //countries
     Route::get('/academic-structure', [AcademicDataController::class, 'getAcademicStructure']); //academic-structure
     Route::get('/courses', [coursesCotroller::class, 'index']);                                 //courses

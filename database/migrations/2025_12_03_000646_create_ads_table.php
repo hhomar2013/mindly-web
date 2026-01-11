@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['sliders', 'popup']);
             $table->enum('from', ['in', 'out']);
-            $table->string('link');
+            $table->string('link')->nullable();
+            $table->string('comment')->nullable();
+            $table->string('model_name')->nullable();
             $table->string('image');
-            $table->string('comment');
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('status')->default(false);
-            $table->string('model_name');
-            $table->morphs('ad_to');
+            $table->nullableMorphs('ad_to');
+
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\Students;
 use App\Models\StudentsLogs;
 use App\Models\Teacher;
+use App\Models\TeacherCourseOverview;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -19,7 +20,18 @@ class DashboardComponent extends Component
         $teachers = Teacher::query()->get()->count();
         $students = Students::query()->get()->count();
         $studentLogs = StudentsLogs::query()->where('is_active', true)->latest()->get();
+        $TeachersCourses = TeacherCourseOverview::query()->get();
         $totalcounts = $studentLogs->count();
-        return view('livewire.admins.dashboard-component', ['centers' => $centers, 'teachers' => $teachers, 'students' => $students, 'totalcounts' => $totalcounts, 'studentLogs' => $studentLogs]);
+        return view(
+            'livewire.admins.dashboard-component',
+            [
+                'centers' => $centers,
+                'teachers' => $teachers,
+                'students' => $students,
+                'totalcounts' => $totalcounts,
+                'studentLogs' => $studentLogs,
+                'TeachersCourses' => $TeachersCourses
+            ]
+        );
     }
 }
