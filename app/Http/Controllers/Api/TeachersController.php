@@ -3,11 +3,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ads;
+use App\Models\Center;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class TeachersController extends Controller
 {
+
+    public function centers()
+    {
+        $centers = Center::query()->where('state', 1)->get();
+        return $centers;
+    }
 
     public function ads()
     {
@@ -52,17 +59,17 @@ class TeachersController extends Controller
           // ], 200);
     } //Top reated teachers
 
-    private function getUserCity(Request $request)
+    public function getUserCity(Request $request)
     {
         return $request->user()->city_id;
     } // getUserCity
 
-    private function getGovernorate(Request $request)
+    public function getGovernorate(Request $request)
     {
         return $request->user()->governorate_id;
     }
 
-    private function getTeachersByCity($city_id)
+    public function getTeachersByCity($city_id)
     {
         return Teacher::query()->where('city_id', $city_id)->with('teacherCourseOverview')->get();
     }
@@ -94,11 +101,17 @@ class TeachersController extends Controller
                     ];
                 }),
             ],
+            'Centers'            => [
+                'name_en' => 'Centers',
+                'name_ar' => "المراكز التعليميه",
+                'data'    => $this->centers(),
+            ],
             'ads'                => [
                 'name_en' => 'Advertisements',
                 'name_ar' => "الإعلانات",
                 'data'    => $ads,
             ],
+
         ], 200);
     } // teachersByCities
 
