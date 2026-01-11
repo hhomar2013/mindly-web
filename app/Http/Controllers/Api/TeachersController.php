@@ -77,42 +77,89 @@ class TeachersController extends Controller
     public function homePage(Request $request)
     {
 
+        // $ads            = $this->ads();
+        // $topRated       = $this->topRatedTeachers();
+        // $userCity       = $this->getUserCity($request);
+        // $teachersByCity = $this->getTeachersByCity($userCity);
+        // return response()->json([
+        //     'message'  => 'Home Page Sections ✔️',
+        //     'teachers' =>
+        //     [
+
+        //         'name_en' => 'Top Rated Teachers',
+        //         'name_ar' => "المدرسين الأكثر شهره",
+        //         'data'    => $topRated,
+
+        //         'name_en' => 'Teachers in your city',
+        //         'name_ar' => "المدرسين الأقرب لمنطقتك",
+        //         'data'    => $teachersByCity->map(function ($val) {
+        //             return [
+        //                 'id'            => $val->id,
+        //                 'name_ar'       => $val->getTranslation('name', 'ar'),
+        //                 'name_en'       => $val->getTranslation('name', 'en'),
+        //                 'image'         => $val->image ? asset('storage/' . $val->image) : null,
+        //                 'Courses Count' => $val->teacherCourseOverview->count(),
+        //             ];
+        //         }),
+        //     ],
+        //     'Centers'  =>
+        //     [
+        //         'name_en' => 'Centers',
+        //         'name_ar' => "المراكز التعليميه",
+        //         'data'    => $this->centers(),
+        //     ],
+        //     [
+        //         'name_en' => 'Advertisements',
+        //         'name_ar' => "الإعلانات",
+        //         'data'    => $ads,
+        //     ],
+
+        // ], 200);
+
         $ads            = $this->ads();
         $topRated       = $this->topRatedTeachers();
         $userCity       = $this->getUserCity($request);
         $teachersByCity = $this->getTeachersByCity($userCity);
+
         return response()->json([
-            'message'            => 'Home Page Sections ✔️',
-            'top_rated_teachers' => [
-                'name_en' => 'Top Rated Teachers',
-                'name_ar' => "المدرسين الأكثر شهره",
-                'data'    => $topRated,
+            'message'  => 'Home Page Sections ✔️',
+
+            'teachers' => [
+                [
+                    'name_en' => 'Top Rated Teachers',
+                    'name_ar' => 'المدرسين الأكثر شهره',
+                    'data'    => $topRated,
+                ],
+                [
+                    'name_en' => 'Teachers in your city',
+                    'name_ar' => 'المدرسين الأقرب لمنطقتك',
+                    'data'    => $teachersByCity->map(function ($val) {
+                        return [
+                            'id'            => $val->id,
+                            'name_ar'       => $val->getTranslation('name', 'ar'),
+                            'name_en'       => $val->getTranslation('name', 'en'),
+                            'image'         => $val->image ? asset('storage/' . $val->image) : null,
+                            'rating_system' => $val->rating_system ?? 0,
+                            'Courses Count' => $val->teacherCourseOverview->count(),
+                        ];
+                    }),
+                ],
             ],
-            'teachers_by_city'   => [
-                'name_en' => 'Teachers in your city',
-                'name_ar' => "المدرسين الأقرب لمنطقتك",
-                'data'    => $teachersByCity->map(function ($val) {
-                    return [
-                        'id'            => $val->id,
-                        'name_ar'       => $val->getTranslation('name', 'ar'),
-                        'name_en'       => $val->getTranslation('name', 'en'),
-                        'image'         => $val->image ? asset('storage/' . $val->image) : null,
-                        'Courses Count' => $val->teacherCourseOverview->count(),
-                    ];
-                }),
-            ],
-            'Centers'            => [
+
+            'Centers'  => [
                 'name_en' => 'Centers',
-                'name_ar' => "المراكز التعليميه",
+                'name_ar' => 'المراكز التعليميه',
                 'data'    => $this->centers(),
             ],
-            'ads'                => [
+
+            'ads'      => [
                 'name_en' => 'Advertisements',
-                'name_ar' => "الإعلانات",
+                'name_ar' => 'الإعلانات',
                 'data'    => $ads,
             ],
 
         ], 200);
+
     } // teachersByCities
 
 }
