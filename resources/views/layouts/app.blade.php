@@ -39,7 +39,7 @@
             background: var(--bs-dark);
             z-index: 1000;
             padding: 10px;
-          
+
         }
     </style>
 </head>
@@ -68,9 +68,7 @@
 
     <script>
         var ctx1 = document.getElementById("chart-line").getContext("2d");
-
         var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
-
         gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
         gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
         gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');

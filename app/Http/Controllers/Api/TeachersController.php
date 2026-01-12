@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -52,11 +53,6 @@ class TeachersController extends Controller
             ];
         }
         return $data;
-          // return response()->json([
-          //     'message' => 'Top Rated Teachers ✔️',
-          //     'count' => $teachers->count(),
-          //     'data' => $data
-          // ], 200);
     } //Top reated teachers
 
     public function getUserCity(Request $request)
@@ -76,46 +72,6 @@ class TeachersController extends Controller
 
     public function homePage(Request $request)
     {
-
-        // $ads            = $this->ads();
-        // $topRated       = $this->topRatedTeachers();
-        // $userCity       = $this->getUserCity($request);
-        // $teachersByCity = $this->getTeachersByCity($userCity);
-        // return response()->json([
-        //     'message'  => 'Home Page Sections ✔️',
-        //     'teachers' =>
-        //     [
-
-        //         'name_en' => 'Top Rated Teachers',
-        //         'name_ar' => "المدرسين الأكثر شهره",
-        //         'data'    => $topRated,
-
-        //         'name_en' => 'Teachers in your city',
-        //         'name_ar' => "المدرسين الأقرب لمنطقتك",
-        //         'data'    => $teachersByCity->map(function ($val) {
-        //             return [
-        //                 'id'            => $val->id,
-        //                 'name_ar'       => $val->getTranslation('name', 'ar'),
-        //                 'name_en'       => $val->getTranslation('name', 'en'),
-        //                 'image'         => $val->image ? asset('storage/' . $val->image) : null,
-        //                 'Courses Count' => $val->teacherCourseOverview->count(),
-        //             ];
-        //         }),
-        //     ],
-        //     'Centers'  =>
-        //     [
-        //         'name_en' => 'Centers',
-        //         'name_ar' => "المراكز التعليميه",
-        //         'data'    => $this->centers(),
-        //     ],
-        //     [
-        //         'name_en' => 'Advertisements',
-        //         'name_ar' => "الإعلانات",
-        //         'data'    => $ads,
-        //     ],
-
-        // ], 200);
-
         $ads            = $this->ads();
         $topRated       = $this->topRatedTeachers();
         $userCity       = $this->getUserCity($request);
@@ -151,7 +107,6 @@ class TeachersController extends Controller
                 'name_ar' => 'المراكز التعليميه',
                 'data'    => $this->centers(),
             ],
-
             'ads'      => [
                 'name_en' => 'Advertisements',
                 'name_ar' => 'الإعلانات',
@@ -159,7 +114,6 @@ class TeachersController extends Controller
             ],
 
         ], 200);
-
     } // teachersByCities
 
 }
