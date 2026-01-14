@@ -32,8 +32,6 @@ class OtpService
     public function sendOtp($identifier)
     {
         $otp = $this->createOtp($identifier);
-
-        // 🔵 مثال إرسال إيميل (تقدر تبدله SMS)
         Mail::to($identifier)->send(new MailsSendOtpMail($otp));
 
         return $otp; // رجّعه علشان تستخدمه في Testing لو عايز

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\EducationStage;
 use App\Models\SecondaryBranch;
 use App\Models\SecondaryGrade;
 use App\Models\SecondarySpecialization;
@@ -11,6 +12,10 @@ use App\Models\secondary_student_details;
 use App\Models\StageGrade;
 use App\Models\Students;
 use App\Models\StudentsLogs;
+use App\Models\UniversityAcademicYear;
+use App\Models\UniversityFaculty;
+use App\Models\UniversityInstitute;
+use App\Models\universty_student_details;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +47,6 @@ class AuthController extends Controller
                 ], 409);
             }
         }
-
         $otp = $this->sendOtp($request);
         if ($otp) {
             return response()->json([
@@ -50,7 +54,7 @@ class AuthController extends Controller
                 'message' => 'OTP has been sent to your email. Please check your inbox.',
             ]);
         }
-    }
+    } //Login
 
     public function loginSendOtp(Request $request, OtpService $otpService)
     {
@@ -83,7 +87,7 @@ class AuthController extends Controller
                 'student' => $student,
             ]);
         }
-    }
+    } //LoginSendOtp
 
     // ✅ Get logged-in student info
     public function profile(Request $request)
@@ -112,11 +116,11 @@ class AuthController extends Controller
             'status'  => true,
             'student' => $student,
         ]);
-    }
+    } //Profile
 
-    // ✅ Logout student (revoke token)
+                                               // ✅ Logout student (revoke token)
     public function logout(Request $request)
-    {
+    { //Logout
         $user    = $request->user();
         $id      = $user->id;
         $student = students::find($id);
@@ -160,9 +164,107 @@ class AuthController extends Controller
         }
     } // sendAnotherOneOtp
       // ✅ Store student Register
+      // public function store(Request $request, OtpService $otpService)
+      // {
+      //     // Validate basic student data
+      //     $request->validate([
+      //         'name'           => 'required',
+      //         'email'          => 'required|email|unique:students,email',
+      //         'password'       => 'required|min:6',
+      //         'governorate_id' => 'required|exists:governors,id',
+      //         'city_id'        => 'required|exists:cities,id',
+      //     ]);
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $educationMap     = config('education_phases');
+    //         $educationTypeKey = $request->education_type_key;
+
+    //         if (! isset($educationMap[$educationTypeKey])) {
+    //             return response()->json(['message' => 'Invalid education phase key.'], 422);
+    //         }
+
+    //         $morphClass = $educationMap[$educationTypeKey];
+    //         $morphId    = null;
+
+    //         // Secondary education branch
+    //         if ($educationTypeKey === 'secondary') {
+
+    //             $request->validate([
+    //                 'secondary_track_key'          => ['required', 'exists:secondary_tracks,track_id'],
+    //                 'secondary_grade_key'          => ['required', 'exists:secondary_grades,grade_id'],
+    //                 'secondary_branch_key'         => ['nullable', 'exists:secondary_branches,branch_id'],
+    //                 'secondary_sub_branch_key'     => ['nullable', Rule::exists('secondary_sub_branches', 'sub_branch_id')],
+    //                 'secondary_specialization_key' => ['nullable', 'exists:secondary_specializations,spec_id'],
+    //             ]);
+
+    //             $trackId     = SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id');
+    //             $gradeId     = SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id');
+    //             $branchId    = $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null;
+    //             $specId      = $request->secondary_specialization_key ? SecondarySpecialization::where('spec_id', $request->secondary_specialization_key)->value('id') : null;
+    //             $subBranchId = $request->secondary_sub_branch_key
+    //                 ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id')
+    //                 : null;
+
+    //             $secondaryDetail = secondary_student_details::create([
+    //                 'secondary_track_id'          => $trackId,
+    //                 'secondary_grade_id'          => $gradeId,
+    //                 'secondary_branch_id'         => $branchId,
+    //                 'secondary_sub_branch_id'     => $subBranchId,
+    //                 'secondary_specialization_id' => $specId,
+    //             ]);
+
+    //             $morphId = $secondaryDetail->id;
+    //         } else if ($educationTypeKey === 'primary' || $educationTypeKey === 'preparatory') {
+    //             $validated = $request->validate([
+    //                 'education_id' => ['required', 'string', Rule::exists('stage_grades', 'grade_id')],
+    //             ]);
+
+    //             $grade   = StageGrade::where('grade_id', $request->education_id)->first();
+    //             $morphId = $grade->id;
+    //         }
+
+    //         // 3️⃣ Create the student
+    //         $student = Students::create([
+    //             'name'           => $request->name,
+    //             'email'          => $request->email,
+    //             'password'       => bcrypt($request->password),
+    //             'governorate_id' => $request->governorate_id,
+    //             'city_id'        => $request->city_id,
+    //             'address'        => $request->address,
+    //             'phone'          => $request->phone ?? null,
+    //             'parent_phone'   => $request->parent_phone ?? null,
+    //             'date_of_birth'  => $request->date_of_birth ?? null,
+    //             'type_of_study'  => $request->type_of_study ?? null,
+    //             'gender'         => $request->gender ?? null,
+    //             'education_id'   => $morphId,
+    //             'education_type' => $morphClass,
+    //         ]);
+
+    //         $otp = $this->sendOtp($request);
+    //         if ($otp) {
+    //             DB::commit();
+    //         }
+
+    //         return response()->json([
+    //             'status'  => true,
+    //             'message' => 'OTP has been sent to your email. Please check your inbox to confirm your registration.',
+    //             // 'token'       => $token,
+    //             // 'student' => $student,
+    //             // 'Student_log' => $studentLog,
+    //         ], 201);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'status' => false,
+    //             'error'  => $e->getMessage(),
+    //         ], 422);
+    //     }
+    // }
+
     public function store(Request $request, OtpService $otpService)
     {
-        // Validate basic student data
+        // 1. Validation الأساسي
         $request->validate([
             'name'           => 'required',
             'email'          => 'required|email|unique:students,email',
@@ -173,8 +275,6 @@ class AuthController extends Controller
 
         DB::beginTransaction();
         try {
-
-            // 2️⃣ معالجة المرحلة التعليمية بالكامل نفس كودك
             $educationMap     = config('education_phases');
             $educationTypeKey = $request->education_type_key;
 
@@ -185,9 +285,8 @@ class AuthController extends Controller
             $morphClass = $educationMap[$educationTypeKey];
             $morphId    = null;
 
-            // Secondary education branch
+            // --- التعامل مع المرحلة الثانوية ---
             if ($educationTypeKey === 'secondary') {
-
                 $request->validate([
                     'secondary_track_key'          => ['required', 'exists:secondary_tracks,track_id'],
                     'secondary_grade_key'          => ['required', 'exists:secondary_grades,grade_id'],
@@ -196,28 +295,58 @@ class AuthController extends Controller
                     'secondary_specialization_key' => ['nullable', 'exists:secondary_specializations,spec_id'],
                 ]);
 
-                $trackId     = SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id');
-                $gradeId     = SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id');
-                $branchId    = $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null;
-                $specId      = $request->secondary_specialization_key ? SecondarySpecialization::where('spec_id', $request->secondary_specialization_key)->value('id') : null;
-                $subBranchId = $request->secondary_sub_branch_key
-                    ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id')
-                    : null;
-
                 $secondaryDetail = secondary_student_details::create([
-                    'secondary_track_id'          => $trackId,
-                    'secondary_grade_id'          => $gradeId,
-                    'secondary_branch_id'         => $branchId,
-                    'secondary_sub_branch_id'     => $subBranchId,
-                    'secondary_specialization_id' => $specId,
+                    'secondary_track_id'          => SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id'),
+                    'secondary_grade_id'          => SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id'),
+                    'secondary_branch_id'         => $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null,
+                    'secondary_sub_branch_id'     => $request->secondary_sub_branch_key ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id') : null,
+                    'secondary_specialization_id' => $request->secondary_specialization_key ? SecondarySpecialization::where('spec_id', $request->secondary_specialization_key)->value('id') : null,
                 ]);
-
                 $morphId = $secondaryDetail->id;
-            } else {
-                $validated = $request->validate([
+
+                // --- التعامل مع المرحلة الجامعية (التعديل الجديد) ---
+            } elseif ($educationTypeKey === 'undergraduate') {
+                $universityType = $request->university_type;
+                if (! in_array($universityType, ['institute', 'faculty'])) {
+                    return response()->json(['message' => 'Invalid university type.'], 422);
+                }
+
+                $yearId = UniversityAcademicYear::where('year_number', $request->university_academic_year_key)
+                    ->firstOrFail(['id'])->id;
+                $educationStageId = EducationStage::where('stage_id', 'undergraduate')->firstOrFail(['id'])->id;
+                $facultyId        = null;
+                $instituteId      = null;
+
+                $rules = [
+                    'university_academic_year_key' => 'nullable|exists:university_academic_years,id',
+                ];
+
+                if ($universityType === 'institute') {
+                    // $rules['university_institute_key'] = 'required|exists:university_institutes,id';
+
+                    $instituteId = UniversityInstitute::where('institute_id', $request->university_institute_key)
+                        ->firstOrFail(['id'])->id;
+                } elseif ($universityType === 'faculty') {
+                    // $rules['university_faculty_key'] = 'required|exists:university_faculties,id';
+                    $facultyId                       = UniversityFaculty::where('faculty_id', $request->university_faculty_key)
+                        ->firstOrFail(['id'])->id;
+                }
+
+                $request->validate($rules);
+
+                $universityDetail = universty_student_details::create([
+                    'education_stage_id'          => $educationStageId,
+                    'university_faculty_id'       => $facultyId,
+                    'university_institute_id'     => $instituteId,
+                    'university_academic_year_id' => $yearId,
+                ]);
+                $morphId = $universityDetail->id;
+
+                // --- ابتدائي وإعدادي ---
+            } elseif ($educationTypeKey === 'primary' || $educationTypeKey === 'preparatory') {
+                $request->validate([
                     'education_id' => ['required', 'string', Rule::exists('stage_grades', 'grade_id')],
                 ]);
-
                 $grade   = StageGrade::where('grade_id', $request->education_id)->first();
                 $morphId = $grade->id;
             }
@@ -244,19 +373,11 @@ class AuthController extends Controller
                 DB::commit();
             }
 
-            return response()->json([
-                'status'  => true,
-                'message' => 'OTP has been sent to your email. Please check your inbox to confirm your registration.',
-                // 'token'       => $token,
-                // 'student' => $student,
-                // 'Student_log' => $studentLog,
-            ], 201);
+            return response()->json(['status' => true, 'message' => 'OTP sent successfully.'], 201);
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'error'  => $e->getMessage(),
-            ], 422);
+            return response()->json(['status' => false, 'error' => $e->getMessage()], 422);
         }
     }
 
@@ -338,4 +459,5 @@ class AuthController extends Controller
             'message' => 'Email is available',
         ]);
     }
+
 }

@@ -35,17 +35,18 @@ Route::prefix('v1')->group(function () {
             Route::get('/teachers-by-cities', [TeachersController::class, 'teachersByCities']); //teachers-by-cities
             Route::post('/join-quiz', [QuizController::class, 'joinQuiz']);                     //quiz
             Route::post('/close-quiz', [QuizController::class, 'closeQuiz']);                   //quiz
-            Route::post('/search', [searchController::class, 'search']);//search
-            Route::get('/home-page', [TeachersController::class, 'homePage']); //home-page
-
+            Route::post('/search', [searchController::class, 'search']);                        //search
+            Route::get('/home-page', [TeachersController::class, 'homePage']);                  //home-page
+            Route::post('/teacher-profile', [TeachersController::class, 'TeacherProfile']);     //teacher-profile
+            Route::post('/center-profile', [TeachersController::class, 'CenterProfile']);     //teacher-courses
         });
     }); //End Students
     Route::prefix('quiz')->group(function () {
         Route::get('/index', [QuizController::class, 'index']); //quiz
     });
-    // Route::get('/test', function () {
-    //     return response()->json(['message' => 'API is working 👌✔️ Welcome to Mindly API!']);
-    // });
+    Route::get('/test', function () {
+        return response()->json(['message' => 'API is working 👌✔️ Welcome to Mindly API!']);
+    });
 
                                                                                                 //Dosen't need token
     Route::get('/countries', [CountriesController::class, 'index']);                            //countries

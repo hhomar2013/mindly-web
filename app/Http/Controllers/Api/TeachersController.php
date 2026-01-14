@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -115,5 +114,92 @@ class TeachersController extends Controller
 
         ], 200);
     } // teachersByCities
+
+    public function TeacherProfile(Request $request)
+    {
+        $teacher_id = $request->teacher_id;
+        $teacher    = Teacher::query()->where('id', $teacher_id)
+            ->with('teacherCourseOverview', 'cities', 'cities.governorates')
+            ->first();
+        if (! $teacher) {
+            return response()->json([
+                'message' => 'Teacher not found ❌',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Teacher Profile ✔️',
+            'data'    => [
+                'id'            => $teacher->id,
+                'name_ar'       => $teacher->getTranslation('name', 'ar'),
+                'name_en'       => $teacher->getTranslation('name', 'en'),
+                'image'         => $teacher->image ? asset('storage/' . $teacher->image) : null,
+                'address'       => $teacher->address,
+                'phone'         => $teacher->phone,
+                'decription'    => $teacher->description,
+                'governorate'   => $teacher->cities && $teacher->cities->governorates ? [
+                    'id'      => $teacher->cities->governorates->id,
+                    'name_ar' => $teacher->cities->governorates->getTranslation('name', 'ar'),
+                    'name_en' => $teacher->cities->governorates->getTranslation('name', 'en'),
+                ] : null,
+                'city'          => $teacher->cities ? [
+                    'id'      => $teacher->cities->id,
+                    'name_ar' => $teacher->cities->getTranslation('name', 'ar'),
+                    'name_en' => $teacher->cities->getTranslation('name', 'en'),
+                ] : null,
+
+                'Courses Count' => $teacher->teacherCourseOverview->count(),
+                'courses'       => $teacher->teacherCourseOverview->map(function ($course) {
+                    return [
+                        'id'      => $course->id,
+                        'name_ar' => $course->getTranslation('name', 'ar'),
+                        'name_en' => $course->getTranslation('name', 'en'),
+                        'image'   => $course->image ? $course->image : null];
+                }),
+                'rating_system' => $teacher->rating_system ?? 0],
+        ], 200);
+    } // TeacherProfile
+
+    public function CenterProfile(Request $request)
+    {
+        $data      = [];
+        $center_id = $request->center_id;
+        $center    = Center::query()->where('id', $center_id)->first();
+        if (! $center) {
+            return response()->json([
+                'message' => 'Center not found ❌',
+            ], 404);
+        }
+        $data = [
+            'id'              => $center->id,
+            'name_ar'         => $center->getTranslation('name', 'ar'),
+            'name_en'         => $center->getTranslation('name', 'en'),
+            'image'           => $center->logo ? asset('storage' . $center->logo) : null,
+            'panner'          => $center->panner ? asset('storage' . $center->panner) : null,
+            'address'         => $center->address,
+            'phone'           => $center->phone,
+            'city'            => $center->cities ? [
+                'id'      => $center->cities->id,
+                'name_ar' => $center->cities->getTranslation('name', 'ar'),
+                'name_en' => $center->cities->getTranslation('name', 'en'),
+            ] : null,
+            'welcome_message' => $center->welcome_message,
+            'main_info'       => $center->main_info,
+            'teachers_count'  => $center->centerTeachers->count(),
+            'teachers'        => $center->centerTeachers->map(function ($teacher) {
+                return [
+                    'id'      => $teacher->teachers->id,
+                    'name_ar' => $teacher->teachers->getTranslation('name', 'ar'),
+                    'name_en' => $teacher->teachers->getTranslation('name', 'en'),
+                    'image'   => $teacher->teachers->image ? asset('storage/' . $teacher->teachers->image) : null,
+                ];
+            }),
+        ];
+        return response()->json([
+            'message' => 'Center Profile ✔️',
+            'data'    => $data,
+        ], 200);
+
+    }
 
 }

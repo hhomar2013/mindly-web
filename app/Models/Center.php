@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +16,14 @@ class Center extends Model
         return $this->hasOne(center_wallets::class);
     }
 
-    public function cities(){
-        return $this->belongsTo(City::class,'city_id');
+    public function cities()
+    {
+        return $this->belongsTo(City::class, 'city_id');
     }
+
+    public function centerTeachers()
+    {
+        return $this->hasMany(centerTeacher::class, 'center_id', 'id');
+    }
+
 }

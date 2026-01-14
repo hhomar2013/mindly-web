@@ -9,6 +9,7 @@ use App\Models\StageGrade;
 use App\Models\Teacher;
 use App\Models\teacher_secondary_details;
 use App\Models\TeacherCourseOverview;
+use App\Models\universty_student_details;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -42,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
             'stage_grades' => StageGrade::class,
             'secondary'    => secondary_student_details::class,
             'secondary_teacher_details' => teacher_secondary_details::class,
+            'university_student_details' => universty_student_details::class,
             'ads_teacher' => Teacher::class,
             'ads_center' => Center::class,
             'ads_course' => TeacherCourseOverview::class,
