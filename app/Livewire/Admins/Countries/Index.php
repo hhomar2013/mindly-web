@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\Admins\Countries;
 
+use App\Helpers\WithPreviewHelper;
 use App\Models\Country;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -9,7 +10,7 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination, WithPreviewHelper;
     use WithFileUploads;
     #[Layout('layouts.app')]
     public $country;

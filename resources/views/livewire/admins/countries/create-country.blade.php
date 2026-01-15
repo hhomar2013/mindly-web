@@ -26,7 +26,7 @@
                           <label for="image" class="btn">{{ __('Country Image') }}
                               <input type="file" name="" id="image" wire:model="image" hidden><br>
                               @if ($image)
-                              <img src="{{ $image->temporaryUrl() }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+                              <img src="{{ $this->getPreviewUrl($image) }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
                               @elseif($old_image)
                               <img src="{{ asset('storage/' . $old_image) }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
                               @else

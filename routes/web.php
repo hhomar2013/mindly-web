@@ -2,24 +2,22 @@
 
 use App\Http\Controllers\PayTabsController;
 use App\Livewire\Admins\Ads\AdsIndex;
-use App\Livewire\Admins\Quiz\QuizIndex;
 use App\Livewire\Admins\Cities\Index as CitiesIndex;
 use App\Livewire\Admins\CodeList\CodeListIndex;
 use App\Livewire\Admins\ContentTypes\Index as ContentTypesIndex;
 use App\Livewire\Admins\Countries\Index as CountriesIndex;
 use App\Livewire\Admins\DashboardComponent;
-use App\Livewire\Admins\EducationalCenter\Content\ContentIndex;
 use App\Livewire\Admins\EducationalCenter\Index as EducationalCenter;
 use App\Livewire\Admins\EducationalCenter\Wallet\Index as EducationalCenterWalletIndex;
 use App\Livewire\Admins\Governorate\Index as GovernorateIndex;
 use App\Livewire\Admins\Pdf\CodeList\CodeListPdf;
+use App\Livewire\Admins\Quiz\QuizIndex;
 use App\Livewire\Admins\SocialMediaTypes\Index as SocialMediaTypesIndex;
 use App\Livewire\Admins\Subjects\SubjectIndex;
 use App\Livewire\Admins\Teachers\Courses\Index as TeacherCoursesIndex;
 use App\Livewire\Admins\Teachers\Index as TeachersIndex;
 use App\Livewire\Admins\Teachers\Wallet\Index as TeacherWalletIndex;
 use App\Livewire\Admins\TypeOfSubscription\TosIndex;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -30,30 +28,30 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 Route::group(
     [
         'prefix'     => LaravelLocalization::setLocale(),
-        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
     ],
     function () {
 
         Route::get('/server-time', function () {
             return [
-                'now' => now()->toDateTimeString(),
+                'now'      => now()->toDateTimeString(),
                 'timezone' => config('app.timezone'),
             ];
         });
 
-        //clear Cache
         Route::get('/clear-all', function () {
             Artisan::call('config:clear');
             Artisan::call('cache:clear');
             Artisan::call('view:clear');
-            return "All caches cleared!";
-        });
+            Artisan::call('route:clear');  // بيمسح كاش الروابط اللي ممكن يكون مخزن توقيع قديم
+            Artisan::call('storage:link'); // بيحاول يعمل Link لو مش موجود (احتياطي)
 
+            return "All caches cleared and storage linked!";
+        });
 
         Livewire::setUpdateRoute(function ($handle) {
             return Route::post('/livewire/update', $handle);
         });
-
 
         Route::get('storage-link', function () {
             $target = base_path('storage/app/public');  // المسار الحقيقي داخل مشروعك
@@ -77,7 +75,7 @@ Route::group(
             Route::get('/teachers', TeachersIndex::class)->name('admins.teachers.index');                                                    //Teachers
             Route::get('/social-media-types', SocialMediaTypesIndex::class)->name('admins.socialMediaTypes.index');                          //social media types
             Route::get('/content-types', ContentTypesIndex::class)->name('admins.contentTypes.index');                                       //content types
-            Route::get('/subjects', SubjectIndex::class)->name('admins.subjects.index');                                                    //subjects
+            Route::get('/subjects', SubjectIndex::class)->name('admins.subjects.index');                                                     //subjects
             Route::get('/educational-center-wallets', EducationalCenterWalletIndex::class)->name('admins.educational-center-wallets.index'); //educational center wallets
             Route::get('/teacher-wallets', TeacherWalletIndex::class)->name('admins.teacher-wallets.index');                                 //teacher wallets
             Route::get('/teacher-courses', TeacherCoursesIndex::class)->name('admins.teacher-courses.index');                                //teacher courses
@@ -101,6 +99,5 @@ Route::group(
         });
     }
 );
-
 
 require __DIR__ . '/auth.php';
