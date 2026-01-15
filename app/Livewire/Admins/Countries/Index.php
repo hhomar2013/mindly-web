@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Admins\Countries;
 
 use App\Models\Country;
@@ -16,7 +15,7 @@ class Index extends Component
     public $country;
     public $action = 'index', $update = false;
     public $name_ar, $name_en;
-    public $image;
+    public $image, $old_image;
     public $code;
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['deleteCountry' => 'delete'];
@@ -35,13 +34,13 @@ class Index extends Component
     public function edit($id)
     {
         $this->country = Country::find($id);
-        $this->name_ar    = $this->country->getTranslation('name', 'ar');
-        $this->name_en    = $this->country->getTranslation('name', 'en');
+        $this->name_ar = $this->country->getTranslation('name', 'ar');
+        $this->name_en = $this->country->getTranslation('name', 'en');
         $this->code    = $this->country->code;
         $this->action  = 'create';
         $this->update  = true;
         if ($this->country->image) {
-            $this->image = $this->country->image;
+            $this->old_image = $this->country->image;
         }
     }
 
@@ -50,36 +49,44 @@ class Index extends Component
         $this->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'code' => 'required|string|max:10',
+            'code'    => 'required|string|max:10',
         ]);
 
         $imageName = $this->image ? $this->image->store('countries', 'public') : null;
         Country::create([
-            'name' => [
+            'name'  => [
                 'ar' => $this->name_ar,
-                'en' => $this->name_en
+                'en' => $this->name_en,
             ],
-            'code' => $this->code,
+            'code'  => $this->code,
             'image' => $imageName,
         ]);
-        $this->reset(['name_ar','name_en', 'image', 'country', 'code']);
+        $this->reset(['name_ar', 'name_en', 'image', 'country', 'code']);
         $this->action = 'index';
         $this->dispatch('message', message: __('Country created successfully.'));
     }
 
-    public function update()
+    public function updateCountry()
     {
         $this->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:10',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'code'    => 'required|string|max:10',
         ]);
-        $imageName = $this->image && !$this->update ? $this->image->store('countries', 'public') : ($this->update ? $this->country->image : null);
+
+        if ($this->image) {
+            $imageName = $this->image->store('countries', 'public');
+        } elseif ($this->old_image) {
+            $imageName = $this->old_image;
+        } else {
+            $imageName = null;
+        }
         $this->country->update([
-            'name' => ['ar' => $this->name_ar, 'en' => $this->name_en],
-            'code' => $this->code,
+            'name'  => ['ar' => $this->name_ar, 'en' => $this->name_en],
+            'code'  => $this->code,
             'image' => $imageName,
         ]);
-        $this->reset(['name', 'image', 'country', 'code']);
+        $this->reset(['name_ar', 'name_en', 'image', 'old_image', 'country', 'code']);
         $this->action = 'index';
         $this->dispatch('message', message: __('Country updated successfully.'));
     }

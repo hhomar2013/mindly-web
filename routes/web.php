@@ -33,7 +33,7 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () {
-        
+
         Route::get('/server-time', function () {
             return [
                 'now' => now()->toDateTimeString(),
