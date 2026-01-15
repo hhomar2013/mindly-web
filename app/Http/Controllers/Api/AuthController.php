@@ -163,104 +163,7 @@ class AuthController extends Controller
             ], 500);
         }
     } // sendAnotherOneOtp
-      // ✅ Store student Register
-      // public function store(Request $request, OtpService $otpService)
-      // {
-      //     // Validate basic student data
-      //     $request->validate([
-      //         'name'           => 'required',
-      //         'email'          => 'required|email|unique:students,email',
-      //         'password'       => 'required|min:6',
-      //         'governorate_id' => 'required|exists:governors,id',
-      //         'city_id'        => 'required|exists:cities,id',
-      //     ]);
 
-    //     DB::beginTransaction();
-    //     try {
-    //         $educationMap     = config('education_phases');
-    //         $educationTypeKey = $request->education_type_key;
-
-    //         if (! isset($educationMap[$educationTypeKey])) {
-    //             return response()->json(['message' => 'Invalid education phase key.'], 422);
-    //         }
-
-    //         $morphClass = $educationMap[$educationTypeKey];
-    //         $morphId    = null;
-
-    //         // Secondary education branch
-    //         if ($educationTypeKey === 'secondary') {
-
-    //             $request->validate([
-    //                 'secondary_track_key'          => ['required', 'exists:secondary_tracks,track_id'],
-    //                 'secondary_grade_key'          => ['required', 'exists:secondary_grades,grade_id'],
-    //                 'secondary_branch_key'         => ['nullable', 'exists:secondary_branches,branch_id'],
-    //                 'secondary_sub_branch_key'     => ['nullable', Rule::exists('secondary_sub_branches', 'sub_branch_id')],
-    //                 'secondary_specialization_key' => ['nullable', 'exists:secondary_specializations,spec_id'],
-    //             ]);
-
-    //             $trackId     = SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id');
-    //             $gradeId     = SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id');
-    //             $branchId    = $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null;
-    //             $specId      = $request->secondary_specialization_key ? SecondarySpecialization::where('spec_id', $request->secondary_specialization_key)->value('id') : null;
-    //             $subBranchId = $request->secondary_sub_branch_key
-    //                 ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id')
-    //                 : null;
-
-    //             $secondaryDetail = secondary_student_details::create([
-    //                 'secondary_track_id'          => $trackId,
-    //                 'secondary_grade_id'          => $gradeId,
-    //                 'secondary_branch_id'         => $branchId,
-    //                 'secondary_sub_branch_id'     => $subBranchId,
-    //                 'secondary_specialization_id' => $specId,
-    //             ]);
-
-    //             $morphId = $secondaryDetail->id;
-    //         } else if ($educationTypeKey === 'primary' || $educationTypeKey === 'preparatory') {
-    //             $validated = $request->validate([
-    //                 'education_id' => ['required', 'string', Rule::exists('stage_grades', 'grade_id')],
-    //             ]);
-
-    //             $grade   = StageGrade::where('grade_id', $request->education_id)->first();
-    //             $morphId = $grade->id;
-    //         }
-
-    //         // 3️⃣ Create the student
-    //         $student = Students::create([
-    //             'name'           => $request->name,
-    //             'email'          => $request->email,
-    //             'password'       => bcrypt($request->password),
-    //             'governorate_id' => $request->governorate_id,
-    //             'city_id'        => $request->city_id,
-    //             'address'        => $request->address,
-    //             'phone'          => $request->phone ?? null,
-    //             'parent_phone'   => $request->parent_phone ?? null,
-    //             'date_of_birth'  => $request->date_of_birth ?? null,
-    //             'type_of_study'  => $request->type_of_study ?? null,
-    //             'gender'         => $request->gender ?? null,
-    //             'education_id'   => $morphId,
-    //             'education_type' => $morphClass,
-    //         ]);
-
-    //         $otp = $this->sendOtp($request);
-    //         if ($otp) {
-    //             DB::commit();
-    //         }
-
-    //         return response()->json([
-    //             'status'  => true,
-    //             'message' => 'OTP has been sent to your email. Please check your inbox to confirm your registration.',
-    //             // 'token'       => $token,
-    //             // 'student' => $student,
-    //             // 'Student_log' => $studentLog,
-    //         ], 201);
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'status' => false,
-    //             'error'  => $e->getMessage(),
-    //         ], 422);
-    //     }
-    // }
 
     public function store(Request $request, OtpService $otpService)
     {
@@ -322,13 +225,10 @@ class AuthController extends Controller
                 ];
 
                 if ($universityType === 'institute') {
-                    // $rules['university_institute_key'] = 'required|exists:university_institutes,id';
-
                     $instituteId = UniversityInstitute::where('institute_id', $request->university_institute_key)
                         ->firstOrFail(['id'])->id;
                 } elseif ($universityType === 'faculty') {
-                    // $rules['university_faculty_key'] = 'required|exists:university_faculties,id';
-                    $facultyId                       = UniversityFaculty::where('faculty_id', $request->university_faculty_key)
+                    $facultyId = UniversityFaculty::where('faculty_id', $request->university_faculty_key)
                         ->firstOrFail(['id'])->id;
                 }
 
@@ -457,6 +357,39 @@ class AuthController extends Controller
             'status'  => true,
             'exists'  => $exists,
             'message' => 'Email is available',
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password'     => 'required',
+            'new_password'         => 'required|min:6|different:current_password',
+            'new_password_confirm' => 'required|same:new_password',
+        ]);
+        $student = $request->user();
+        if (! Hash::check($request->current_password, $student->password)) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Current password is incorrect',
+            ], 422);
+        }
+
+        $student->password = bcrypt($request->new_password);
+        $student->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Password changed successfully',
+        ]);
+    }
+    
+    public function deleteAccount(Request $request)
+    {
+        $request->user()->delete();
+        return response()->json([
+            'status'  => true,
+            'message' => 'Account deleted successfully',
         ]);
     }
 

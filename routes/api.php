@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\enrollController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\searchController;
 use App\Http\Controllers\Api\TeachersController;
+use App\Http\Controllers\Api\TermsAndCondetionsController;
 use Illuminate\Support\Facades\Route;
 
 //Version 1F
@@ -28,7 +29,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/enroll', [enrollController::class, 'enrollCourse']); //enroll
             Route::get('/my-courses', [enrollController::class, 'index']);     //enroll
             Route::post('/reviews', [coursesCotroller::class, 'storeReview']); //reviews
-            Route::get('/profile', [AuthController::class, 'profile']);
+            Route::post('/profile', [AuthController::class, 'profile']);
             Route::post('/update-profile-photo', [AuthController::class, 'updateProfilePhoto']);
             Route::get('/top-rated-teachers', [TeachersController::class, 'topRatedTeachers']); //top-rateds-teachers
             Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']);   //course_lessons
@@ -38,7 +39,9 @@ Route::prefix('v1')->group(function () {
             Route::post('/search', [searchController::class, 'search']);                        //search
             Route::get('/home-page', [TeachersController::class, 'homePage']);                  //home-page
             Route::post('/teacher-profile', [TeachersController::class, 'TeacherProfile']);     //teacher-profile
-            Route::post('/center-profile', [TeachersController::class, 'CenterProfile']);     //teacher-courses
+            Route::post('/center-profile', [TeachersController::class, 'CenterProfile']);       //Center-profile
+            Route::post('/change-password', [AuthController::class, 'changePassword']);         //change-password
+            Route::post('/delete-account', [AuthController::class, 'deleteAccount']);
         });
     }); //End Students
     Route::prefix('quiz')->group(function () {
@@ -48,11 +51,11 @@ Route::prefix('v1')->group(function () {
         return response()->json(['message' => 'API is working 👌✔️ Welcome to Mindly API!']);
     });
 
-                                                                                                //Dosen't need token
+    //Dosen't need token
     Route::get('/countries', [CountriesController::class, 'index']);                            //countries
     Route::get('/academic-structure', [AcademicDataController::class, 'getAcademicStructure']); //academic-structure
     Route::get('/courses', [coursesCotroller::class, 'index']);                                 //courses
 
     Route::get('/ads', [adsController::class, 'index']); //ads
-
+    Route::get('/terms-and-condetions', [TermsAndCondetionsController::class, 'index']);
 }); //End Version 1

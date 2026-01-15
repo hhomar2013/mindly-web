@@ -94,7 +94,7 @@
                             <strong>{{ __('Ads Image') }}</strong>
                             <div class="mt-3 position-relative d-inline-block">
                                 @if ($image)
-                                <img src="{{ $image->temporaryUrl() }}" class="rounded shadow" style="width: 200px; height: 200px; object-fit: cover;">
+                                <img src="{{ $this->getPreviewUrl($image) }}" class="rounded shadow" style="width: 200px; height: 200px; object-fit: cover;">
                                 @elseif($old_image)
                                 <img src="{{ asset('storage/' . $old_image) }}" class="rounded shadow" style="width: 200px; height: 200px; object-fit: cover;">
                                 @else

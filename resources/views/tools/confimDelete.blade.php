@@ -17,3 +17,23 @@
         })
     }
 </script>
+
+
+<script>
+    function confirm(id, method = 'delete') {
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: "لا يمكنك التراجع بعد هذا الإجراء!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم ✔️',
+            cancelButtonText: 'إلغاء❌'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch(method, { id: id });
+            }
+        })
+    }
+</script>

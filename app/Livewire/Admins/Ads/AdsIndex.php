@@ -2,6 +2,7 @@
 namespace App\Livewire\Admins\Ads;
 
 use App\Helpers\switchActions;
+use App\Helpers\WithPreviewHelper;
 use App\Models\ads;
 use App\Models\Center;
 use App\Models\Teacher;
@@ -12,7 +13,7 @@ use Livewire\WithFileUploads;
 
 class AdsIndex extends Component
 {
-    use switchActions, WithFileUploads;
+    use switchActions, WithFileUploads , WithPreviewHelper;
 
     public array $types = ['sliders', 'popup'];
     public array $from  = ['in', 'out'];

@@ -15,16 +15,14 @@
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" /> <!-- CSS Files -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> <!-- CSS Files -->
 
     @if (app()->getLocale() == 'ar')
-        <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard-rtl.css') }}" rel="stylesheet" />
-        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet"> --}}
+    <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard-rtl.css') }}" rel="stylesheet" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet"> --}}
     @else
-        <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
-        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
+    <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
     @endif
 
 
@@ -41,7 +39,9 @@
             padding: 10px;
 
         }
+
     </style>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 </head>
 
 <body class="g-sidenav-show bg-gray-100  {{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
@@ -73,79 +73,80 @@
         gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
         gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
         new Chart(ctx1, {
-            type: "line",
-            data: {
-                labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                    label: "Mobile apps",
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#5e72e4",
-                    backgroundColor: gradientStroke1,
-                    borderWidth: 3,
-                    fill: true,
-                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                    maxBarThickness: 6
+            type: "line"
+            , data: {
+                labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                , datasets: [{
+                    label: "Mobile apps"
+                    , tension: 0.4
+                    , borderWidth: 0
+                    , pointRadius: 0
+                    , borderColor: "#5e72e4"
+                    , backgroundColor: gradientStroke1
+                    , borderWidth: 3
+                    , fill: true
+                    , data: [50, 40, 300, 220, 500, 250, 400, 230, 500]
+                    , maxBarThickness: 6
 
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
+                }]
+            , }
+            , options: {
+                responsive: true
+                , maintainAspectRatio: false
+                , plugins: {
                     legend: {
-                        display: false,
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
-                },
-                scales: {
+                        display: false
+                    , }
+                }
+                , interaction: {
+                    intersect: false
+                    , mode: 'index'
+                , }
+                , scales: {
                     y: {
                         grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            padding: 10,
-                            color: '#fbfbfb',
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
+                            drawBorder: false
+                            , display: true
+                            , drawOnChartArea: true
+                            , drawTicks: false
+                            , borderDash: [5, 5]
                         }
-                    },
-                    x: {
+                        , ticks: {
+                            display: true
+                            , padding: 10
+                            , color: '#fbfbfb'
+                            , font: {
+                                size: 11
+                                , family: "Open Sans"
+                                , style: 'normal'
+                                , lineHeight: 2
+                            }
+                        , }
+                    }
+                    , x: {
                         grid: {
-                            drawBorder: false,
-                            display: false,
-                            drawOnChartArea: false,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            color: '#ccc',
-                            padding: 20,
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
+                            drawBorder: false
+                            , display: false
+                            , drawOnChartArea: false
+                            , drawTicks: false
+                            , borderDash: [5, 5]
                         }
-                    },
-                },
-            },
-        });
+                        , ticks: {
+                            display: true
+                            , color: '#ccc'
+                            , padding: 20
+                            , font: {
+                                size: 11
+                                , family: "Open Sans"
+                                , style: 'normal'
+                                , lineHeight: 2
+                            }
+                        , }
+                    }
+                , }
+            , }
+        , });
+
     </script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
@@ -155,6 +156,7 @@
             }
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
+
     </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
