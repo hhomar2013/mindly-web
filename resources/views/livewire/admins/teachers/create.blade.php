@@ -1,6 +1,27 @@
 <div class="card-body">
+    <style>
+        .banner_image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+    </style>
     <form wire:submit.prevent="save">
         <div class="row">
+            <div class="col-lg-12">
+                <label for="banner" style="width: 100% ; height: 250;">
+                    <input type="file" wire:model="banner" hidden id="banner" />
+                    @if ($banner)
+                        <img src="{{ $this->getPreviewUrl($banner) }}" class="rounded banner_image">
+                    @elseif($old_banner)
+                        <img src="{{ asset('storage/' . $old_banner) }}" class="rounded banner_image">
+                    @else
+                        <img src="{{ asset('assets/img/banner.png') }}" class="rounded banner_image">
+                    @endif
+                </label>
+
+            </div>
+            <hr>
             <div class="col-lg-8">
                 {{-- Row Right Items --}}
                 <div class="row">
@@ -115,7 +136,7 @@
                                 </div>
                             @endforeach
 
-                           
+
                     </div>{{-- End of Social Media Types --}}
                 </div>{{-- End Row Right Items --}}
             </div>
@@ -124,7 +145,7 @@
                     <label for="image" class="btn">{{ __('Teacher Image') }}
                         <input type="file" name="" id="image" wire:model="image" hidden><br>
                         @if ($image)
-                            <img src="{{ $image->temporaryUrl() }}"
+                            <img src="{{ $this->getPreviewUrl($image) }}"
                                 style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
                         @elseif($old_image)
                             <img src="{{ asset('storage/' . $old_image) }}"

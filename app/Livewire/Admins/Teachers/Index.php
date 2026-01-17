@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admins\Teachers;
 
+use App\Helpers\WithPreviewHelper;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\governor;
@@ -19,11 +20,11 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination, WithPreviewHelper;
     use WithFileUploads;
     public $action = 'index';
     public $isEdit = false;
-    public $teacher_id, $name_ar, $name_en, $address, $phone, $image, $old_image, $description, $in_out = FALSE;
+    public $teacher_id, $name_ar, $name_en, $address, $phone, $image, $old_image, $description, $in_out = FALSE, $banner, $old_banner;
     public $country_id, $governor_id, $city_id;
     public $teacherSMList = [];
     protected $listeners = ['refreshTeachers' => 'render', 'deleteTeacher' => 'delete', 'addTeacherSM' => 'addTeacherSM', 'rateTeacher' => 'saveRating'];
@@ -71,7 +72,7 @@ class Index extends Component
     // }
     public function resetForm()
     {
-        $this->reset(['name_ar', 'name_en', 'address', 'phone', 'image', 'description', 'country_id', 'governor_id', 'city_id']);
+        $this->reset(['name_ar', 'name_en', 'address', 'phone', 'image', 'old_image', 'description', 'country_id', 'governor_id', 'city_id', 'banner', 'old_banner']);
     } //reset form
     public function createTeacher()
     {
@@ -96,14 +97,17 @@ class Index extends Component
         ]);
 
         $imageName = $this->image ? $this->image->store('teachers', 'public') : $this->old_image;
+
+        $bunner_path = $this->banner ? $this->banner->store('teachers/banner', 'public') : $this->old_banner;
+
         if ($this->isEdit) {
-            $this->update($this->teacher_id, $imageName);
+            $this->update($this->teacher_id, $imageName, $bunner_path);
         } else {
-            $this->store($imageName);
+            $this->store($imageName, $bunner_path);
         }
     } //save method
 
-    public function store($imageName)
+    public function store($imageName, $bunner_path)
     {
         $teacher =  Teacher::create([
             'name' => [
@@ -112,10 +116,11 @@ class Index extends Component
             ],
             'address' => $this->address,
             'phone' => $this->phone,
-            'image' => $imageName,
+            'image' => $imageName ?? null,
             'description' => $this->description,
             'city_id' => $this->city_id,
             'user_id' => Auth::id(),
+            'banner' => $bunner_path ?? null,
         ]);
         if ($teacher) {
             if ($this->teacherSMList) {
@@ -154,7 +159,7 @@ class Index extends Component
         }
     } //store method
 
-    public function update($id, $imageName)
+    public function update($id, $imageName, $bunner_path)
     {
         $teacher = Teacher::query()->find($id);
         if ($teacher) {
@@ -165,7 +170,8 @@ class Index extends Component
                 ],
                 'address' => $this->address,
                 'phone' => $this->phone,
-                'image' => $imageName,
+                'image' => $imageName ?? null,
+                'banner' => $bunner_path ?? null,
                 'description' => $this->description,
                 'city_id' => $this->city_id,
                 'user_id' => Auth::id(),
@@ -204,6 +210,7 @@ class Index extends Component
         $this->old_image = $teacher->image;
         $this->description = $teacher->description;
         $this->city_id = $teacher->city_id;
+        $this->old_banner = $teacher->banner;
 
         // Set location data
         $city              = City::find($teacher->city_id);

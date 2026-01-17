@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('optional_link')->nullable();
             $table->string('image')->nullable();
+            $table->string('banner')->nullable();
             $table->timestamps();
         });
     }

@@ -24,8 +24,9 @@ class TeachersController extends Controller
                 'address' => $center->address,
                 'governorate' => $center->cities->Governorates,
                 'city' => $center->cities,
-                'image' => $center->image ? asset('storage/' . $center->image) : null,
+                'image' => $center->logo ? asset('storage/' . $center->logo) : null,
                 'main_info' => $center->main_info,
+                'panner' => $center->panner,
                 'welcome_message' => $center->welcome_message,
             ];
         }
