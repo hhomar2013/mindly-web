@@ -29,7 +29,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/enroll', [enrollController::class, 'enrollCourse']); //enroll
             Route::get('/my-courses', [enrollController::class, 'index']);     //enroll
             Route::post('/reviews', [coursesCotroller::class, 'storeReview']); //reviews
-            Route::post('/profile', [AuthController::class, 'profile']);
+            Route::get('/profile', [AuthController::class, 'profile']);
             Route::post('/update-profile-photo', [AuthController::class, 'updateProfilePhoto']);
             Route::get('/top-rated-teachers', [TeachersController::class, 'topRatedTeachers']); //top-rateds-teachers
             Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']);   //course_lessons
@@ -41,7 +41,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/teacher-profile', [TeachersController::class, 'TeacherProfile']);     //teacher-profile
             Route::post('/center-profile', [TeachersController::class, 'CenterProfile']);       //Center-profile
             Route::post('/change-password', [AuthController::class, 'changePassword']);         //change-password
-            Route::post('/delete-account', [AuthController::class, 'deleteAccount']);
+            Route::post('/delete-account', [AuthController::class, 'deleteAccount']);           //delete-account
+            
         });
     }); //End Students
     Route::prefix('quiz')->group(function () {

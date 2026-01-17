@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
@@ -92,6 +94,8 @@ class AuthController extends Controller
     // ✅ Get logged-in student info
     public function profile(Request $request)
     {
+       
+
         $student = $request->user()->load('education');
 
         if ($student->education && isset($student->education->secondary_track_id)) {
@@ -118,7 +122,7 @@ class AuthController extends Controller
         ]);
     } //Profile
 
-                                               // ✅ Logout student (revoke token)
+    // ✅ Logout student (revoke token)
     public function logout(Request $request)
     { //Logout
         $user    = $request->user();
@@ -274,7 +278,6 @@ class AuthController extends Controller
             }
 
             return response()->json(['status' => true, 'message' => 'OTP sent successfully.'], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => false, 'error' => $e->getMessage()], 422);
@@ -383,7 +386,7 @@ class AuthController extends Controller
             'message' => 'Password changed successfully',
         ]);
     }
-    
+
     public function deleteAccount(Request $request)
     {
         $request->user()->delete();
@@ -392,5 +395,4 @@ class AuthController extends Controller
             'message' => 'Account deleted successfully',
         ]);
     }
-
 }

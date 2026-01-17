@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -13,7 +14,22 @@ class TeachersController extends Controller
     public function centers()
     {
         $centers = Center::query()->where('state', 1)->get();
-        return $centers;
+        $data = [];
+        foreach ($centers as $center) {
+            $data[] = [
+                'id'   => $center->id,
+                'name_ar' => $center->getTranslation('name', 'ar'),
+                'name_en' => $center->getTranslation('name', 'ar'),
+                'phone' => $center->phone,
+                'address' => $center->address,
+                'governorate' => $center->cities->Governorates,
+                'city' => $center->cities,
+                'image' => $center->image ? asset('storage/' . $center->image) : null,
+                'main_info' => $center->main_info,
+                'welcome_message' => $center->welcome_message,
+            ];
+        }
+        return $data;
     }
 
     public function ads()
@@ -154,9 +170,11 @@ class TeachersController extends Controller
                         'id'      => $course->id,
                         'name_ar' => $course->getTranslation('name', 'ar'),
                         'name_en' => $course->getTranslation('name', 'en'),
-                        'image'   => $course->image ? $course->image : null];
+                        'image'   => $course->image ? $course->image : null
+                    ];
                 }),
-                'rating_system' => $teacher->rating_system ?? 0],
+                'rating_system' => $teacher->rating_system ?? 0
+            ],
         ], 200);
     } // TeacherProfile
 
@@ -199,7 +217,5 @@ class TeachersController extends Controller
             'message' => 'Center Profile ✔️',
             'data'    => $data,
         ], 200);
-
     }
-
 }
