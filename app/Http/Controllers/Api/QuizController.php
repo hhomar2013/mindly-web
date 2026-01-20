@@ -13,6 +13,28 @@ use Illuminate\Support\Facades\Auth;
 class QuizController extends Controller
 {
 
+
+    public function instructions($id)
+    {
+        $exam = exam::query()->with('questions')->find($id);
+        if (!$exam) {
+            return response()->json([
+                'message' => __('Quiz not found'),
+            ], 404);
+        }
+        return response()->json([
+            'message' => __('Quiz instructions'),
+            'data' => $exam ? [
+                'title' => $exam->title,
+                'duration' => $exam->duration,
+                'questions_count' => $exam->questions->count(),
+                'total_degrees' => $exam->questions->sum('score'),
+                'instructions' => "If you exit the application for any reason the quiz will be submitted automatically",
+            ] : []
+        ], 200);
+    }
+
+
     private function checkIfStudentJoiendQuiz($id, $user)
     {
         $studentExam = student_exam::query()

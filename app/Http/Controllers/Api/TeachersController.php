@@ -151,6 +151,7 @@ class TeachersController extends Controller
                 'name_ar'       => $teacher->getTranslation('name', 'ar'),
                 'name_en'       => $teacher->getTranslation('name', 'en'),
                 'image'         => $teacher->image ? asset('storage/' . $teacher->image) : null,
+                'banner'        => $teacher->banner ? asset('storage/' . $teacher->banner) : null,
                 'address'       => $teacher->address,
                 'phone'         => $teacher->phone,
                 'decription'    => $teacher->description,

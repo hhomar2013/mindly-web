@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CountriesController;
 use App\Http\Controllers\Api\coursesCotroller;
 use App\Http\Controllers\Api\enrollController;
+use App\Http\Controllers\Api\MainDataController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\searchController;
 use App\Http\Controllers\Api\TeachersController;
@@ -34,6 +35,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/top-rated-teachers', [TeachersController::class, 'topRatedTeachers']); //top-rateds-teachers
             Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']);   //course_lessons
             Route::get('/teachers-by-cities', [TeachersController::class, 'teachersByCities']); //teachers-by-cities
+            Route::get('/quiz-instructions/{id}', [QuizController::class, 'instructions']);    //quiz-instructions
             Route::post('/join-quiz', [QuizController::class, 'joinQuiz']);                     //quiz
             Route::post('/close-quiz', [QuizController::class, 'closeQuiz']);                   //quiz
             Route::post('/search', [searchController::class, 'search']);                        //search
@@ -42,7 +44,6 @@ Route::prefix('v1')->group(function () {
             Route::post('/center-profile', [TeachersController::class, 'CenterProfile']);       //Center-profile
             Route::post('/change-password', [AuthController::class, 'changePassword']);         //change-password
             Route::post('/delete-account', [AuthController::class, 'deleteAccount']);           //delete-account
-            
         });
     }); //End Students
     Route::prefix('quiz')->group(function () {
@@ -59,4 +60,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/ads', [adsController::class, 'index']); //ads
     Route::get('/terms-and-condetions', [TermsAndCondetionsController::class, 'index']);
+    Route::get('/main-data', [MainDataController::class, 'index']); //Main data of platform
 }); //End Version 1
