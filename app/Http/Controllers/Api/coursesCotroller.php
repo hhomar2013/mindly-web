@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -113,14 +114,16 @@ class coursesCotroller extends Controller
                         ] : null,
                     ],
                 ] : null,
-                'lessons'     => $course->map(function ($lesson) {
+                'lessons' => $course->map(function ($lesson) {
                     return [
                         'id'      => $lesson->id,
                         'name_ar' => $lesson->getTranslation('name', 'ar'),
                         'name_en' => $lesson->getTranslation('name', 'en'),
                         'content' => $lesson->CourseLessonContent->map(function ($content) {
                             $type = $content->contentType?->type;
-                            return [
+
+                            // 1. تعريف البيانات الأساسية أولاً
+                            $result = [
                                 'id'          => $content->id,
                                 'ContentType' => $content->contentType ? [
                                     'id'      => $content->contentType->id,
@@ -131,8 +134,16 @@ class coursesCotroller extends Controller
                                 ] : null,
                                 'name_ar'     => $content->getTranslation('name', 'ar'),
                                 'name_en'     => $content->getTranslation('name', 'en'),
-                                'link'        => $type === 'link' || $type === 'quiz' ? $content->link : asset($content->link),
                             ];
+
+                            // 2. تطبيق الشرط لتحديد اسم المفتاح والقيمة
+                            if ($type === 'quiz') {
+                                $result['exam_id'] = $content->link;
+                            } else {
+                                $result['link'] = asset($content->link);
+                            }
+
+                            return $result;
                         }),
                     ];
                 }),
