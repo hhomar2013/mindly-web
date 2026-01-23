@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PayTabsController;
+use App\Http\Controllers\website\HomeController;
 use App\Livewire\Admins\Ads\AdsIndex;
 use App\Livewire\Admins\Cities\Index as CitiesIndex;
 use App\Livewire\Admins\CodeList\CodeListIndex;
@@ -64,13 +65,18 @@ Route::group(
             symlink($target, $link);
             return 'Storage link created successfully!';
         });
+
+        Route::middleware('guest:web')->group(function () {
+            Route::get('/', [HomeController::class, 'index'])->name('website.home');
+        });
+
         Route::middleware('auth:web')->group(function () {
 
-            Route::get('/', function () {
-                return redirect()->intended(Auth::check() ? route('dashboard') : route('login'));
-            });
+            // Route::get('/', function () {
+            //     return redirect()->intended(Auth::check() ? route('dashboard') : route('login'));
+            // });
             Route::get('dashboard', DashboardComponent::class)->name('dashboard');
-            Route::get('/users',UsersIndex::class)->name('admins.users.index');                                                    //dashboard
+            Route::get('/users', UsersIndex::class)->name('admins.users.index');                                                             //dashboard
             Route::get('/countries', CountriesIndex::class)->name('admins.countries.index');                                                 //countries
             Route::get('/governorate', GovernorateIndex::class)->name('admins.governorate.index');                                           //govenorate
             Route::get('/cities', CitiesIndex::class)->name('admins.cities.index');                                                          //cities
