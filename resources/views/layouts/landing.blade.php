@@ -249,7 +249,33 @@
             cursor: grabbing;
         }
 
+        .platform-img {
+            /* ثبت العرض والطول عشان تضمن إنهم يبقوا قد بعض بالظبط */
+            width: 8rem;
+            /* height: 40px; */
+            /* object-fit: contain مهمة جداً عشان الصورة متبوظش جوه المقاس الجديد */
+            object-fit: contain;
+            background-color: --var(--primary-red);
+            /* اختيار اختياري لو عايز توحد الخلفية وراهم */
+            border-radius: 5px;
+            padding: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .platform-img:hover {
+            transform: scale(1.05);
+            /* حركة خفيفة عند الوقوف بالماوس */
+        }
+
+        /* لو المساحة ضيقة جداً في الموبايل */
+        @media (max-width: 768px) {
+            .platform-img {
+                width: 100px;
+            }
+        }
+
     </style>
+    @yield('css')
 </head>
 
 <body>
@@ -289,7 +315,7 @@
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-4">
+                <div class="col-md-3 mb-4">
                     @if (app()->getLocale() == 'ar')
                     <h5 class="fs-3">ما<span class="text-white-50">يندلي</span></h5>
                     @else
@@ -299,7 +325,7 @@
 
                     {{-- <p>Leading the way in digital education across the Middle East. Excellence in every lesson.</p> --}}
                 </div>
-                <div class="col-md-4 mb-4 ">
+                <div class="col-md-3 mb-4 ">
                     <h5 data-key="quickLinks">{{ __('Quick Links') }}</h5>
                     <ul class="list-unstyled">
                         <li><a href="#">{{ __('Privacy Policy') }}</a></li>
@@ -307,11 +333,27 @@
                         <li><a href="#">{{ __('Support Center') }}</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4 mb-4">
+                <div class="col-md-3 mb-4">
                     <h5 data-key="contact">{{ __('Contact Info') }}</h5>
-                    <p><i class="fas fa-phone me-2"></i> +123 456 789</p>
-                    <p><i class="fas fa-envelope me-2"></i> info@edupremium.com</p>
-                    <p><i class="fas fa-map-marker-alt me-2"></i> Cairo, Egypt</p>
+                    <p><i class="fas fa-phone me-2"></i> <a class="text-white" href="tel:{{ $mainData['phone'] }}">{{ $mainData['phone'] }}</a></p>
+                    <p><i class="fas fa-envelope me-2"></i> <a class="text-white" href="MailTo: {{ $mainData['email'] }}"> {{ $mainData['email'] }}</a></p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> {{ $mainData['address'] }}</p>
+                    <div class="d-flex gap-3">
+                        <a href="#"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4 d-flex align-items-end">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <a href="#">
+                            <img src="{{ asset('assets/img/platform/android.png') }}" class="platform-img" alt="Google Play">
+                        </a>
+                        <a href="#">
+                            <img src="{{ asset('assets/img/platform/apple.png') }}" class="platform-img" alt="App Store">
+                        </a>
+                    </div>
                 </div>
             </div>
             <hr class="mt-4">

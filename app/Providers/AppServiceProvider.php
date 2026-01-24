@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Helpers\GetMainData;
 use App\Models\Center;
 use App\Models\secondary_student_details;
 use App\Models\StageGrade;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
@@ -68,9 +70,11 @@ class AppServiceProvider extends ServiceProvider
             // ->middleware('livewire');
         });
 
-        // Livewire::setUpdateRoute(function ($handle) {
-        //     return Route::post('/livewire/update', $handle);
-        // });
+        View::composer('layouts.landing', function ($view) {
+            // إنشاء كلاس سريع لاستخدام الـ Trait
+            $helper = new class {use GetMainData;};
+            $view->with('mainData', $helper->getMainData());
+        });
 
     }
 }

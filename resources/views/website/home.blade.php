@@ -12,7 +12,7 @@
     <div class="carousel-inner">
         @foreach ($banners as $banner)
         <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-            <img src="{{ asset('storage/' . $banner->image) }}" class="d-block w-100 h-100 object-fit-cover" alt="Banner Image">
+            <img src="{{ asset('storage/' . $banner->image) }}" class="d-block w-100 h-100" alt="Banner Image">
             <div class="carousel-caption">
                 {{-- <h2 class="text-dark" data-key="heroTitle">{{ $banner->comment ?? 'Unlock Your Future' }}</h2> --}}
                 {{-- <p class="fs-5" data-key="heroSub">{{ $banner->description ?? 'Join thousands of students learning from the best experts.' }}</p> --}}
@@ -53,18 +53,18 @@
 
     </div>
 </section>
-
+@foreach ($centers as $center )
 <section class="container py-5 mt-5" id="centers">
     <div class="text-center mb-5 reveal">
         <h2 class="fw-bold" data-key="centers">{{ __('Educational Centers') }}</h2>
         <div class="mx-auto" style="width: 80px; height: 4px; background: var(--primary-red);"></div>
     </div>
     <div class="row">
-        <div class="col-md-4 reveal">
+        <div class="col-md-3 reveal">
             <div class="card custom-card">
-                <img src="{{ asset('assets/img/mindly_bg.jpg') }}" class="card-img-top" alt="Teacher">
+                <img src="{{ asset('storage/' .$center->logo) }}" class="card-img-top" alt="Center">
                 <div class="card-body text-center">
-                    <h5 class="fw-bold">Mindly Center</h5>
+                    <h5 class="fw-bold">{{$center->name}}</h5>
                     {{-- <p class="text-muted">Mathematics Expert</p> --}}
                     <a href="teacher-profile.html" class="btn btn-main" data-key="showProfile">{{ __('Show Profile') }}</a>
                 </div>
@@ -72,5 +72,7 @@
         </div>
     </div>
 </section>
+@endforeach
+
 
 @endsection
