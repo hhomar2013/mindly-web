@@ -134,12 +134,12 @@
             z-index: 5;
         }
 
-        [dir="ltr"] .profile-img-container {
+        [dir="rtl"] .profile-img-container {
             text-align: right;
             padding-right: 50px;
         }
 
-        [dir="rtl"] .profile-img-container {
+        [dir="ltr"] .profile-img-container {
             text-align: left;
             padding-left: 50px;
         }
@@ -257,9 +257,9 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             @if ( app()->getLocale() == 'ar')
-            <a class="navbar-brand fw-bold fs-3" href="#">ما<span class="text-white-50">يندلي</span></a>
+            <a class="navbar-brand fw-bold fs-3" href="{{ route('website.home') }}">ما<span class="text-white-50">يندلي</span></a>
             @else
-            <a class="navbar-brand fw-bold fs-3" href="#">Mi<span class="text-white-50">ndly</span></a>
+            <a class="navbar-brand fw-bold fs-3" href="{{ route('website.home') }}">Mi<span class="text-white-50">ndly</span></a>
 
             @endif
 
@@ -268,7 +268,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="#" data-key="home">{{ __('Home') }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('website.home') }}" data-key="home">{{ __('Home') }}</a></li>
                     <li class="nav-item"><a class="nav-link" href="#teachers" data-key="teachers">{{ __('Teachers') }}</a></li>
                     <li class="nav-item"><a class="nav-link" href="#centers" data-key="centers">{{ __('Educational Centers') }}</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" data-key="about">{{ __('About Us') }}</a></li>
@@ -283,96 +283,8 @@
             </div>
         </div>
     </nav>
+    @yield('content')
 
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=80" class="d-block w-100 h-100 object-fit-cover" alt="...">
-                <div class="carousel-caption">
-                    <h2 data-key="heroTitle">Unlock Your Future</h2>
-                    <p class="fs-5" data-key="heroSub">Join thousands of students learning from the best experts.</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=80" class="d-block w-100 h-100 object-fit-cover" alt="...">
-                <div class="carousel-caption">
-                    <h2 data-key="heroTitle">Unlock Your Future</h2>
-                    <p class="fs-5" data-key="heroSub">Join thousands of students learning from the best experts.</p>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
-    </div>
-
-    <section class="container py-5 mt-5" id="teachers">
-        <div class="text-center mb-5 reveal">
-            <h2 class="fw-bold" data-key="topTeachers">{{ __('Top Rated Teachers') }}</h2>
-            <div class="mx-auto" style="width: 80px; height: 4px; background: var(--primary-red);"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 reveal">
-                <div class="card custom-card">
-                    <img src="https://i.pravatar.cc/300?img=11" class="card-img-top" alt="Teacher">
-                    <div class="card-body text-center">
-                        <h5 class="fw-bold">Dr. Sarah Ahmed</h5>
-                        <p class="text-muted">Mathematics Expert</p>
-                        <a href="teacher-profile.html" class="btn btn-main" data-key="showProfile">Show Profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="container py-5 mt-5" id="centers">
-        <div class="text-center mb-5 reveal">
-            <h2 class="fw-bold" data-key="centers">{{ __('Educational Centers') }}</h2>
-            <div class="mx-auto" style="width: 80px; height: 4px; background: var(--primary-red);"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 reveal">
-                <div class="card custom-card">
-                    <img src="{{ asset('assets/img/mindly_bg.jpg') }}" class="card-img-top" alt="Teacher">
-                    <div class="card-body text-center">
-                        <h5 class="fw-bold">Mindly Center</h5>
-                        {{-- <p class="text-muted">Mathematics Expert</p> --}}
-                        <a href="teacher-profile.html" class="btn btn-main" data-key="showProfile">Show Profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="profile-preview" class="pb-5">
-        <div class="profile-banner">
-            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80" class="w-100 h-100 object-fit-cover" alt="banner">
-        </div>
-        <div class="container">
-            <div class="profile-img-container reveal">
-                <img src="https://i.pravatar.cc/300?img=11" class="profile-avatar" alt="Teacher">
-            </div>
-            <div class="row mt-4 reveal">
-                <div class="col-md-8">
-                    <h1 class="fw-bold">Dr. Sarah Ahmed</h1>
-                    <h4 class="text-danger mb-3">Senior Mathematics Professor</h4>
-                    <p class="lead">15+ years of experience in advanced calculus and algebra. Helping students achieve
-                        99th percentile results across the region.</p>
-                    <div class="d-flex gap-3 mt-4">
-                        <button class="btn btn-main px-5">Book Now</button>
-                        <button class="btn btn-outline-danger px-5">Message</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <footer>
         <div class="container">
@@ -387,16 +299,16 @@
 
                     {{-- <p>Leading the way in digital education across the Middle East. Excellence in every lesson.</p> --}}
                 </div>
-                <div class="col-md-4 mb-4 text-center">
-                    <h5 data-key="quickLinks">Quick Links</h5>
+                <div class="col-md-4 mb-4 ">
+                    <h5 data-key="quickLinks">{{ __('Quick Links') }}</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Support Center</a></li>
+                        <li><a href="#">{{ __('Privacy Policy') }}</a></li>
+                        <li><a href="#">{{ __('Terms of Service') }}</a></li>
+                        <li><a href="#">{{ __('Support Center') }}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <h5 data-key="contact">Contact Info</h5>
+                    <h5 data-key="contact">{{ __('Contact Info') }}</h5>
                     <p><i class="fas fa-phone me-2"></i> +123 456 789</p>
                     <p><i class="fas fa-envelope me-2"></i> info@edupremium.com</p>
                     <p><i class="fas fa-map-marker-alt me-2"></i> Cairo, Egypt</p>
@@ -404,7 +316,11 @@
             </div>
             <hr class="mt-4">
             <div class="text-center pt-2">
-                <small>&copy; {{ Carbon\Carbon::now()->format('Y') }} {{ app()->getLocale() == 'ar' ? 'مايندلي' : 'Mindly' }} {{ __('All rights reserved') }}.</small>
+                <small>&copy; {{ Carbon\Carbon::now()->format('Y') }}
+                    {{ app()->getLocale() == 'ar' ? 'مايندلي' : 'Mindly' }}
+                    {{ __('All rights reserved') }}.
+                    {{ __('Developed by') }} <b><a href="">MTG .</a></b>
+                </small>
             </div>
         </div>
     </footer>

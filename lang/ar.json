@@ -20,7 +20,7 @@
     "home": "الصفحة الرئيسية",
     "about": "حول",
     "About Us": "معلومات عنا",
-    "Call Us" : "اتصل بنا",
+    "Call Us": "اتصل بنا",
     "contact": "اتصل بنا",
     "search": "بحث",
     "notifications": "الإشعارات",
@@ -147,7 +147,7 @@
     "About the educational center": "نبذه عن مركز التعليم",
     "Enter about the educational center": "أدخل نبذه عن مركز التعليم",
     "Teacher Management": "إدارة المُعلِمين",
-    "Top Rated Teachers" : "أفضل المُعلِمين تقييماً",
+    "Top Rated Teachers": "أفضل المُعلِمين تقييماً",
     "Add Teacher": "إضافة مُعلِم",
     "Teacher created successfully.": "تم إنشاء المُعلِم بنجاح.",
     "Teacher updated successfully.": "تم تحديث المُعلِم بنجاح.",
@@ -368,6 +368,13 @@
     "Created At": "تاريخ الإنشاء",
     "Add User": "إضافة مستخدم جديد",
     "offline": "غير متصل",
-    "Home" : "الرئيسية",
-    "All rights reserved" : "جميع الحقوق محفوظة"
+    "Home": "الرئيسية",
+    "All rights reserved": "جميع الحقوق محفوظة",
+    "Quick Links": "روابط سريعة",
+    "Privacy Policy": "سياسة الخصوصية",
+    "Terms of Service": "شروط الخدمة",
+    "Support Center": "مركز الدعم",
+    "Contact Info": "معلومات الاتصال",
+    "Developed by": "تم التطوير بواسطة",
+    "Show Profile": "عرض الملف الشخصي"
 }

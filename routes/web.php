@@ -68,14 +68,11 @@ Route::group(
 
         Route::middleware('guest:web')->group(function () {
             Route::get('/', [HomeController::class, 'index'])->name('website.home');
+            Route::get('/teacher-profile/{id}', [HomeController::class, 'teacherProfile'])->name('website.teacher.profile');
         });
 
         Route::middleware('auth:web')->group(function () {
-
-            // Route::get('/', function () {
-            //     return redirect()->intended(Auth::check() ? route('dashboard') : route('login'));
-            // });
-            Route::get('dashboard', DashboardComponent::class)->name('dashboard');
+            Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
             Route::get('/users', UsersIndex::class)->name('admins.users.index');                                                             //dashboard
             Route::get('/countries', CountriesIndex::class)->name('admins.countries.index');                                                 //countries
             Route::get('/governorate', GovernorateIndex::class)->name('admins.governorate.index');                                           //govenorate
