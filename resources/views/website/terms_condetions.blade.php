@@ -10,7 +10,11 @@
                         <i class="fas fa-file-contract fa-3x text-danger mb-3"></i>
                         <h1 class="fw-bold">{{ __('Platform policies and terms') }}</h1>
                         <p class="text-muted">
-                            آخر تحديث: {{ isset($terms->updated_at) ? \Carbon\Carbon::parse($terms->updated_at)->format('Y/m/d') : '2026' }}
+                            {{ __('Last Update') }} :
+                            {{-- {{ isset($terms->updated_at) ? \Carbon\Carbon::parse($terms->updated_at)->format('M d, Y') : '2026' }} --}}
+
+                            {{isset($terms->updated_at) ? \Carbon\Carbon::parse($terms->updated_at)->locale(app()->getLocale())->translatedFormat('d F, Y')  : '2026'}}
+
                         </p>
                     </div>
 
@@ -33,9 +37,6 @@
                         </div>
 
 
-                        <div class="text-center mt-5">
-                            <a href="{{ url('/') }}" class="btn btn-primary px-5 py-2">العودة للرئيسية</a>
-                        </div>
                     </div>
                 </div>
             </div>

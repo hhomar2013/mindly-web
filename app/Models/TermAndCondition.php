@@ -2,11 +2,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class TermAndCondition extends Model
 {
-    protected $guarded = [];
-    protected $table   = 'terms_and_conditions';
+    use HasTranslations;
+
+    protected $guarded         = [];
+    public array $translatable = ['content'];
+    protected $table           = 'terms_and_conditions';
     public static function current($type = 'terms')
     {
         return self::where('type', $type)
