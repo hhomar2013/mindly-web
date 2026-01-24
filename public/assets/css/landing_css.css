@@ -1,0 +1,273 @@
+:root {
+    --primary-red: #D90429;
+    --dark-red: #A4031F;
+    --soft-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --transition-speed: 0.5s;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* --- Navbar Styles --- */
+.navbar {
+    background-color: var(--primary-red) !important;
+    padding: 1rem 2rem;
+    transition: all 0.3s ease;
+}
+
+.nav-link {
+    color: white !important;
+    font-weight: 700;
+    margin: 0 15px;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: white;
+    transition: width 0.3s;
+}
+
+
+.nav-link.active {
+    color: #ffc107 !important;
+    /* لون ذهبي مثلاً */
+    font-weight: bold;
+}
+
+/* تنعيم الحركة عند الانتقال للأقسام */
+html {
+    scroll-behavior: smooth;
+}
+
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.lang-switch {
+    background: white;
+    color: var(--primary-red);
+    border-radius: 50px;
+    padding: 5px 20px;
+    font-weight: 700;
+    border: 2px solid white;
+    transition: 0.3s;
+}
+
+.lang-switch:hover {
+    background: transparent;
+    color: white;
+}
+
+/* --- Hero Section --- */
+.carousel-item {
+    height: 70vh;
+    min-height: 400px;
+    background: #333;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carousel-caption {
+    bottom: 30%;
+    z-index: 10;
+}
+
+.carousel-caption h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    animation: fadeInUp 1s ease;
+}
+
+/* --- Card Styles --- */
+.custom-card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--soft-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.custom-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(217, 4, 41, 0.2);
+}
+
+.btn-main {
+    background-color: var(--primary-red);
+    color: white;
+    border-radius: 10px;
+    padding: 10px 25px;
+    font-weight: 700;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-main:hover {
+    background-color: var(--dark-red);
+    color: white;
+    box-shadow: 0 0 15px rgba(217, 4, 41, 0.4);
+}
+
+/* --- Profile Page Components --- */
+.profile-banner {
+    height: 350px;
+    background: linear-gradient(45deg, #eee, #ddd);
+    position: relative;
+}
+
+.profile-img-container {
+    position: relative;
+    margin-top: -100px;
+    z-index: 5;
+}
+
+[dir="rtl"] .profile-img-container {
+    text-align: right;
+    padding-right: 50px;
+}
+
+[dir="ltr"] .profile-img-container {
+    text-align: left;
+    padding-left: 50px;
+}
+
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    border: 8px solid white;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: var(--soft-shadow);
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--primary-red);
+    color: white;
+    padding: 60px 0 20px;
+}
+
+footer h5 {
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+footer a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+footer a:hover {
+    color: white;
+    padding-left: 5px;
+}
+
+/* --- Animations --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RTL Adjustments */
+[dir="rtl"] .ms-auto {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+
+
+/* تنسيق المؤشرات أسفل السلايدر */
+.custom-indicators {
+    bottom: 20px;
+    /* المسافة من الأسفل */
+}
+
+.custom-indicators [data-bs-target] {
+    width: 40px;
+    /* عرض الخط */
+    height: 6px;
+    /* سمك الخط */
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    /* إزالة الحدود الافتراضية */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0 5px;
+}
+
+.custom-indicators .active {
+    width: 80px;
+    /* يتمدد الخط عند تفعيله */
+    background-color: var(--primary-red) !important;
+    /* اللون الأحمر الخاص بالهوية */
+}
+
+/* تأثير بسيط عند التمرير بالماوس */
+.custom-indicators [data-bs-target]:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* تغيير شكل الماوس ليوحي بالسحب */
+.carousel-inner {
+    cursor: grab;
+}
+
+.carousel-inner:active {
+    cursor: grabbing;
+}
+
+.platform-img {
+    /* ثبت العرض والطول عشان تضمن إنهم يبقوا قد بعض بالظبط */
+    width: 8rem;
+    /* height: 40px; */
+    /* object-fit: contain مهمة جداً عشان الصورة متبوظش جوه المقاس الجديد */
+    object-fit: contain;
+    background-color: --var(--primary-red);
+    /* اختيار اختياري لو عايز توحد الخلفية وراهم */
+    border-radius: 5px;
+    padding: 2px;
+    transition: transform 0.3s ease;
+}
+
+.platform-img:hover {
+    transform: scale(1.05);
+    /* حركة خفيفة عند الوقوف بالماوس */
+}
+
+/* لو المساحة ضيقة جداً في الموبايل */
+@media (max-width: 768px) {
+    .platform-img {
+        width: 100px;
+    }
+}

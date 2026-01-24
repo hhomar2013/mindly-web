@@ -69,6 +69,17 @@ Route::group(
         Route::middleware('guest:web')->group(function () {
             Route::get('/', [HomeController::class, 'index'])->name('website.home');
             Route::get('/teacher-profile/{id}', [HomeController::class, 'teacherProfile'])->name('website.teacher.profile');
+            Route::get('about-us', function () {
+                return view('website.about-us');
+            })->name('website.about.us');
+
+            Route::get('/contact-us', function () {
+                $settings = new class {use \App\Helpers\GetMainData;};;
+                $mainData = $settings->getMainData();
+                return view('website.contact-us', ['mainData' => $mainData]);
+            })->name('website.contact.us');
+
+            Route::post('/contact-send', [HomeController::class, 'sendEmail'])->name('contact.send');
         });
 
         Route::middleware('auth:web')->group(function () {
