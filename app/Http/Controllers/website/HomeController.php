@@ -6,11 +6,9 @@ use App\Mail\ContactUsMail;
 use App\Models\ads;
 use App\Models\Center;
 use App\Models\Teacher;
+use App\Models\TermAndCondition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
-
-
 
 class HomeController extends Controller
 {
@@ -48,5 +46,12 @@ class HomeController extends Controller
 
         // 3. الرجوع برسالة نجاح
         return back()->with('success', 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+    }
+
+    public function Terms()
+    {
+        $terms   = TermAndCondition::current('terms');
+        $privacy = TermAndCondition::current('privacy');
+        return view('website.terms_condetions', ['terms' => $terms, 'privacy' => $privacy]);
     }
 }

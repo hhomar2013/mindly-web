@@ -33,8 +33,8 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item "><a class="nav-link {{ request()->routeIs('website.home') ? 'active' : '' }}" href="{{ route('website.home') }}" data-key="home">{{ __('Home') }}</a></li>
-                    <li class="nav-item"><a class="nav-link " href="#teachers" data-key="teachers">{{ __('Teachers') }}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#centers" data-key="centers">{{ __('Educational Centers') }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('website.home') }}/#teachers" data-key="teachers">{{ __('Teachers') }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('website.home') }}/#centers" data-key="centers">{{ __('Educational Centers') }}</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('website.about.us') ? 'active' : '' }}" href="{{ route('website.about.us') }}" data-key="about">{{ __('About Us') }}</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('website.contact.us') ? 'active' : '' }}" href="{{ route('website.contact.us') }}" data-key="contact">{{ __('Call Us') }}</a></li>
                 </ul>
@@ -66,9 +66,8 @@
                 <div class="col-md-3 mb-4 ">
                     <h5 data-key="quickLinks">{{ __('Quick Links') }}</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#">{{ __('Privacy Policy') }}</a></li>
-                        <li><a href="#">{{ __('Terms of Service') }}</a></li>
-                        <li><a href="#">{{ __('Support Center') }}</a></li>
+                        <li><a class="{{ request()->routeIs('website.terms.and.condetions') ? 'text-warning' :'' }}" href="{{ route('website.terms.and.condetions') }}">{{ __('Platform policies and terms') }}</a></li>
+                        <li><a class="{{ request()->routeIs('website.contact.us') ? 'text-warning' :'' }}" href="{{ route('website.contact.us') }}">{{ __('Contact Us') .'-('.  __('Support Center') .')' }}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">

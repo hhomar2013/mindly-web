@@ -74,12 +74,14 @@ Route::group(
             })->name('website.about.us');
 
             Route::get('/contact-us', function () {
-                $settings = new class {use \App\Helpers\GetMainData;};;
+                $settings = new class {use \App\Helpers\GetMainData;};;;
                 $mainData = $settings->getMainData();
                 return view('website.contact-us', ['mainData' => $mainData]);
             })->name('website.contact.us');
 
             Route::post('/contact-send', [HomeController::class, 'sendEmail'])->name('contact.send');
+
+            Route::get('/terms-and-conditions', [HomeController::class, 'Terms'])->name('website.terms.and.condetions');
         });
 
         Route::middleware('auth:web')->group(function () {
