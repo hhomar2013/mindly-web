@@ -33,8 +33,12 @@
 
             <div class="col-md-8">
                 <div class="card border-0 shadow-sm p-4">
+
                     <form action="{{ route('contact.send') }}" method="POST">
                         @csrf
+                        @if(session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ __('Name') }}</label>

@@ -3,6 +3,12 @@
     --dark-red: #A4031F;
     --soft-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     --transition-speed: 0.5s;
+
+    --primary-color: #4A90E2;
+    /* لون التعليم الافتراضي لميندلي */
+    --bg-light: #f8f9fa;
+    --text-dark: #2d3436;
+    --border-radius: 20px;
 }
 
 body {
@@ -71,10 +77,39 @@ html {
 
 /* --- Hero Section --- */
 .carousel-item {
-    height: 70vh;
-    min-height: 400px;
-    background: #333;
+    /* background: #333; */
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+.carousel-item img {
+    object-fit: fill !important;
+    height: 200px !important;
+
+    /* ارتفاع مناسب جداً للموبايل */
+}
+
+@media (min-width: 768px) {
+    .carousel-item img {
+        object-fit: fill !important;
+        height: 500px !important;
+        /* ارتفاع الكمبيوتر */
+    }
+}
+
+/* تحسين شكل الـ Indicators (النقط اللي تحت) */
+.carousel-indicators [button] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    /* خليها دوائر بدل مستطيلات */
+    margin: 0 5px;
+}
+
+/* لمنع ظهور أي زوائد خارج الـ Border Radius */
+.carousel-inner {
+    border-radius: 15px;
+    overflow: hidden;
 }
 
 .carousel-caption {

@@ -5,7 +5,7 @@
 @section('content')
 <section id="profile-preview" class="pb-5">
     <div class="profile-banner">
-        <img src="{{ asset('storage/' . $teacher->banner) }}" class="w-100 h-100 object-fit-cover" alt="banner">
+        <img src="{{ $teacher->banner ? asset('storage/' . $teacher->banner)  : asset('assets/img/mindly_bg.jpg') }}" class="w-100 h-100 object-fit-cover" alt="banner">
     </div>
     <div class="container">
         <div class="profile-img-container reveal">
@@ -28,6 +28,29 @@
                     </div>
                     {{-- <button class="btn btn-main px-5">Book Now</button>
                     <button class="btn btn-outline-danger px-5">Message</button> --}}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mt-5">
+                <h2 class="fw-bold mb-4">{{ __('Courses') }}</h2>
+                <div class="row g-4">
+                    @forelse ($teacher->teacherCourseOverview as $course)
+                    <div class="col-md-3 reveal">
+                        <div class="card custom-card">
+                            <img src="{{ asset($course->image)  }}" class="card-img-top" style="height: 200px; width: auto;" alt="Course">
+                            <div class="card-body text-center">
+                                <h5 class="fw-bold">{{ $course->name }}</h5>
+                                <p class="text-muted">{{ Str::limit($course->description, 50) }}</p>
+                                <a href="{{ route('website.course.details',['id'=>$course->id]) }}" class="btn btn-main">{{ __('View Course') }}</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    @empty
+                    <p class="text-white bg-danger text-center p-5">{{ __('No courses available for this teacher.') }}</p>
+                    @endforelse
                 </div>
             </div>
         </div>

@@ -16,7 +16,7 @@
     @yield('css')
 </head>
 
-<body>
+<body style="zoom: 90%">
 
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">

@@ -69,12 +69,13 @@ Route::group(
         Route::middleware('guest:web')->group(function () {
             Route::get('/', [HomeController::class, 'index'])->name('website.home');
             Route::get('/teacher-profile/{id}', [HomeController::class, 'teacherProfile'])->name('website.teacher.profile');
+            Route::get('/course-details/{id}', [HomeController::class, 'showCourse'])->name('website.course.details');
             Route::get('about-us', function () {
                 return view('website.about-us');
             })->name('website.about.us');
 
             Route::get('/contact-us', function () {
-                $settings = new class {use \App\Helpers\GetMainData;};;;
+                $settings = new class {use \App\Helpers\GetMainData;};;;;
                 $mainData = $settings->getMainData();
                 return view('website.contact-us', ['mainData' => $mainData]);
             })->name('website.contact.us');

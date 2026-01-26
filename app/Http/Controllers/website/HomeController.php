@@ -6,6 +6,7 @@ use App\Mail\ContactUsMail;
 use App\Models\ads;
 use App\Models\Center;
 use App\Models\Teacher;
+use App\Models\TeacherCourseOverview;
 use App\Models\TermAndCondition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -27,8 +28,19 @@ class HomeController extends Controller
 
     public function teacherProfile($id)
     {
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::where('id', '=', $id)->with('teacherCourseOverview')->first();
         return view('website.teacher-profile', ['teacher' => $teacher]);
+    }
+    public function showCourse($id)
+    {
+        $courseOverView = TeacherCourseOverview::query()->where('id', $id)->with('teacher')->first();
+        $courseLessons  = $courseOverView->lessons()->with('CourseLessonContent')->get();
+        $reviews        = $courseOverView->reviews()->with('student')->get();
+
+        return view('website.course-details', [
+            'courseOverView' => $courseOverView,
+            'courseLessons'  => $courseLessons,
+            'reviews'        => $reviews]);
     }
 
     public function sendEmail(Request $request)
