@@ -11,10 +11,17 @@ use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\searchController;
 use App\Http\Controllers\Api\TeachersController;
 use App\Http\Controllers\Api\TermsAndCondetionsController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 //Version 1F
 Route::prefix('v1')->group(function () {
+    Route::get('/test-lang', function () {
+        return response()->json([
+            'current_locale' => App::getLocale(),
+            'message'        => __('welcome'), // تأكد إن المفتاح ده موجود في ملفات الترجمة
+        ]);
+    });
     // Students register
     Route::prefix('students')->group(function () {
         // Route::post('/send-otp', [AuthController::class, 'sendOtp']);
@@ -35,7 +42,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/top-rated-teachers', [TeachersController::class, 'topRatedTeachers']); //top-rateds-teachers
             Route::post('/course_lessons', [coursesCotroller::class, 'show_course_lessons']);   //course_lessons
             Route::get('/teachers-by-cities', [TeachersController::class, 'teachersByCities']); //teachers-by-cities
-            Route::get('/quiz-instructions/{id}', [QuizController::class, 'instructions']);    //quiz-instructions
+            Route::get('/quiz-instructions/{id}', [QuizController::class, 'instructions']);     //quiz-instructions
             Route::post('/join-quiz', [QuizController::class, 'joinQuiz']);                     //quiz
             Route::post('/close-quiz', [QuizController::class, 'closeQuiz']);                   //quiz
             Route::post('/search', [searchController::class, 'search']);                        //search
@@ -53,7 +60,7 @@ Route::prefix('v1')->group(function () {
         return response()->json(['message' => 'API is working 👌✔️ Welcome to Mindly API!']);
     });
 
-    //Dosen't need token
+                                                                                                //Dosen't need token
     Route::get('/countries', [CountriesController::class, 'index']);                            //countries
     Route::get('/academic-structure', [AcademicDataController::class, 'getAcademicStructure']); //academic-structure
     Route::get('/courses', [coursesCotroller::class, 'index']);                                 //courses
@@ -61,4 +68,4 @@ Route::prefix('v1')->group(function () {
     Route::get('/ads', [adsController::class, 'index']); //ads
     Route::get('/terms-and-condetions', [TermsAndCondetionsController::class, 'index']);
     Route::get('/main-data', [MainDataController::class, 'index']); //Main data of platform
-}); //End Version 1
+});                                                             //End Version 1
