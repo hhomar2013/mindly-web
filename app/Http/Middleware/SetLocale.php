@@ -14,19 +14,19 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // هنشوف الـ Header اللي جاي، ولو مش موجود هنخلي اللغة الافتراضية 'en'
-        $language = $request->header('Accept-Language');
-
-        $locale = substr($language, 0, 2);
-
-        $supportedLanguages = ['ar', 'en'];
-
-        if (in_array($locale, $supportedLanguages)) {
-            app()->setLocale($locale);
-        } else {
-            app()->setLocale(config('app.fallback_locale'));
+        // لو الـ Request مش API، سيبه يعدي ومتحاولش تغير اللغة هنا
+        if (! $request->is('api/*')) {
+            return $next($request);
         }
 
+        // هنا Logic الموبايل بس
+        $headerLocale       = $request->header('Accept-Language');
+        $locale             = substr($headerLocale, 0, 2);
+        $supportedLanguages = ['ar', 'en'];
+
+        if ($locale && in_array($locale, $supportedLanguages)) {
+            app()->setLocale($locale);
+        }
         return $next($request);
     }
 }
