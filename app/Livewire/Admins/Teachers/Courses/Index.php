@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Admins\Teachers\Courses;
 
 use App\Helpers\switchActions;
@@ -15,10 +14,10 @@ use App\Models\SecondaryTrack;
 use App\Models\StageGrade;
 use App\Models\subjects;
 use App\Models\Teacher;
-use App\Models\teacher_secondary_details;
 use App\Models\TeacherCourseLesson;
 use App\Models\TeacherCourseLessonContent;
 use App\Models\TeacherCourseOverview;
+use App\Models\teacher_secondary_details;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -30,11 +29,12 @@ class Index extends Component
     public $IsEdit = false;
     public $course_id;
     public ?int $teacher_id = null;
-    public $courses = [];
-    public $teacher = [];
-    public $search = '';
+    public $courses         = [];
+    public $teacher         = [];
+    public $search          = '';
     #[Url]
     public string $action;
+    public $lesson_content_document;
     public $education_system_id;
     public $education_stages = [];
     public $education_stages_id;
@@ -96,14 +96,14 @@ class Index extends Component
     {
         $q = TeacherCourseLessonContent::query()->with('contentType')->find($id);
         if ($q) {
-            $this->lesson_content = $q;
-            $this->lesson_content_ar_name   = $q->getTranslation('name', 'ar');
-            $this->lesson_content_en_name   = $q->getTranslation('name', 'en');
-            $this->lesson_content_link      = $q->link;
-            $this->content_type_id          = $q->contentType->id;
-            $this->lesson_id                = $q->tcl_id;
-            $this->selectedContentType      = $q->contentType->type;
-            $this->IsEdit                   = true;
+            $this->lesson_content         = $q;
+            $this->lesson_content_ar_name = $q->getTranslation('name', 'ar');
+            $this->lesson_content_en_name = $q->getTranslation('name', 'en');
+            $this->lesson_content_link    = $q->link;
+            $this->content_type_id        = $q->contentType->id;
+            $this->lesson_id              = $q->tcl_id;
+            $this->selectedContentType    = $q->contentType->type;
+            $this->IsEdit                 = true;
         }
     }
 
@@ -113,18 +113,18 @@ class Index extends Component
         $this->validate([
             'lesson_content_ar_name' => 'required',
             'lesson_content_en_name' => 'required',
-            'content_type_id' => 'required',
+            'content_type_id'        => 'required',
         ]);
-
-        $quiz = asset('api/v1/students/join-quiz/' . $this->quiz_id);
+        $document      = $this->lesson_content_document ? $this->lesson_content_document->store('teachers/pdf', 'public') : '';
+        $quiz          = asset('api/v1/students/join-quiz/' . $this->quiz_id);
         $lessonContent = TeacherCourseLessonContent::query()->create([
             'tcl_id' => $this->lesson_id,
-            'ct_id' => $this->content_type_id,
-            'name' => [
+            'ct_id'  => $this->content_type_id,
+            'name'   => [
                 'ar' => $this->lesson_content_ar_name,
                 'en' => $this->lesson_content_en_name,
             ],
-            'link' => $this->lesson_content_link,
+            'link'   => $this->lesson_content_document ? $document : $this->lesson_content_link,
         ]);
 
         // dd( $lessonContent);
@@ -137,6 +137,7 @@ class Index extends Component
                 'lesson_content_en_name',
                 'content_type_id',
                 'lesson_content_link',
+                'lesson_content_document'
             ]);
             $this->IsEdit = false;
         }
@@ -160,13 +161,11 @@ class Index extends Component
         }
     }
 
-
-
     public function setActionData(string $actionName)
     {
-        $this->action = $actionName;
+        $this->action         = $actionName;
         $this->lesson_ar_name = '';
-        $this->lesson_id = null;
+        $this->lesson_id      = null;
         $this->lesson_en_name = '';
     }
     public function delete($id)
@@ -180,10 +179,10 @@ class Index extends Component
     }
     private function getSelectedAcademicYearModel()
     {
-        $modelId = null;
+        $modelId    = null;
         $modelClass = null;
         if ($this->secondary_specializations_id) {
-            $modelId = $this->secondary_specializations_id;
+            $modelId    = $this->secondary_specializations_id;
             $modelClass = SecondarySpecialization::class;
         } elseif ($this->stage_grades_id) {
             $modelId = $this->stage_grades_id;
@@ -199,13 +198,13 @@ class Index extends Component
     }
     public function getScondaryGrades()
     {
-        $this->secondary_branch_id = null;
+        $this->secondary_branch_id          = null;
         $this->secondary_specializations_id = null;
-        $this->secondary_sub_branch_id = null;
-        $this->stage_grades = [];
-        $this->secondary_sub_branch = [];
-        $this->secondary_specializations = [];
-        $this->secondary_branch = [];
+        $this->secondary_sub_branch_id      = null;
+        $this->stage_grades                 = [];
+        $this->secondary_sub_branch         = [];
+        $this->secondary_specializations    = [];
+        $this->secondary_branch             = [];
         if ($this->secondary_tracks_id) {
             $q = SecondaryGrade::query()->where('secondary_track_id', $this->secondary_tracks_id)->get();
             if ($q->count() > 0) {
@@ -231,8 +230,8 @@ class Index extends Component
     public function getScondaryBranch()
     {
 
-        $this->secondary_branch = [];
-        $this->secondary_sub_branch = [];
+        $this->secondary_branch          = [];
+        $this->secondary_sub_branch      = [];
         $this->secondary_specializations = [];
         if ($this->secondary_tracks_id) {
             $this->getSecondarySpecializations();
@@ -278,11 +277,10 @@ class Index extends Component
         $this->action = 'show-course';
         session(['teacher_id' => $id]);
         $this->teacher_id = $id;
-        $this->teacher = Teacher::query()->where('id', $id)->first();
-        $course = TeacherCourseOverview::query()->where('teacher_id', $id)->with(['subject', 'education'])->get();
-        $this->courses = $course;
+        $this->teacher    = Teacher::query()->where('id', $id)->first();
+        $course           = TeacherCourseOverview::query()->where('teacher_id', $id)->with(['subject', 'education'])->get();
+        $this->courses    = $course;
     }
-
 
     private function checkSession($id, $parameter)
     {
@@ -305,7 +303,7 @@ class Index extends Component
     }
     public function mount()
     {
-        if (!$this->search) {
+        if (! $this->search) {
 
             $this->resetForm();
         }
@@ -331,44 +329,43 @@ class Index extends Component
         // $this->teacher_id = null;
         // $this->courses = [];
         // $this->teacher = [];
-        $this->education_system_id = null;
-        $this->education_stages_id = null;
-        $this->stage_grades_id = null;
-        $this->secondary_tracks_id = null;
-        $this->secondary_branch_id = null;
+        $this->education_system_id          = null;
+        $this->education_stages_id          = null;
+        $this->stage_grades_id              = null;
+        $this->secondary_tracks_id          = null;
+        $this->secondary_branch_id          = null;
         $this->secondary_specializations_id = null;
-        $this->price = null;
-        $this->course_name = null;
-        $this->subject_id = null;
-        $this->description = null;
-        $this->price_note = null;
-        $this->optional_link = null;
-        $this->secondary_sub_branch_id = null;
-        $this->education_stages = [];
-        $this->stage_grades = [];
-        $this->secondary_tracks = [];
-        $this->secondary_branch = [];
-        $this->secondary_specializations = [];
-        $this->secondary_sub_branch = [];
+        $this->price                        = null;
+        $this->course_name                  = null;
+        $this->subject_id                   = null;
+        $this->description                  = null;
+        $this->price_note                   = null;
+        $this->optional_link                = null;
+        $this->secondary_sub_branch_id      = null;
+        $this->education_stages             = [];
+        $this->stage_grades                 = [];
+        $this->secondary_tracks             = [];
+        $this->secondary_branch             = [];
+        $this->secondary_specializations    = [];
+        $this->secondary_sub_branch         = [];
     }
 
-    public  function save_secondary_details()
+    public function save_secondary_details()
     {
-        $select_secondary_tracks_id = $this->secondary_tracks_id;
-        $select_secondary_branch_id   = $this->secondary_branch_id;
-        $select_secondary_sub_branch_id = $this->secondary_sub_branch_id;
-        $select_stage_grades_id = $this->stage_grades_id;
+        $select_secondary_tracks_id          = $this->secondary_tracks_id;
+        $select_secondary_branch_id          = $this->secondary_branch_id;
+        $select_secondary_sub_branch_id      = $this->secondary_sub_branch_id;
+        $select_stage_grades_id              = $this->stage_grades_id;
         $select_secondary_specializations_id = $this->secondary_specializations_id;
-
 
         // dd($select_secondary_tracks_id , $select_secondary_branch_id , $select_secondary_sub_branch_id , $select_stage_grades_id , $select_secondary_specializations_id);
 
-        $teacher_secondary_details = new teacher_secondary_details();
-        $teacher_secondary_details->secondary_track_id = $select_secondary_tracks_id ?? NULL;
-        $teacher_secondary_details->secondary_branch_id = $select_secondary_branch_id ?? NULL;
-        $teacher_secondary_details->secondary_sub_branch_id = $select_secondary_sub_branch_id ?? NULL;
-        $teacher_secondary_details->secondary_grade_id = $select_stage_grades_id ?? NULL;
-        $teacher_secondary_details->secondary_specialization_id = $select_secondary_specializations_id ?? NULL;
+        $teacher_secondary_details                              = new teacher_secondary_details();
+        $teacher_secondary_details->secondary_track_id          = $select_secondary_tracks_id ?? null;
+        $teacher_secondary_details->secondary_branch_id         = $select_secondary_branch_id ?? null;
+        $teacher_secondary_details->secondary_sub_branch_id     = $select_secondary_sub_branch_id ?? null;
+        $teacher_secondary_details->secondary_grade_id          = $select_stage_grades_id ?? null;
+        $teacher_secondary_details->secondary_specialization_id = $select_secondary_specializations_id ?? null;
         $teacher_secondary_details->save();
         if ($teacher_secondary_details) {
             return teacher_secondary_details::find($teacher_secondary_details->id);
@@ -380,14 +377,13 @@ class Index extends Component
     public function saveCourseOverview()
     {
         $this->validate([
-            'course_name' => 'required|string|max:255',
-            'subject_id' => 'required|exists:subjects,id',
-            'price' => 'nullable|numeric|min:0',
-            'stage_grades_id' => 'exclude_if:secondary_specializations_id,!=,null|nullable|integer',
+            'course_name'                  => 'required|string|max:255',
+            'subject_id'                   => 'required|exists:subjects,id',
+            'price'                        => 'nullable|numeric|min:0',
+            'stage_grades_id'              => 'exclude_if:secondary_specializations_id,!=,null|nullable|integer',
             'secondary_specializations_id' => 'exclude_if:stage_grades_id,!=,null|nullable|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'                        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
 
         // $academicYearModel = $this->getSelectedAcademicYearModel();
         $education_stage = EducationStage::query()->find($this->education_stages_id);
@@ -399,8 +395,7 @@ class Index extends Component
 
         // dd($academicYearModel);
 
-
-        if (!$academicYearModel) {
+        if (! $academicYearModel) {
             $this->dispatch('message', message: __('Please select the specific academic year (grade or specialization) for the course.'));
             return;
         }
@@ -408,21 +403,21 @@ class Index extends Component
         // ✅ التعديل: إذا كان $editingCourseOverview موجوداً، نستخدمه، وإلا ننشئ كائن جديد
         if ($this->editingCourseOverview) {
             $courseOverview = $this->editingCourseOverview;
-            $message = __('Course updated successfully!');
+            $message        = __('Course updated successfully!');
         } else {
-            $courseOverview = new TeacherCourseOverview();
+            $courseOverview             = new TeacherCourseOverview();
             $courseOverview->teacher_id = $this->teacher_id;
-            $message = __('Course added successfully!');
+            $message                    = __('Course added successfully!');
         }
 
         // 3. تعبئة البيانات (مشتركة بين الإضافة والتعديل)
-        $courseOverview->subject_id = $this->subject_id;
-        $courseOverview->name = ['ar' => $this->course_name];
-        $courseOverview->price = $this->price;
-        $courseOverview->price_note = $this->price_note;
-        $courseOverview->description = $this->description;
+        $courseOverview->subject_id    = $this->subject_id;
+        $courseOverview->name          = ['ar' => $this->course_name];
+        $courseOverview->price         = $this->price;
+        $courseOverview->price_note    = $this->price_note;
+        $courseOverview->description   = $this->description;
         $courseOverview->optional_link = $this->optional_link;
-        $imageName = $this->image ? $this->image->store('courses', 'public') : $this->old_image;
+        $imageName                     = $this->image ? $this->image->store('courses', 'public') : $this->old_image;
         if ($this->image) {
 
             $courseOverview->image = $imageName;
@@ -430,15 +425,12 @@ class Index extends Component
             $courseOverview->image = $imageName;
         }
 
-
-
         // 4. ربط/تحديث العلاقة المرنة
         // $courseOverview->academicYear()->associate($academicYearModel);
         $courseOverview->education()->associate($academicYearModel);
 
         // 5. الحفظ
         $courseOverview->save();
-
 
         $this->dispatch('message', message: $message);
 
@@ -459,7 +451,7 @@ class Index extends Component
             'secondary_branch_id',
             'secondary_specializations_id',
             'secondary_sub_branch_id',
-            'image'
+            'image',
         ]);
 
         // 7. تحديث قائمة الكورسات
@@ -476,7 +468,7 @@ class Index extends Component
             'secondary_specializations',
             'secondary_sub_branch',
             'image',
-            'old_image'
+            'old_image',
         ]);
         session(['course' => $course]);
         // 1. تخزين الكائن في خاصية النموذج
@@ -487,11 +479,11 @@ class Index extends Component
 
         // 3. تحميل البيانات الأساسية
         // (افتراض أنك تستخدم Spatie/Translatable لعمود 'name' من نوع JSON)
-        $this->course_name = $course->getTranslation('name', 'ar');
-        $this->subject_id = $course->subject_id;
-        $this->price = $course->price;
-        $this->price_note = $course->price_note;
-        $this->description = $course->description;
+        $this->course_name   = $course->getTranslation('name', 'ar');
+        $this->subject_id    = $course->subject_id;
+        $this->price         = $course->price;
+        $this->price_note    = $course->price_note;
+        $this->description   = $course->description;
         $this->optional_link = $course->optional_link;
         if ($course->image) {
             $this->old_image = $course->image;
@@ -508,34 +500,34 @@ class Index extends Component
         $this->reset(['lesson_content_ar_name', 'lesson_content_en_name', 'content_type_id', 'lesson_content_link', 'image']);
         $this->action = 'subject-managment';
         session(['course_id' => $id]);
-        $this->course_id = $id;
+        $this->course_id   = $id;
         $this->subjectShow = TeacherCourseOverview::query()->where('id', $id)->with('subject')->first();
-        $this->lessons = TeacherCourseLesson::query()->where('tco_id', $id)->get();
+        $this->lessons     = TeacherCourseLesson::query()->where('tco_id', $id)->get();
     }
     public function editLesson($id)
     {
-        $this->action = 'add-lesson';
-        $this->lesson_id = $id;
-        $q = TeacherCourseLesson::query()->where('id', $id)->first();
-        $this->lessons = $q;
-        $this->lesson_ar_name =  $q->getTranslation('name', 'ar');
-        $this->lesson_en_name =  $q->getTranslation('name', 'en');
+        $this->action         = 'add-lesson';
+        $this->lesson_id      = $id;
+        $q                    = TeacherCourseLesson::query()->where('id', $id)->first();
+        $this->lessons        = $q;
+        $this->lesson_ar_name = $q->getTranslation('name', 'ar');
+        $this->lesson_en_name = $q->getTranslation('name', 'en');
     }
     public function saveLesson()
     {
         $this->validate([
             'lesson_ar_name' => 'required',
-            'lesson_en_name' => 'required'
+            'lesson_en_name' => 'required',
         ]);
 
         $q = TeacherCourseLesson::query()->updateOrCreate([
-            'id' => $this->lesson_id
+            'id' => $this->lesson_id,
         ], [
-            'name' => [
+            'name'   => [
                 'ar' => $this->lesson_ar_name,
-                'en' => $this->lesson_en_name
+                'en' => $this->lesson_en_name,
             ],
-            'tco_id' => $this->course_id
+            'tco_id' => $this->course_id,
         ]);
         if ($q) {
             $this->dispatch('message', message: __('Lesson added successfully!'));
@@ -562,16 +554,16 @@ class Index extends Component
     {
         $this->action = 'add-lesson-content';
         session(['lesson_id' => $id]);
-        $this->lesson_id = $id;
+        $this->lesson_id       = $id;
         $this->lessons_content = TeacherCourseLessonContent::query()->where('tcl_id', $id)->get();
-        $this->contentTypes = ContentType::query()->where('status', 1)->get();
+        $this->contentTypes    = ContentType::query()->where('status', 1)->get();
     }
 
     public function updatedQuizId($value)
     {
-        $quiz = exam::find($value);
+        $quiz                         = exam::find($value);
         $this->lesson_content_ar_name = $quiz?->title;
-        $this->lesson_content_link = $quiz?->id;
+        $this->lesson_content_link    = $quiz?->id;
     }
 
 
@@ -595,7 +587,7 @@ class Index extends Component
             $this->secondary_specializations_id = $education->secondary_specialization_id;
             $this->getSecondarySpecializations();
         } elseif ($q->education_type == 'stage_grades') {
-            $stage_grades = StageGrade::query()->where('grade_id', $education->grade_id)->with(['stage.system'])->first();
+            $stage_grades              = StageGrade::query()->where('grade_id', $education->grade_id)->with(['stage.system'])->first();
             $this->education_system_id = $stage_grades->stage->education_system_id;
             $this->education_stages_id = $stage_grades->education_stage_id;
             $this->getEducationStages();
@@ -608,9 +600,9 @@ class Index extends Component
     #[Layout('layouts.app')]
     public function render()
     {
-        $subjects_all = subjects::all();
+        $subjects_all     = subjects::all();
         $education_system = EducationSystem::all();
-        $teachers = Teacher::query()
+        $teachers         = Teacher::query()
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
                 $query->orWhere('phone', 'like', '%' . $this->search . '%');

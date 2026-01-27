@@ -14,13 +14,10 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // لو الـ Request مش API، سيبه يعدي ومتحاولش تغير اللغة هنا
         if (! $request->is('api/*')) {
             return $next($request);
         }
-
-        // هنا Logic الموبايل بس
-        $headerLocale       = $request->header('Accept-Language');
+        $headerLocale       = $request->header('Accept-language');
         $locale             = substr($headerLocale, 0, 2);
         $supportedLanguages = ['ar', 'en'];
 
