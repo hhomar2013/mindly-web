@@ -47,7 +47,7 @@ Route::group(
             Artisan::call('cache:clear');
             Artisan::call('view:clear');
             Artisan::call('route:clear');
-            Artisan::call('storage:link');
+            // Artisan::call('storage:link');
 
             return "All caches cleared and storage linked!";
         });

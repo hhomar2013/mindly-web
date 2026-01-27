@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -114,7 +113,7 @@ class coursesCotroller extends Controller
                         ] : null,
                     ],
                 ] : null,
-                'lessons' => $course->map(function ($lesson) {
+                'lessons'     => $course->map(function ($lesson) {
                     return [
                         'id'      => $lesson->id,
                         'name_ar' => $lesson->getTranslation('name', 'ar'),
@@ -139,6 +138,8 @@ class coursesCotroller extends Controller
                             // 2. تطبيق الشرط لتحديد اسم المفتاح والقيمة
                             if ($type === 'quiz') {
                                 $result['exam_id'] = $content->link;
+                            } elseif ($type === 'document') {
+                                $result['link'] = $content->link ?? asset('storage/' . $content->link);
                             } else {
                                 $result['link'] = asset($content->link);
                             }
@@ -155,7 +156,7 @@ class coursesCotroller extends Controller
                                 'id'      => $review->student->id,
                                 'name'    => $review->student->name,
                                 'rating'  => $review->star_number,
-                                'image'   => $review->student->image ? asset('storage/' . $review->student->image) : null,
+                                'image'   => $review->student->image ? $review->student->image : null,
                                 'comment' => $review->content,
                             ];
                         }
