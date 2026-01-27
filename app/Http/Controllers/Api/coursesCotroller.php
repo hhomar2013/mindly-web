@@ -139,7 +139,7 @@ class coursesCotroller extends Controller
                             if ($type === 'quiz') {
                                 $result['exam_id'] = $content->link;
                             } elseif ($type === 'document') {
-                                $result['link'] = $content->link ?? asset('storage/' . $content->link);
+                                $result['link'] = asset('storage/' . $content->link);
                             } else {
                                 $result['link'] = asset($content->link);
                             }
