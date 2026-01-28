@@ -394,6 +394,20 @@
     "Overview": "نظرة عامة",
     "View Course": "عرض المادة",
     "No reviews available for this course.": "لا توجد تقييمات متاحة لهذه المادة.",
-    "Select Document" : "أختر الملف"
-
+    "Select Document": "أختر الملف",
+    "Invalid credentials": "هذه البيانات لا تتطابق مع سجلاتنا",
+    "You are already logged in from another device": "انت مسجل دخول بالفعل على جهاز اخر",
+    "OTP has been sent to your email. Please check your inbox.": "تم إرسال الكود إلى البريد الإلكتروني الخاص بك. يرجى التحقق من صندوق الوارد الخاص بك.",
+    "Invalid or expired": "غير صالح او مننهى الصلاحيه",
+    "Login successful": "تم تسجيل الدخول بنجاح",
+    "Logged out successfully": "تم تسجيل الخروج بنجاح",
+    "A new OTP has been sent to your email. Please check your inbox.": "تم أرسال كود جديد الى البريد الالكتروني الخاص بك . برجاء التحقق من صندوق البريد الخاص بك.",
+    "Failed to resend OTP. Please try again later.": "فشل ارسال كود جديد. يرجى المحاولة مرة اخرى لاحقا.",
+    "Registration confirmed and login successful": "تم التسجيل بنجاح.",
+    "Profile photo updated successfully": "تم تحديث صورة الملف الشخصي بنجاح",
+    "Email already exists": "البريد الالكتروني موجود بالفعل",
+    "Email is available": "البريد الالكتروني متاح",
+    "Password changed successfully": "تم تغيير كلمة المرور بنجاح",
+    "Current password is incorrect": "كلمة المرور الحالية غير صحيحة",
+    "Account deleted successfully": "تم حذف الحساب بنجاح"
 }

@@ -39,13 +39,13 @@ class AuthController extends Controller
         $student = Students::where('email', $request->email)->first();
         if (! $student || ! Hash::check($request->password, $student->password)) {
             return response()->json([
-                'message' => 'Invalid credentials',
+                'message' => __('Invalid credentials'),
             ], 401);
         } else {
             $check = $otpService->AnotherDevice($student->id);
             if ($check) {
                 return response()->json([
-                    'message' => 'You are already logged in from another device',
+                    'message' => __('You are already logged in from another device'),
                 ], 409);
             }
         }
@@ -53,7 +53,7 @@ class AuthController extends Controller
         if ($otp) {
             return response()->json([
                 'status'  => true,
-                'message' => 'OTP has been sent to your email. Please check your inbox.',
+                'message' => __('OTP has been sent to your email. Please check your inbox.'),
             ]);
         }
     } //Login
@@ -70,7 +70,7 @@ class AuthController extends Controller
         if (! $isOtpValid) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Invalid or expired OTP',
+                'message' => __('Invalid or expired'),
             ], 422);
         }
         $student = Students::query()->where('email', $request->email)->first();
@@ -84,7 +84,7 @@ class AuthController extends Controller
         if ($save) {
             $token = $student->createToken('student_token')->plainTextToken;
             return response()->json([
-                'message' => 'Login successful',
+                'message' => __('Login successful'),
                 'token'   => $token,
                 'student' => $student,
             ]);
@@ -94,7 +94,7 @@ class AuthController extends Controller
     // ✅ Get logged-in student info
     public function profile(Request $request)
     {
-       
+
 
         $student = $request->user()->load('education');
 
@@ -138,7 +138,7 @@ class AuthController extends Controller
         }
         return response()->json([
             'status'  => true,
-            'message' => 'Logged out successfully',
+            'message' => __('Logged out successfully'),
         ]);
     }
     // ✅ First Send OTP
@@ -158,12 +158,12 @@ class AuthController extends Controller
         if ($otp) {
             return response()->json([
                 'status'  => true,
-                'message' => 'A new OTP has been sent to your email. Please check your inbox.',
+                'message' => __('A new OTP has been sent to your email. Please check your inbox.'),
             ]);
         } else {
             return response()->json([
                 'status'  => false,
-                'message' => 'Failed to resend OTP. Please try again later.',
+                'message' => __('Failed to resend OTP. Please try again later.'),
             ], 500);
         }
     } // sendAnotherOneOtp
@@ -277,7 +277,7 @@ class AuthController extends Controller
                 DB::commit();
             }
 
-            return response()->json(['status' => true, 'message' => 'OTP sent successfully.'], 201);
+            return response()->json(['status' => true, 'message' => __('OTP has been sent to your email. Please check your inbox.')], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => false, 'error' => $e->getMessage()], 422);
@@ -296,7 +296,7 @@ class AuthController extends Controller
         if (! $isOtpValid) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Invalid or expired OTP',
+                'message' => __('Invalid or expired'),
             ], 422);
         }
         $student = Students::query()->where('email', $request->email)->first();
@@ -310,7 +310,7 @@ class AuthController extends Controller
         if ($save) {
             $token = $student->createToken('student_token')->plainTextToken;
             return response()->json([
-                'message' => 'Registration confirmed and login successful',
+                'message' => __('Registration confirmed and login successful'),
                 'token'   => $token,
                 'student' => $student,
             ]);
@@ -339,7 +339,7 @@ class AuthController extends Controller
         $student->save();
         return response()->json([
             'status'  => true,
-            'message' => 'Profile photo updated successfully',
+            'message' => __('Profile photo updated successfully'),
             'student' => $student,
         ]);
     }
@@ -353,13 +353,13 @@ class AuthController extends Controller
         if ($exists) {
             return response()->json([
                 'status'  => true,
-                'message' => 'Email already exists',
+                'message' => __('Email already exists'),
             ]);
         }
         return response()->json([
             'status'  => true,
             'exists'  => $exists,
-            'message' => 'Email is available',
+            'message' => __('Email is available'),
         ]);
     }
 
@@ -374,7 +374,7 @@ class AuthController extends Controller
         if (! Hash::check($request->current_password, $student->password)) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Current password is incorrect',
+                'message' => __('Current password is incorrect'),
             ], 422);
         }
 
@@ -383,7 +383,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status'  => true,
-            'message' => 'Password changed successfully',
+            'message' => __('Password changed successfully'),
         ]);
     }
 
@@ -392,7 +392,7 @@ class AuthController extends Controller
         $request->user()->delete();
         return response()->json([
             'status'  => true,
-            'message' => 'Account deleted successfully',
+            'message' => __('Account deleted successfully'),
         ]);
     }
 }
