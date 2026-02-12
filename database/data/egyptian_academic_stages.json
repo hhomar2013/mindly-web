@@ -1,0 +1,513 @@
+{
+    "education_system": [
+        {
+            "id": 1,
+            "name_en": "Pre-university Education",
+            "name_ar": "التعليم قبل الجامعي",
+            "stages": [
+                {
+                    "id": 1,
+                    "stage_id": "kindergarten",
+                    "name_en": "Kindergarten",
+                    "name_ar": "رياض الأطفال",
+                    "duration_years": 2,
+                    "grades": [
+                        {
+                            "id": 1,
+                            "grade_id": "kg1",
+                            "name_en": "KG1",
+                            "name_ar": "المستوى الأول"
+                        },
+                        {
+                            "id": 2,
+                            "grade_id": "kg2",
+                            "name_en": "KG2",
+                            "name_ar": "المستوى الثاني"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "stage_id": "primary",
+                    "name_en": "Primary Stage",
+                    "name_ar": "المرحلة الابتدائية",
+                    "duration_years": 6,
+                    "grades": [
+                        {
+                            "id": 1,
+                            "grade_id": "primary_1",
+                            "name_en": "First Grade",
+                            "name_ar": "الصف الأول الابتدائي"
+                        },
+                        {
+                            "id": 2,
+                            "grade_id": "primary_2",
+                            "name_en": "Second Grade",
+                            "name_ar": "الصف الثاني الابتدائي"
+                        },
+                        {
+                            "id": 3,
+                            "grade_id": "primary_3",
+                            "name_en": "Third Grade",
+                            "name_ar": "الصف الثالث الابتدائي"
+                        },
+                        {
+                            "id": 4,
+                            "grade_id": "primary_4",
+                            "name_en": "Fourth Grade",
+                            "name_ar": "الصف الرابع الابتدائي"
+                        },
+                        {
+                            "id": 5,
+                            "grade_id": "primary_5",
+                            "name_en": "Fifth Grade",
+                            "name_ar": "الصف الخامس الابتدائي"
+                        },
+                        {
+                            "id": 6,
+                            "grade_id": "primary_6",
+                            "name_en": "Sixth Grade",
+                            "name_ar": "الصف السادس الابتدائي"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "stage_id": "preparatory",
+                    "name_en": "Preparatory Stage",
+                    "name_ar": "المرحلة الإعدادية",
+                    "duration_years": 3,
+                    "grades": [
+                        {
+                            "id": 1,
+                            "grade_id": "prep_1",
+                            "name_en": "First Preparatory Grade",
+                            "name_ar": "الصف الأول الإعدادي"
+                        },
+                        {
+                            "id": 2,
+                            "grade_id": "prep_2",
+                            "name_en": "Second Preparatory Grade",
+                            "name_ar": "الصف الثاني الإعدادي"
+                        },
+                        {
+                            "id": 3,
+                            "grade_id": "prep_3",
+                            "name_en": "Third Preparatory Grade",
+                            "name_ar": "الصف الثالث الإعدادي"
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "stage_id": "secondary",
+                    "name_en": "Secondary Stage",
+                    "name_ar": "المرحلة الثانوية",
+                    "duration_years": 3,
+                    "tracks": [
+                        {
+                            "id": 1,
+                            "track_id": "general_secondary",
+                            "name_en": "General Secondary (Thanaweya Amma)",
+                            "name_ar": "الثانوية العامة (النظام الحالي)",
+                            "grades": [
+                                {
+                                    "id": 1,
+                                    "grade_id": "secondary_1",
+                                    "name_en": "First Secondary Grade",
+                                    "name_ar": "الصف الأول الثانوي"
+                                },
+                                {
+                                    "id": 2,
+                                    "grade_id": "secondary_2",
+                                    "name_en": "Second Secondary Grade",
+                                    "name_ar": "الصف الثاني الثانوي"
+                                },
+                                {
+                                    "id": 3,
+                                    "grade_id": "secondary_3",
+                                    "name_en": "Third Secondary Grade",
+                                    "name_ar": "الصف الثالث الثانوي"
+                                }
+                            ],
+                            "branches": [
+                                {
+                                    "id": 1,
+                                    "branch_id": "scientific",
+                                    "name_en": "Scientific",
+                                    "name_ar": "علمي",
+                                    "sub_branches": [
+                                        {
+                                            "id": 1,
+                                            "sub_branch_id": "science",
+                                            "name_en": "Science",
+                                            "name_ar": "علوم"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "sub_branch_id": "mathematics",
+                                            "name_en": "Mathematics",
+                                            "name_ar": "رياضيات"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 2,
+                                    "branch_id": "literary",
+                                    "name_en": "Literary",
+                                    "name_ar": "أدبي"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 2,
+                            "track_id": "egyptian_baccalaureate",
+                            "name_en": "Egyptian Baccalaureate",
+                            "name_ar": "البكالوريا المصرية",
+                            "grades": [
+                                {
+                                    "id": 4,
+                                    "grade_id": "baccalaureate_1",
+                                    "name_en": "First Year",
+                                    "name_ar": "السنة الأولى"
+                                },
+                                {
+                                    "id": 5,
+                                    "grade_id": "baccalaureate_2",
+                                    "name_en": "Second Year",
+                                    "name_ar": "السنة الثانية"
+                                },
+                                {
+                                    "id": 6,
+                                    "grade_id": "baccalaureate_3",
+                                    "name_en": "Third Year",
+                                    "name_ar": "السنة الثالثة"
+                                }
+                            ],
+                            "specializations": [
+                                {
+                                    "id": 1,
+                                    "spec_id": "medical_sector",
+                                    "name_en": "Medical and Life Sciences",
+                                    "name_ar": "مسار الطب وعلوم الحياة"
+                                },
+                                {
+                                    "id": 2,
+                                    "spec_id": "engineering_sector",
+                                    "name_en": "Engineering and Computer Science",
+                                    "name_ar": "مسار الهندسة وعلوم الحاسب"
+                                },
+                                {
+                                    "id": 3,
+                                    "spec_id": "business_sector",
+                                    "name_en": "Business",
+                                    "name_ar": "مسار الأعمال"
+                                },
+                                {
+                                    "id": 4,
+                                    "spec_id": "arts_humanities_sector",
+                                    "name_en": "Arts and Humanities",
+                                    "name_ar": "مسار الآداب والفنون"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 3,
+                            "track_id": "al_azhar_secondary",
+                            "name_en": "Al-Azhar Secondary",
+                            "name_ar": "الثانوية الأزهرية",
+                            "grades": [
+                                {
+                                    "id": 7,
+                                    "grade_id": "azhar_secondary_1",
+                                    "name_en": "First Azhar Secondary Grade",
+                                    "name_ar": "الصف الأول الثانوي الأزهري"
+                                },
+                                {
+                                    "id": 8,
+                                    "grade_id": "azhar_secondary_2",
+                                    "name_en": "Second Azhar Secondary Grade",
+                                    "name_ar": "الصف الثاني الثانوي الأزهري"
+                                },
+                                {
+                                    "id": 9,
+                                    "grade_id": "azhar_secondary_3",
+                                    "name_en": "Third Azhar Secondary Grade",
+                                    "name_ar": "الصف الثالث الثانوي الأزهري"
+                                }
+                            ],
+                            "branches": [
+                                {
+                                    "id": 3,
+                                    "branch_id": "scientific_azhar",
+                                    "name_en": "Scientific",
+                                    "name_ar": "علمي"
+                                },
+                                {
+                                    "id": 4,
+                                    "branch_id": "literary_azhar",
+                                    "name_en": "Literary",
+                                    "name_ar": "أدبي"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 4,
+                            "track_id": "technical_secondary",
+                            "name_en": "Technical Secondary",
+                            "name_ar": "الثانوي الفني",
+                            "grades": [
+                                {
+                                    "id": 10,
+                                    "grade_id": "technical_secondary_1",
+                                    "name_en": "First Technical Secondary Grade",
+                                    "name_ar": "الصف الأول الثانوي الفني"
+                                },
+                                {
+                                    "id": 11,
+                                    "grade_id": "technical_secondary_2",
+                                    "name_en": "Second Technical Secondary Grade",
+                                    "name_ar": "الصف الثاني الثانوي الفني"
+                                },
+                                {
+                                    "id": 12,
+                                    "grade_id": "technical_secondary_3",
+                                    "name_en": "Third Technical Secondary Grade",
+                                    "name_ar": "الصف الثالث الثانوي الفني"
+                                }
+                            ],
+                            "specializations": [
+                                {
+                                    "id": 5,
+                                    "spec_id": "industrial",
+                                    "name_en": "Industrial",
+                                    "name_ar": "صناعي"
+                                },
+                                {
+                                    "id": 6,
+                                    "spec_id": "commercial",
+                                    "name_en": "Commercial",
+                                    "name_ar": "تجاري"
+                                },
+                                {
+                                    "id": 7,
+                                    "spec_id": "agricultural",
+                                    "name_en": "Agricultural",
+                                    "name_ar": "زراعي"
+                                },
+                                {
+                                    "id": 8,
+                                    "spec_id": "hospitality",
+                                    "name_en": "Hotel and Hospitality",
+                                    "name_ar": "فندقي"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name_en": "University Education",
+            "name_ar": "التعليم الجامعي",
+            "stages": [
+                {
+                    "stage_id": "undergraduate",
+                    "name_en": "Undergraduate (Bachelor's/Licence)",
+                    "name_ar": "نوع الشهادة (بكالوريوس/ليسانس)",
+                    "faculties": [
+                        {
+                            "faculty_id": "medicine",
+                            "name_en": "Faculty of Medicine",
+                            "name_ar": "كلية الطب",
+                            "duration_years": 7
+                        },
+                        {
+                            "faculty_id": "dentistry",
+                            "name_en": "Faculty of Dentistry",
+                            "name_ar": "كلية طب الأسنان",
+                            "duration_years": 6
+                        },
+                        {
+                            "faculty_id": "pharmacy",
+                            "name_en": "Faculty of Pharmacy",
+                            "name_ar": "كلية الصيدلة",
+                            "duration_years": 5
+                        },
+                        {
+                            "faculty_id": "physical_therapy",
+                            "name_en": "Faculty of Physical Therapy",
+                            "name_ar": "كلية العلاج الطبيعي",
+                            "duration_years": 6
+                        },
+                        {
+                            "faculty_id": "veterinary_medicine",
+                            "name_en": "Faculty of Veterinary Medicine",
+                            "name_ar": "كلية الطب البيطري",
+                            "duration_years": 5
+                        },
+                        {
+                            "faculty_id": "nursing",
+                            "name_en": "Faculty of Nursing",
+                            "name_ar": "كلية التمريض",
+                            "duration_years": 5
+                        },
+                        {
+                            "faculty_id": "engineering",
+                            "name_en": "Faculty of Engineering",
+                            "name_ar": "كلية الهندسة",
+                            "duration_years": 5
+                        },
+                        {
+                            "faculty_id": "computers_and_ai",
+                            "name_en": "Faculty of Computers and Artificial Intelligence",
+                            "name_ar": "كلية الحاسبات والذكاء الاصطناعي",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "science",
+                            "name_en": "Faculty of Science",
+                            "name_ar": "كلية العلوم",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "agriculture",
+                            "name_en": "Faculty of Agriculture",
+                            "name_ar": "كلية الزراعة",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "commerce",
+                            "name_en": "Faculty of Commerce",
+                            "name_ar": "كلية التجارة",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "economics_and_political_science",
+                            "name_en": "Faculty of Economics and Political Science",
+                            "name_ar": "كلية الاقتصاد والعلوم السياسية",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "mass_communication",
+                            "name_en": "Faculty of Mass Communication",
+                            "name_ar": "كلية الإعلام",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "al_alsun",
+                            "name_en": "Faculty of Al-Alsun (Languages)",
+                            "name_ar": "كلية الألسن",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "arts",
+                            "name_en": "Faculty of Arts",
+                            "name_ar": "كلية الآداب",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "law",
+                            "name_en": "Faculty of Law",
+                            "name_ar": "كلية الحقوق",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "education",
+                            "name_en": "Faculty of Education",
+                            "name_ar": "كلية التربية",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "specific_education",
+                            "name_en": "Faculty of Specific Education",
+                            "name_ar": "كلية التربية النوعية",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "physical_education",
+                            "name_en": "Faculty of Physical Education",
+                            "name_ar": "كلية التربية الرياضية",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "fine_arts",
+                            "name_en": "Faculty of Fine Arts",
+                            "name_ar": "كلية الفنون الجميلة",
+                            "duration_years": 5
+                        },
+                        {
+                            "faculty_id": "applied_arts",
+                            "name_en": "Faculty of Applied Arts",
+                            "name_ar": "كلية الفنون التطبيقية",
+                            "duration_years": 5
+                        },
+                        {
+                            "faculty_id": "archaeology",
+                            "name_en": "Faculty of Archaeology",
+                            "name_ar": "كلية الآثار",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "tourism_and_hotels",
+                            "name_en": "Faculty of Tourism and Hotels",
+                            "name_ar": "كلية السياحة والفنادق",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "dar_al_ulum",
+                            "name_en": "Faculty of Dar al-Ulum",
+                            "name_ar": "كلية دار العلوم",
+                            "duration_years": 4
+                        },
+                        {
+                            "faculty_id": "social_work",
+                            "name_en": "Faculty of Social Work",
+                            "name_ar": "كلية الخدمة الاجتماعية",
+                            "duration_years": 4
+                        }
+                    ],
+                    "institutes": [
+                        {
+                            "institute_id": "technical_health",
+                            "name_en": "Technical Health Institute",
+                            "name_ar": "المعهد الفني الصحي",
+                            "duration_years": 2
+                        },
+                        {
+                            "institute_id": "industrial_technical",
+                            "name_en": "Industrial Technical Institute",
+                            "name_ar": "المعهد الفني الصناعي",
+                            "duration_years": 2
+                        },
+                        {
+                            "institute_id": "commercial_technical",
+                            "name_en": "Commercial Technical Institute",
+                            "name_ar": "المعهد الفني التجاري",
+                            "duration_years": 2
+                        },
+                        {
+                            "institute_id": "social_work_institute",
+                            "name_en": "Higher Institute for Social Work",
+                            "name_ar": "المعهد العالي للخدمة الاجتماعية",
+                            "duration_years": 4
+                        },
+                        {
+                            "institute_id": "engineering_and_technology",
+                            "name_en": "Higher Institute of Engineering and Technology",
+                            "name_ar": "المعهد العالي للهندسة والتكنولوجيا",
+                            "duration_years": 5
+                        },
+                        {
+                            "institute_id": "computer_science_institute",
+                            "name_en": "Higher Institute for Computer Science",
+                            "name_ar": "المعهد العالي لعلوم الحاسب ونظم المعلومات",
+                            "duration_years": 4
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

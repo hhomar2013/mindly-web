@@ -1,0 +1,77 @@
+{
+    "message": "Home Page Sections ✔️",
+    "teachers": [
+        {
+            "name_en": "Top Rated Teachers",
+            "name_ar": "المدرسين الأكثر شهره",
+            "data": [
+                {
+                    "id": 2,
+                    "name_ar": "محمد وليد",
+                    "name_en": "Mohamed Waled",
+                    "image": "https://mindlyedu.com/storage/teachers/eWIAP90zvIVDhOa2Y1oAF16Sxf7qrzIdrJDptoJk.png",
+                    "rating_system": 5,
+                    "Courses Count": 1
+                }
+            ]
+        },
+        {
+            "name_en": "Teachers in your city",
+            "name_ar": "المدرسين الأقرب لمنطقتك",
+            "data": [
+                {
+                    "id": 2,
+                    "name_ar": "محمد وليد",
+                    "name_en": "Mohamed Waled",
+                    "image": "https://mindlyedu.com/storage/teachers/eWIAP90zvIVDhOa2Y1oAF16Sxf7qrzIdrJDptoJk.png",
+                    "rating_system": 5,
+                    "Courses Count": 1
+                }
+            ]
+        }
+    ],
+    "Centers": {
+        "name_en": "Centers",
+        "name_ar": "المراكز التعليميه",
+        "data": [
+            {
+                "id": 1,
+                "name": {
+                    "ar": "مايندلي",
+                    "en": "Mindly"
+                },
+                "address": "المحله الكبرى",
+                "phone": "01128719111",
+                "logo": "centers/6rKxMH2lQdxpHeTRGUq9s2ptuhZV3tEPwr9rkuis.png",
+                "panner": null,
+                "welcome_message": "اهلا و سهلا",
+                "main_info": "ةشمكنلشمكنبلك",
+                "state": 1,
+                "city_id": 126,
+                "user_id": 1,
+                "created_at": "2025-12-08T00:50:46.000000Z",
+                "updated_at": "2026-01-11T12:44:02.000000Z"
+            }
+        ]
+    },
+    "ads": {
+        "name_en": "Advertisements",
+        "name_ar": "الإعلانات",
+        "data": [
+            {
+                "type": "sliders",
+                "from": "in",
+                "image": "https://mindlyedu.com/storage/ads/6k3jZJkGUf01MtJgA9h1qHOdJAOT7o9SOsZ8Snr6.jpg",
+                "link": "/teacher-profile/1",
+                "comment": null
+            },
+            {
+                "type": "popup",
+                "from": "out",
+                "image": "https://mindlyedu.com/storage/ads/StdKHhI1hYA9iWDgvBhssKDsrYYk7zMPrHqa9Mcw.jpg",
+                "link": "https://www.youtube.com/watch?v=YMzSi5ugXUE&t=376s",
+                "comment": null
+            }
+        ]
+    }
+}
