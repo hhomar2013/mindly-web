@@ -92,7 +92,7 @@ html {
 @media (min-width: 768px) {
     .carousel-item img {
         object-fit: fill !important;
-        height: 500px !important;
+        height: 700px !important;
         /* ارتفاع الكمبيوتر */
     }
 }

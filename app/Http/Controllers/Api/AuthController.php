@@ -475,4 +475,22 @@ class AuthController extends Controller
             return response()->json(['message' => __('Password reset successfully')], 200);
         }
     }
+
+
+    public function storeFcmToken(Request $request)
+    {
+        $request->validate([
+            'fcm_token' => 'required|string',
+        ]);
+
+        $student = Students::query()->where('id', $request->user()->id)->first();
+        if (!$student) {
+            return response()->json(['message' => __('This email is not registered')], 400);
+        }
+
+        $student->update([
+            'fcm_token' => $request->fcm_token,
+        ]);
+        return response()->json(['message' => __('FCM token stored successfully')], 200);
+    }
 }
