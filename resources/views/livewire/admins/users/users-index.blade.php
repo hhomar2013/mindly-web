@@ -8,14 +8,19 @@
                         {{ __('Users') }}
                     </h5>
                     @include('tools.spinner')
+                    <select wire:model.live="perPage" class="form-select form-select-sm w-5">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
 
                         <div class="text-start">
-                            <button class="btn btn-sm btn-rounded btn-primary"
-                                wire:click.prevent="$set('action', 'create')">
+                            <button class="btn btn-sm btn-rounded btn-primary" wire:click.prevent="$set('action', 'create')">
                                 <i class="fa fa-plus"></i>
                                 {{ __('Add User') }}
                             </button>
@@ -28,10 +33,8 @@
                             </a>
                         </div>
                         <div class="text-end">
-                            <button class="btn btn-rounded  {{ $type == 'users' ? 'btn-danger' : 'btn-primary' }}"
-                                wire:click.prevent="selectType('users')">{{ __('Users') }}</button>
-                            <button class="btn btn-rounded {{ $type == 'students' ? 'btn-danger' : 'btn-primary' }}"
-                                wire:click.prevent="selectType('students')">{{ __('Students') }}</button>
+                            <button class="btn btn-rounded  {{ $type == 'users' ? 'btn-danger' : 'btn-primary' }}" wire:click.prevent="selectType('users')">{{ __('Users') }}</button>
+                            <button class="btn btn-rounded {{ $type == 'students' ? 'btn-danger' : 'btn-primary' }}" wire:click.prevent="selectType('students')">{{ __('Students') }}</button>
                         </div>
                     </div>
 
@@ -41,9 +44,9 @@
                     </p>
                     <!-- Users Table -->
                     @if ($type == 'users')
-                        @include('livewire.admins.users.users-table', ['users' => $this->system_users])
+                    @include('livewire.admins.users.users-table', ['users' => $this->system_users])
                     @else
-                        @include('livewire.admins.users.student-table', ['users' => $this->students])
+                    @include('livewire.admins.users.student-table', ['users' => $this->students])
                     @endif
                     <!-- End Users Table -->
                 </div>
@@ -53,6 +56,6 @@
 </div>
 
 @script
-    @include('tools.message')
+@include('tools.message')
 @endscript
 @include('tools.confimDelete', ['method' => 'logout'])

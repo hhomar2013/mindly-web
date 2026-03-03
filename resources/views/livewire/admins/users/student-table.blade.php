@@ -11,24 +11,26 @@
     </thead>
     <tbody>
         @foreach ($users as $user)
-            <tr class="text-center">
-                <th scope="row">{{ $loop->iteration }}</th>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->created_at->format('Y-m-d') }}</td>
-                <td> @livewire('switcher', ['model' => $user, 'field' => 'status'], key($user->id))</td>
-                <td>
-                    <button class="btn btn-sm btn-rounded btn-primary"><i class="fa fa-edit"></i></button>
-                    <button class="btn btn-sm  btn-rounded btn-danger"><i class="fa fa-trash"></i></button>
-                    @if ($user->is_online)
-                        <button class="btn btn-sm  btn-rounded btn-info"
-                            onclick="confirm({{ $user->id }},'logout')">
-                            <i class="fa fa-sign-out"></i></button>
-                    @else
-                        <span class="btn btn-danger  btn-rounded">{{ __('offline') }}</span>
-                    @endif
-                </td>
-            </tr>
+        <tr class="text-center">
+            <th scope="row">{{ $loop->iteration }}</th>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>{{ $user->created_at->format('Y-m-d') }}</td>
+            <td> @livewire('switcher', ['model' => $user, 'field' => 'status'], key($user->id))</td>
+            <td>
+                <button class="btn btn-sm btn-rounded btn-primary"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-sm  btn-rounded btn-danger"><i class="fa fa-trash"></i></button>
+                @if ($user->is_online)
+                <button class="btn btn-sm  btn-rounded btn-info" onclick="confirm({{ $user->id }},'logout')">
+                    <i class="fa fa-sign-out"></i></button>
+                @else
+                <span class="btn btn-danger  btn-rounded">{{ __('offline') }}</span>
+                @endif
+            </td>
+        </tr>
         @endforeach
     </tbody>
 </table>
+<div class="mb-2 p-3">
+    {{ $users->links() }}
+</div>

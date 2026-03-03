@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Admins\Users;
 
 use App\Models\Students;
@@ -10,23 +9,22 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class UsersIndex extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $selectedRoles = [];
-    public $type = 'users';
-    public $action = 'index';
+    public $selectedRoles      = [];
+    public $type               = 'users';
+    public $action             = 'index';
     public $name;
     public $email;
     public $password;
     public $user;
     public $search;
+    public $perPage      = 10;
     protected $listeners = ['logout' => 'logoutStudent', 'refresh' => '$refresh'];
-
 
     public function assignRole($userId, $roleName)
     {
@@ -40,31 +38,35 @@ class UsersIndex extends Component
         }
     }
 
-  
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
 
     public function selectType($type)
     {
+        $this->resetPage();
         $this->type = $type;
     }
 
     public function saveUser()
     {
         $this->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required',
+            'email'    => 'required|email|unique:users,email',
             'password' => 'required',
         ]);
 
-        $user =   User::create([
-            'name' => $this->name,
-            'email' => $this->email,
+        $user = User::create([
+            'name'     => $this->name,
+            'email'    => $this->email,
             'password' => bcrypt($this->password),
         ]);
 
-        $user ? $this->dispatch('message', message: __('User created successfully')) :
-            $this->dispatch('message', message: __('User created failed'));
-        $this->name = '';
-        $this->email = '';
+        $user ? $this->dispatch('message', message : __('User created successfully')):
+        $this->dispatch('message', message: __('User created failed'));
+        $this->name     = '';
+        $this->email    = '';
         $this->password = '';
         $this->dispatch('refresh');
         $this->action = 'index';
@@ -73,22 +75,24 @@ class UsersIndex extends Component
     public function editUser($id)
     {
         $this->action = 'create';
-        $this->user = User::find($id);
-        $this->name = $this->user->name;
-        $this->email = $this->user->email;
+        $this->user   = User::find($id);
+        $this->name   = $this->user->name;
+        $this->email  = $this->user->email;
     }
-
 
     public function logoutStudent($id)
     {
         $student = Students::find($id);
-        if (!$student) return;
+        if (! $student) {
+            return;
+        }
+
         // $student->update(['status' => false]);
         StudentsLogs::where('student_id', $id)
             ->where('is_active', true)
             ->update([
-                'action' => 'logout',
-                'is_active' => false
+                'action'    => 'logout',
+                'is_active' => false,
             ]);
         if (method_exists($student, 'tokens')) {
             $student->tokens()->delete();
@@ -99,14 +103,14 @@ class UsersIndex extends Component
         }
         $this->dispatch('message', message: __('Student logged out successfully'));
         $this->dispatch('refresh');
-        $this->type = 'students';
+        $this->type   = 'students';
         $this->action = 'index';
     }
 
     public function studentIsOnline($id)
     {
         $log = StudentsLogs::query()->where('student_id', $id)->where('is_active', true)->latest()->first();
-        if (!$log) {
+        if (! $log) {
             return false;
         }
         return $log;
@@ -123,20 +127,16 @@ class UsersIndex extends Component
 
         return User::query()->where('email', '!=', 'omar@app.com')
             ->where('name', 'like', '%' . $this->search . '%')
-            ->with('roles')->paginate(10);
+            ->with('roles')->paginate($this->perPage);
     }
 
     #[Computed()]
     public function students()
     {
-
-        $this->resetPage();
         return Students::with(['logs' => function ($query) {
             $query->where('is_active', true);
-        }])->paginate(10);
+        }])->paginate($this->perPage);
     }
-
-
 
     #[Layout('layouts.app')]
     public function render()
@@ -150,8 +150,8 @@ class UsersIndex extends Component
             [
                 'roles' => Role::all(),
                 'users' => $this->type == 'users' ?
-                    $this->system_users() :
-                    $this->students()
+                $this->system_users() :
+                $this->students(),
             ]
         );
     }
