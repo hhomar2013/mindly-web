@@ -50,13 +50,15 @@
     @include('tools.aside')
     <main class="main-content position-relative border-radius-lg " style="height: 100vh">
         <!-- Navbar -->
-        @include('tools.nav')
+        {{-- @include('tools.nav') --}}
+        @livewire('admins.tools.navbar')
         <!-- End Navbar -->
         <div class="container-fluid py-4 ">
             {{ $slot }}
         </div>
         @include('tools.footer')
     </main>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -75,6 +77,8 @@
     @include('tools.confimDelete')
     @stack('js')
     @livewireScripts
+
+
 </body>
 
 </html>

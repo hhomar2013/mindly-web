@@ -1,5 +1,5 @@
 <input class="form-control rounded" type="text" wire:model.live.debounce.500ms="search"
-    placeholder="{{ __('Search') }}" />
+    placeholder="{{ __('Search...') }}" />
 
 <table class="table table-striped table-hover table-bordered table-responsive table-sm">
     <thead class="text-center">

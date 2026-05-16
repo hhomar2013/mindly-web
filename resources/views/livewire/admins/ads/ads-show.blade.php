@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h5 class="card-title mb-0">
-            <button class="btn btn-success btn-sm" wire:click="create()">
+            <button type="button" class="btn btn-success btn-sm" wire:click="create">
                 <i class="fa fa-plus"></i>
                 {{ __('Add Ads') }}</button>
         </h5>
@@ -13,10 +13,9 @@
                     <div class="card shadow bg-gradient-secondary text-white">
                         <div class="card-body text-center">
                             <img class="bg-white" src="{{ asset('storage/' . $ads_val->image) }}"
-                                style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
-
+                                style="width: 100%; height: 150px; object-fit: fill; border-radius: 5px;">
                             <h5 class="card-title">{{ $ads_val->type == 'sliders' ? __('Sliders') : __('Popup') }}</h5>
-                            {{-- <p class="card-text">Content</p> --}}
+
                         </div>
                         <div class="card-footer">
 

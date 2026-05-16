@@ -1,3 +1,4 @@
+<input class="form-control rounded" type="text" wire:model.live.debounce.500ms="searchStudents" placeholder="{{ __('Search...') }}" />
 <table class="table table-striped table-hover table-bordered">
     <thead class="text-center">
         <tr>
@@ -19,7 +20,7 @@
             <td> @livewire('switcher', ['model' => $user, 'field' => 'status'], key($user->id))</td>
             <td>
                 <button class="btn btn-sm btn-rounded btn-primary"><i class="fa fa-edit"></i></button>
-                <button class="btn btn-sm  btn-rounded btn-danger"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-sm  btn-rounded btn-danger" onclick="confirm({{ $user->id }} ,'deleteStudent')"><i class="fa fa-trash"></i></button>
                 @if ($user->is_online)
                 <button class="btn btn-sm  btn-rounded btn-info" onclick="confirm({{ $user->id }},'logout')">
                     <i class="fa fa-sign-out"></i></button>

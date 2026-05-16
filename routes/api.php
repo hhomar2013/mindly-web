@@ -36,6 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/password/forgot', [AuthController::class, 'sendCode']);
         Route::post('/password/verify', [AuthController::class, 'verifyCode']);
         Route::post('/password/reset', [AuthController::class, 'resetPassword']);
+        Route::post('/fcm-token', [AuthController::class, 'storeFcmToken']);
         Route::middleware(['force.json', 'auth:sanctum'])->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);         // Logout
             Route::post('/enroll', [enrollController::class, 'enrollCourse']); // enroll

@@ -23,8 +23,9 @@ class UsersIndex extends Component
     public $password;
     public $user;
     public $search;
+    public $searchStudents;
     public $perPage      = 10;
-    protected $listeners = ['logout' => 'logoutStudent', 'refresh' => '$refresh'];
+    protected $listeners = ['logout' => 'logoutStudent', 'refresh' => '$refresh' , 'deleteStudent'=>'deleteStudent'];
 
     public function assignRole($userId, $roleName)
     {
@@ -121,21 +122,42 @@ class UsersIndex extends Component
         $this->resetPage();
     }
 
+    public function updatedSearchStudents()
+    {
+        $this->resetPage();
+    }
+
     #[Computed()]
     public function system_users()
     {
 
         return User::query()->where('email', '!=', 'omar@app.com')
             ->where('name', 'like', '%' . $this->search . '%')
+            ->orWhere('email', 'like', '%' . $this->search . '%')
             ->with('roles')->paginate($this->perPage);
     }
 
     #[Computed()]
     public function students()
     {
-        return Students::with(['logs' => function ($query) {
-            $query->where('is_active', true);
-        }])->paginate($this->perPage);
+        return Students::query()
+            ->where('name', 'like', '%' . $this->searchStudents . '%')
+            ->orWhere('email', 'like', '%' . $this->searchStudents . '%')
+            ->orWhere('phone', 'like', '%' . $this->searchStudents . '%')
+            ->with(['logs' => function ($query) {
+                $query->where('is_active', true);
+            }])->paginate($this->perPage);
+    }
+
+    public function deleteStudent($id)
+    {
+        $student = Students::find($id);
+        if (! $student) {
+            return;
+        }
+        $student->delete();
+        $this->dispatch('message', message: __('Student deleted successfully'));
+        $this->dispatch('refresh');
     }
 
     #[Layout('layouts.app')]

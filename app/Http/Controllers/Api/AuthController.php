@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Mail\ResetPasswordOtp;
 use App\Models\EducationStage;
+use App\Models\secondary_student_details;
 use App\Models\SecondaryBranch;
 use App\Models\SecondaryGrade;
 use App\Models\SecondarySpecialization;
 use App\Models\SecondarySubBranch;
 use App\Models\SecondaryTrack;
-use App\Models\secondary_student_details;
 use App\Models\StageGrade;
 use App\Models\Students;
 use App\Models\StudentsLogs;
@@ -24,19 +24,27 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
+    private function convertArabicNumbers($string)
+    {
+        if (! $string) {
+            return $string;
+        }
+        $arabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        return str_replace($arabic, $english, $string);
+    }
 
     public function login(Request $request, OtpService $otpService)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -61,44 +69,47 @@ class AuthController extends Controller
         $otp = $this->sendOtp($request);
         if ($otp) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => __('OTP has been sent to your email. Please check your inbox.'),
             ]);
         }
-    } //Login
+    } // Login
 
     public function loginSendOtp(Request $request, OtpService $otpService)
     {
         $request->validate([
-            'email'       => 'required|email',
-            'otp'         => 'required',
+            'email' => 'required|email',
+            'otp' => 'required',
             'mobile_name' => 'required',
         ]);
 
         $isOtpValid = $otpService->verifyOtp($request->email, $request->otp);
         if (! $isOtpValid) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => __('Invalid or expired'),
             ], 422);
         }
         $student = Students::query()->where('email', $request->email)->first();
-        $student->update(['status' => true]);
+
         // Log the login attempt
         $save = StudentsLogs::query()->create([
-            'student_id'  => $student->id,
+            'student_id' => $student->id,
             'mobile_name' => $request->mobile_name,
-            'action'      => 'Login',
+            'action' => 'Login',
         ]);
         if ($save) {
             $token = $student->createToken('student_token')->plainTextToken;
+            $student->fcm_token = '';
+
             return response()->json([
                 'message' => __('Login successful'),
-                'token'   => $token,
+                'token' => $token,
                 'student' => $student,
             ]);
+
         }
-    } //LoginSendOtp
+    } // LoginSendOtp
 
     // ✅ Get logged-in student info
     public function profile(Request $request)
@@ -117,17 +128,18 @@ class AuthController extends Controller
                     'secondarySpecialization',
                 ]);
             }
+
             return $user;
         });
 
         return response()->json(['status' => true, 'student' => $student]);
-    } //Profile
+    } // Profile
 
     // ✅ Logout student (revoke token)
     public function logout(Request $request)
-    { //Logout
-        $user    = $request->user();
-        $id      = $user->id;
+    { // Logout
+        $user = $request->user();
+        $id = $user->id;
         // $student = students::find($id);
         // $student->update(['status' => false]);
         $studentLog = StudentsLogs::query()->where('student_id', $user->id)
@@ -137,16 +149,19 @@ class AuthController extends Controller
             $studentLog->update(['action' => 'logout', 'is_active' => false]);
             $user->currentAccessToken()->delete();
         }
+
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => __('Logged out successfully'),
         ]);
     }
+
     // ✅ First Send OTP
     public function sendOtp(Request $request)
     {
-        $otpService = new OtpService();
-        $otp        = $otpService->sendOtp($request->email);
+        $otpService = new OtpService;
+        $otp = $otpService->sendOtp($request->email);
+
         return $otp ? true : false;
     }
 
@@ -158,32 +173,49 @@ class AuthController extends Controller
         $otp = $otpService->sendOtp($request->email);
         if ($otp) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => __('A new OTP has been sent to your email. Please check your inbox.'),
             ]);
         } else {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => __('Failed to resend OTP. Please try again later.'),
             ], 500);
         }
     } // sendAnotherOneOtp
 
-
     public function store(Request $request, OtpService $otpService)
     {
+
+        // التعديل 3: تحويل الأرقام العربية إلى إنجليزية في المدخلات الهامة
+        $inputs = $request->all();
+        if (isset($inputs['phone'])) {
+            $inputs['phone'] = $this->convertArabicNumbers($inputs['phone']);
+        }
+
+        if (isset($inputs['parent_phone'])) {
+            $inputs['parent_phone'] = $this->convertArabicNumbers($inputs['parent_phone']);
+        }
+
+        if (isset($inputs['date_of_birth'])) {
+            $inputs['date_of_birth'] = $this->convertArabicNumbers($inputs['date_of_birth']);
+        }
+
+        // استبدال المدخلات بالقيم المعالجة
+        $request->replace($inputs);
+
         // 1. Validation الأساسي
         $request->validate([
-            'name'           => 'required',
-            'email'          => 'required|email|unique:students,email',
-            'password'       => 'required|min:6',
+            'name' => 'required',
+            'email' => 'required|email|unique:students,email',
+            'password' => 'required|min:6',
             'governorate_id' => 'required|exists:governors,id',
-            'city_id'        => 'required|exists:cities,id',
+            'city_id' => 'required|exists:cities,id',
         ]);
 
         DB::beginTransaction();
         try {
-            $educationMap     = config('education_phases');
+            $educationMap = config('education_phases');
             $educationTypeKey = $request->education_type_key;
 
             if (! isset($educationMap[$educationTypeKey])) {
@@ -191,23 +223,23 @@ class AuthController extends Controller
             }
 
             $morphClass = $educationMap[$educationTypeKey];
-            $morphId    = null;
+            $morphId = null;
 
             // --- التعامل مع المرحلة الثانوية ---
             if ($educationTypeKey === 'secondary') {
                 $request->validate([
-                    'secondary_track_key'          => ['required', 'exists:secondary_tracks,track_id'],
-                    'secondary_grade_key'          => ['required', 'exists:secondary_grades,grade_id'],
-                    'secondary_branch_key'         => ['nullable', 'exists:secondary_branches,branch_id'],
-                    'secondary_sub_branch_key'     => ['nullable', Rule::exists('secondary_sub_branches', 'sub_branch_id')],
+                    'secondary_track_key' => ['required', 'exists:secondary_tracks,track_id'],
+                    'secondary_grade_key' => ['required', 'exists:secondary_grades,grade_id'],
+                    'secondary_branch_key' => ['nullable', 'exists:secondary_branches,branch_id'],
+                    'secondary_sub_branch_key' => ['nullable', Rule::exists('secondary_sub_branches', 'sub_branch_id')],
                     'secondary_specialization_key' => ['nullable', 'exists:secondary_specializations,spec_id'],
                 ]);
 
                 $secondaryDetail = secondary_student_details::create([
-                    'secondary_track_id'          => SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id'),
-                    'secondary_grade_id'          => SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id'),
-                    'secondary_branch_id'         => $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null,
-                    'secondary_sub_branch_id'     => $request->secondary_sub_branch_key ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id') : null,
+                    'secondary_track_id' => SecondaryTrack::where('track_id', $request->secondary_track_key)->value('id'),
+                    'secondary_grade_id' => SecondaryGrade::where('grade_id', $request->secondary_grade_key)->value('id'),
+                    'secondary_branch_id' => $request->secondary_branch_key ? SecondaryBranch::where('branch_id', $request->secondary_branch_key)->value('id') : null,
+                    'secondary_sub_branch_id' => $request->secondary_sub_branch_key ? SecondarySubBranch::where('sub_branch_id', $request->secondary_sub_branch_key)->value('id') : null,
                     'secondary_specialization_id' => $request->secondary_specialization_key ? SecondarySpecialization::where('spec_id', $request->secondary_specialization_key)->value('id') : null,
                 ]);
                 $morphId = $secondaryDetail->id;
@@ -222,8 +254,8 @@ class AuthController extends Controller
                 $yearId = UniversityAcademicYear::where('year_number', $request->university_academic_year_key)
                     ->firstOrFail(['id'])->id;
                 $educationStageId = EducationStage::where('stage_id', 'undergraduate')->firstOrFail(['id'])->id;
-                $facultyId        = null;
-                $instituteId      = null;
+                $facultyId = null;
+                $instituteId = null;
 
                 $rules = [
                     'university_academic_year_key' => 'nullable|exists:university_academic_years,id',
@@ -240,9 +272,9 @@ class AuthController extends Controller
                 $request->validate($rules);
 
                 $universityDetail = universty_student_details::create([
-                    'education_stage_id'          => $educationStageId,
-                    'university_faculty_id'       => $facultyId,
-                    'university_institute_id'     => $instituteId,
+                    'education_stage_id' => $educationStageId,
+                    'university_faculty_id' => $facultyId,
+                    'university_institute_id' => $instituteId,
                     'university_academic_year_id' => $yearId,
                 ]);
                 $morphId = $universityDetail->id;
@@ -252,26 +284,26 @@ class AuthController extends Controller
                 $request->validate([
                     'education_id' => ['required', 'string', Rule::exists('stage_grades', 'grade_id')],
                 ]);
-                $grade   = StageGrade::where('grade_id', $request->education_id)->first();
+                $grade = StageGrade::where('grade_id', $request->education_id)->first();
                 $morphId = $grade->id;
             }
 
             // 3️⃣ Create the student
             $student = Students::create([
-                'name'           => $request->name,
-                'email'          => $request->email,
-                'password'       => bcrypt($request->password),
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
                 'governorate_id' => $request->governorate_id,
-                'city_id'        => $request->city_id,
-                'address'        => $request->address,
-                'phone'          => $request->phone ?? null,
-                'parent_phone'   => $request->parent_phone ?? null,
-                'date_of_birth'  => $request->date_of_birth ?? null,
-                'type_of_study'  => $request->type_of_study ?? null,
-                'gender'         => $request->gender ?? null,
-                'education_id'   => $morphId,
+                'city_id' => $request->city_id,
+                'address' => $request->address,
+                'phone' => $request->phone ?? null,
+                'parent_phone' => $request->parent_phone ?? null,
+                'date_of_birth' => $request->date_of_birth ?? null,
+                'type_of_study' => $request->type_of_study ?? null,
+                'gender' => $request->gender ?? null,
+                'education_id' => $morphId,
                 'education_type' => $morphClass,
-                'status'         => true,
+                'status' => true,
             ]);
 
             $otp = $this->sendOtp($request);
@@ -282,6 +314,7 @@ class AuthController extends Controller
             return response()->json(['status' => true, 'message' => __('OTP has been sent to your email. Please check your inbox.')], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['status' => false, 'error' => $e->getMessage()], 422);
         }
     }
@@ -289,15 +322,15 @@ class AuthController extends Controller
     public function confirmRegister(Request $request, OtpService $otpService)
     {
         $request->validate([
-            'email'       => 'required|email',
-            'otp'         => 'required',
+            'email' => 'required|email',
+            'otp' => 'required',
             'mobile_name' => 'required',
         ]);
 
         $isOtpValid = $otpService->verifyOtp($request->email, $request->otp);
         if (! $isOtpValid) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => __('Invalid or expired'),
             ], 422);
         }
@@ -305,15 +338,16 @@ class AuthController extends Controller
 
         // Log the login attempt
         $save = StudentsLogs::query()->create([
-            'student_id'  => $student->id,
+            'student_id' => $student->id,
             'mobile_name' => $request->mobile_name,
-            'action'      => 'First Register Login',
+            'action' => 'First Register Login',
         ]);
         if ($save) {
             $token = $student->createToken('student_token')->plainTextToken;
+
             return response()->json([
                 'message' => __('Registration confirmed and login successful'),
-                'token'   => $token,
+                'token' => $token,
                 'student' => $student,
             ]);
         }
@@ -322,7 +356,7 @@ class AuthController extends Controller
     public function show(Request $request)
     {
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'student' => $request->user(),
         ]);
     }
@@ -336,11 +370,12 @@ class AuthController extends Controller
         if ($student->image && Storage::disk('public')->exists($student->getRawOriginal('image'))) {
             Storage::disk('public')->delete($student->getRawOriginal('image'));
         }
-        $imagePath      = $request->file('image')->store('profilePhotos', 'public');
+        $imagePath = $request->file('image')->store('profilePhotos', 'public');
         $student->image = $imagePath;
         $student->save();
+
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => __('Profile photo updated successfully'),
             'student' => $student,
         ]);
@@ -354,13 +389,14 @@ class AuthController extends Controller
         $exists = Students::where('email', $request->email)->exists();
         if ($exists) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => __('Email already exists'),
             ]);
         }
+
         return response()->json([
-            'status'  => true,
-            'exists'  => $exists,
+            'status' => true,
+            'exists' => $exists,
             'message' => __('Email is available'),
         ]);
     }
@@ -368,14 +404,14 @@ class AuthController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'current_password'     => 'required',
-            'new_password'         => 'required|min:6|different:current_password',
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|different:current_password',
             'new_password_confirm' => 'required|same:new_password',
         ]);
         $student = $request->user();
         if (! Hash::check($request->current_password, $student->password)) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => __('Current password is incorrect'),
             ], 422);
         }
@@ -384,7 +420,7 @@ class AuthController extends Controller
         $student->save();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => __('Password changed successfully'),
         ]);
     }
@@ -392,13 +428,12 @@ class AuthController extends Controller
     public function deleteAccount(Request $request)
     {
         $request->user()->delete();
+
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => __('Account deleted successfully'),
         ]);
     }
-
-
 
     public function sendCode(Request $request)
     {
@@ -415,17 +450,16 @@ class AuthController extends Controller
         return response()->json(['message' => __('The code was sent successfully')]);
     }
 
-
     public function verifyCode(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
-            'code'  => 'required|numeric'
+            'code' => 'required|numeric',
         ]);
 
         $resetData = DB::table('password_reset_codes')->where('email', $request->email)->first();
 
-        if (!$resetData || $request->code != $resetData->code) {
+        if (! $resetData || $request->code != $resetData->code) {
             return response()->json(['message' => __('Invalid or expired')], 400);
         }
 
@@ -434,8 +468,9 @@ class AuthController extends Controller
         }
         $data = [
             'email' => $request->email,
-            'code'  => $resetData->code,
+            'code' => $resetData->code,
         ];
+
         return response()->json(['message' => __('The code is correct, you can change the password now'), 'data' => $data], 200);
     }
 
@@ -446,9 +481,8 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-
         $student = Students::query()->where('email', $request->email)->first();
-        if (!$student) {
+        if (! $student) {
             return response()->json(['message' => __('This email is not registered')], 400);
         }
 
@@ -458,12 +492,12 @@ class AuthController extends Controller
 
         if ($student) {
             DB::table('password_reset_codes')->where('email', $request->email)->delete();
-            //logout
+            // logout
             StudentsLogs::where('student_id', $student->id)
                 ->where('is_active', true)
                 ->update([
                     'action' => 'logout',
-                    'is_active' => false
+                    'is_active' => false,
                 ]);
             if (method_exists($student, 'tokens')) {
                 $student->tokens()->delete();
@@ -472,10 +506,10 @@ class AuthController extends Controller
                     ->where('tokenable_id', $student->id)
                     ->delete();
             }
+
             return response()->json(['message' => __('Password reset successfully')], 200);
         }
     }
-
 
     public function storeFcmToken(Request $request)
     {
@@ -484,13 +518,14 @@ class AuthController extends Controller
         ]);
 
         $student = Students::query()->where('id', $request->user()->id)->first();
-        if (!$student) {
+        if (! $student) {
             return response()->json(['message' => __('This email is not registered')], 400);
         }
 
         $student->update([
             'fcm_token' => $request->fcm_token,
         ]);
+
         return response()->json(['message' => __('FCM token stored successfully')], 200);
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ads', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['sliders', 'popup']);
+            $table->enum('type', ['sliders', 'popup'])->nullable();
             $table->enum('from', ['in', 'out']);
             $table->string('link')->nullable();
             $table->string('comment')->nullable();

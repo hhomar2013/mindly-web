@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,9 +26,10 @@ class Students extends Model
         'gender',
         'education_id',
         'education_type',
+        'status',
     ];
     protected $appends = ['is_online'];
-    protected $hidden = ['password'];
+    protected $hidden  = ['password'];
 
     protected $casts = [
         'name' => 'array',
@@ -58,7 +58,6 @@ class Students extends Model
             ->exists();
     }
 
-
     public function termAcceptances()
     {
         return $this->hasMany(TermAcceptance::class);
@@ -68,7 +67,6 @@ class Students extends Model
     {
         return $this->hasMany(StudentsLogs::class, 'student_id', 'id');
     }
-
 
     public function getIsOnlineAttribute()
     {

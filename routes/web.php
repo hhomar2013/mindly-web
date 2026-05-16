@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PayTabsController;
+
 use App\Http\Controllers\website\HomeController;
 use App\Livewire\Admins\Ads\AdsIndex;
 use App\Livewire\Admins\Cities\Index as CitiesIndex;
@@ -34,14 +34,14 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::group(
     [
-        'prefix'     => LaravelLocalization::setLocale(),
+        'prefix' => LaravelLocalization::setLocale(),
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
     ],
     function () {
 
         Route::get('/server-time', function () {
             return [
-                'now'      => now()->toDateTimeString(),
+                'now' => now()->toDateTimeString(),
                 'timezone' => config('app.timezone'),
             ];
         });
@@ -53,7 +53,7 @@ Route::group(
             Artisan::call('route:clear');
             // Artisan::call('storage:link');
 
-            return "All caches cleared and storage linked!";
+            return 'All caches cleared and storage linked!';
         });
 
         Livewire::setUpdateRoute(function ($handle) {
@@ -62,11 +62,12 @@ Route::group(
 
         Route::get('storage-link', function () {
             $target = base_path('storage/app/public');
-            $link   = base_path('public_html/storage');
+            $link = base_path('public_html/storage');
             if (file_exists($link)) {
                 return 'Link already exists';
             }
             symlink($target, $link);
+
             return 'Storage link created successfully!';
         });
 
@@ -79,10 +80,12 @@ Route::group(
             })->name('website.about.us');
 
             Route::get('/contact-us', function () {
-                $settings = new class {
+                $settings = new class
+                {
                     use \App\Helpers\GetMainData;
-                };;;;
+                };
                 $mainData = $settings->getMainData();
+
                 return view('website.contact-us', ['mainData' => $mainData]);
             })->name('website.contact.us');
 
@@ -92,27 +95,29 @@ Route::group(
         });
 
         Route::middleware('auth:web')->group(function () {
-            Route::get('/dashboard', DashboardComponent::class)->name('dashboard');   //dashboard
+
+
+
+            Route::get('/dashboard', DashboardComponent::class)->name('dashboard');   // dashboard
             Route::middleware(['permission:settings'])->group(function () {
                 Route::get('/users', UsersIndex::class)->name('admins.users.index')->middleware(['permission:users']);
-                Route::get('/countries', CountriesIndex::class)->name('admins.countries.index')->middleware(['permission:countries']);                                                 //countries
-                Route::get('/governorate', GovernorateIndex::class)->name('admins.governorate.index')->middleware(['permission:governorate']);                                           //govenorate
-                Route::get('/cities', CitiesIndex::class)->name('admins.cities.index')->middleware(['permission:cities']);                                                          //cities
-                Route::get('/social-media-types', SocialMediaTypesIndex::class)->name('admins.socialMediaTypes.index')->middleware(['permission:social-media-types']);                          //social media types
-                Route::get('/subjects', SubjectIndex::class)->name('admins.subjects.index')->middleware(['permission:subjects']);                                                     //subjects
+                Route::get('/countries', CountriesIndex::class)->name('admins.countries.index')->middleware(['permission:countries']);                                                 // countries
+                Route::get('/governorate', GovernorateIndex::class)->name('admins.governorate.index')->middleware(['permission:governorate']);                                           // govenorate
+                Route::get('/cities', CitiesIndex::class)->name('admins.cities.index')->middleware(['permission:cities']);                                                          // cities
+                Route::get('/social-media-types', SocialMediaTypesIndex::class)->name('admins.socialMediaTypes.index')->middleware(['permission:social-media-types']);                          // social media types
+                Route::get('/subjects', SubjectIndex::class)->name('admins.subjects.index')->middleware(['permission:subjects']);                                                     // subjects
                 Route::get('/type-of-subscriptions', TosIndex::class)->name('admins.tos.index');
                 // Route::get('/paytabs/checkout', [PayTabsController::class, 'checkout'])->name('paytabs.checkout');
                 // Route::post('/paytabs/callback', [PayTabsController::class, 'callback'])->name('paytabs.callback');
                 // Route::get('/paytabs/return', [PayTabsController::class, 'return'])->name('paytabs.return');
-            }); //settings
+            }); // settings
 
-
-            Route::get('/educational-center', EducationalCenter::class)->name('admins.educationalCenters.index')->middleware('can:educational-center');                            //eaducational centers
-            Route::get('/teachers', TeachersIndex::class)->name('admins.teachers.index')->middleware('can:teachers');                                                    //Teachers
-            Route::get('/content-types', ContentTypesIndex::class)->name('admins.contentTypes.index')->middleware('can:content-types');                                       //content types
-            Route::get('/educational-center-wallets', EducationalCenterWalletIndex::class)->name('admins.educational-center-wallets.index')->middleware('can:educational-center-wallets'); //educational center wallets
-            Route::get('/teacher-wallets', TeacherWalletIndex::class)->name('admins.teacher-wallets.index')->middleware('can:teacher-wallets');                                 //teacher wallets
-            Route::get('/teacher-courses', TeacherCoursesIndex::class)->name('admins.teacher-courses.index')->middleware('can:teacher-courses');                                //teacher courses
+            Route::get('/educational-center', EducationalCenter::class)->name('admins.educationalCenters.index')->middleware('can:educational-center');                            // eaducational centers
+            Route::get('/teachers', TeachersIndex::class)->name('admins.teachers.index')->middleware('can:teachers');                                                    // Teachers
+            Route::get('/content-types', ContentTypesIndex::class)->name('admins.contentTypes.index')->middleware('can:content-types');                                       // content types
+            Route::get('/educational-center-wallets', EducationalCenterWalletIndex::class)->name('admins.educational-center-wallets.index')->middleware('can:educational-center-wallets'); // educational center wallets
+            Route::get('/teacher-wallets', TeacherWalletIndex::class)->name('admins.teacher-wallets.index')->middleware('can:teacher-wallets');                                 // teacher wallets
+            Route::get('/teacher-courses', TeacherCoursesIndex::class)->name('admins.teacher-courses.index')->middleware('can:teacher-courses');                                // teacher courses
             Route::get('/code-list', CodeListIndex::class)->name('admins.code-list.index')->middleware('can:code-list');
             Route::get('pdf/code-list/{id}', CodeListPdf::class)->name('pdf.code-list');
             Route::get('ads', AdsIndex::class)->name('admins.ads.index');
@@ -125,16 +130,17 @@ Route::group(
                 Route::get('/roles/edit/{id}', RoleCreate::class)->name('admins.roles.edit');
                 Route::get('/permissions', PermissionIndex::class)->name('admins.permissions');
             });
-            /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-            Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); //User Profile
+            /* ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+            Route::view('profile', 'profile')->middleware(['auth'])->name('profile'); // User Profile
             Route::post('/logout', function (Request $request) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
+
                 return redirect()->route('login');
             })->name('logout');
         });
     }
 );
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

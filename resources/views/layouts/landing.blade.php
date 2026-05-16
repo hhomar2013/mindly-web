@@ -15,6 +15,22 @@
 </head>
 
 <body style="zoom: 90%">
+    {{-- <div class="modal fade" id="imagePopupModal" tabindex="-1" aria-labelledby="imagePopupModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close"
+                        style="font-size: 1.5rem; z-index: 999;"></button>
+                </div>
+                <div class="modal-body text-center p-4 pt-0">
+                    <img src="{{ asset('assets/img/mindly_icon.png') }}" id="popupImageDisplay"
+                        class="img-fluid rounded shadow" alt="Preview Image"
+                        style="max-height: 70vh; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div> --}}
 
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
@@ -116,9 +132,37 @@
         </div>
     </footer>
 
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="{{ asset('assets/js/landing_js.js') }}"></script>
+
+    {{-- <script>
+        function showImagePopup(imageUrl = null, title = null) {
+            var labelEl = document.getElementById('imagePopupModalLabel');
+            if (title && labelEl) {
+                labelEl.innerText = title;
+            }
+            var imgEl = document.getElementById('popupImageDisplay');
+            if (imageUrl && imgEl) {
+                imgEl.src = imageUrl;
+            }
+
+            if (typeof bootstrap !== 'undefined') {
+                var imageModal = new bootstrap.Modal(document.getElementById('imagePopupModal'));
+                imageModal.show();
+            } else {
+                console.error('Bootstrap is not defined!');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                showImagePopup();
+            }, 1000);
+        });
+    </script> --}}
 </body>
 
 </html>
