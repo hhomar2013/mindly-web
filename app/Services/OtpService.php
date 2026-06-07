@@ -36,7 +36,6 @@ class OtpService
     // إرسال OTP (إيميل أو SMS)
     public function sendOtp($identifier)
     {
-
         $otp = $this->createOtp($identifier);
         Mail::to($identifier)->send(new MailsSendOtpMail($otp));
 

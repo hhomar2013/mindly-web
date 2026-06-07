@@ -47,7 +47,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if ($request->email == 'test@ios.com' && $request->password == 123456) {
+        $student = Students::where('email', $request->email)->first();
+        if ($student && $student->email == 'test@ios.com') {
             $otp = $this->sendOtp($request);
             if ($otp) {
                 return response()->json([
@@ -55,32 +56,30 @@ class AuthController extends Controller
                     'message' => __('OTP has been sent to your email. Please check your inbox.'),
                 ]);
             }
+        }
+        if ($student->status == false) {
+            return response()->json([
+                'message' => __('Your account is blocked call support for more info'),
+            ], 401);
+        }
+        if (! $student || ! Hash::check($request->password, $student->password)) {
+            return response()->json([
+                'message' => __('Invalid credentials'),
+            ], 400);
         } else {
-            $student = Students::where('email', $request->email)->first();
-            if ($student->status == false) {
+            $check = $otpService->AnotherDevice($student->id);
+            if ($check) {
                 return response()->json([
-                    'message' => __('Your account is blocked call support for more info'),
-                ], 401);
-            }
-            if (! $student || ! Hash::check($request->password, $student->password)) {
-                return response()->json([
-                    'message' => __('Invalid credentials'),
+                    'message' => __('You are already logged in from another device'),
                 ], 400);
-            } else {
-                $check = $otpService->AnotherDevice($student->id);
-                if ($check) {
-                    return response()->json([
-                        'message' => __('You are already logged in from another device'),
-                    ], 400);
-                }
             }
-            $otp = $this->sendOtp($request);
-            if ($otp) {
-                return response()->json([
-                    'status'  => true,
-                    'message' => __('OTP has been sent to your email. Please check your inbox.'),
-                ]);
-            }
+        }
+        $otp = $this->sendOtp($request);
+        if ($otp) {
+            return response()->json([
+                'status'  => true,
+                'message' => __('OTP has been sent to your email. Please check your inbox.'),
+            ]);
         }
 
     } // Login

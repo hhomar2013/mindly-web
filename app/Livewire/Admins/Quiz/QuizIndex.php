@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Livewire\Admins\Quiz;
 
 use App\Helpers\switchActions;
+use App\Helpers\WithPreviewHelper;
 use App\Models\exam;
 use App\Models\exam_questions;
 use App\Models\Teacher;
@@ -16,7 +16,7 @@ use Livewire\WithPagination;
 
 class QuizIndex extends Component
 {
-    use WithFileUploads, WithPagination, switchActions;
+    use WithFileUploads, WithPagination, switchActions, WithPreviewHelper;
     #[Layout('layouts.app')]
     #[Title('Quiz')]
     #[Url()]
@@ -38,7 +38,7 @@ class QuizIndex extends Component
     public $quiz_id;
     public $quiz;
     public $questionTitle;
-    public $questionImage, $old_questionImage;
+    public $questionImage, $old_questionImage, $previewImage;
     public $questionCorrect;
     public $questionScore;
     public $answerScore;
@@ -49,12 +49,10 @@ class QuizIndex extends Component
     public $correctAnswerIndex = null;
     public $questionTypes = [
         'trueOrFalse' => 'True Or False',
-        'choose' => 'Choose',
+        'choose'      => 'Choose',
     ];
 
-
     protected $listeners = ['deleteQuestion' => 'deleteQuestion', 'deleteQuiz' => 'deleteQuiz', 'removeQuestionAnswer' => 'removeQuestionAnswer'];
-
 
     public function newQuestion()
     {
@@ -69,6 +67,11 @@ class QuizIndex extends Component
             'update',
             'old_questionImage',
         ]);
+    }
+
+    public function updatedQuestionImage($value)
+    {
+        $this->previewImage = $this->getPreviewUrl($value);
     }
 
     public function deleteQuestion($id)
@@ -88,7 +91,7 @@ class QuizIndex extends Component
     //editQuestions
     public function editQuestion($questionId)
     {
-        $this->update = true;
+        $this->update        = true;
         $this->quizQuestions = exam_questions::findOrFail($questionId);
 
         // Basic fields
@@ -97,10 +100,10 @@ class QuizIndex extends Component
         $this->answerScore   = $this->quizQuestions->score;
 
         $this->old_questionImage = $this->quizQuestions->image;
-        $this->isImage = !empty($this->quizQuestions->image);
+        $this->isImage           = ! empty($this->quizQuestions->image);
 
         // Reset
-        $this->questionAnswers = [];
+        $this->questionAnswers    = [];
         $this->correctAnswerIndex = null;
 
         $options = json_decode($this->quizQuestions->options, true);
@@ -144,7 +147,7 @@ class QuizIndex extends Component
         }
 
         if ($this->questionType === 'choose') {
-            $rules['questionAnswers'] = 'required|array|min:2';
+            $rules['questionAnswers']    = 'required|array|min:2';
             $rules['correctAnswerIndex'] = 'required|integer';
             foreach ($this->questionAnswers as $key => $answer) {
                 $rules["questionAnswers.$key.title"] = 'required|string|min:1';
@@ -154,12 +157,12 @@ class QuizIndex extends Component
         $this->validate($rules);
 
         // ================= Prepare Data =================
-        $options = [];
+        $options       = [];
         $correctAnswer = null;
 
         // TRUE / FALSE
         if ($this->questionType === 'trueOrFalse') {
-            $options = ['true', 'false'];
+            $options       = ['true', 'false'];
             $correctAnswer = $this->questionAnswers[0]['correct'];
         }
 
@@ -181,7 +184,7 @@ class QuizIndex extends Component
         }
 
         // ================= Update Question =================
-        $update =  $this->quizQuestions->update([
+        $update = $this->quizQuestions->update([
             'text'           => $this->questionTitle,
             'image'          => $imagePath,
             'options'        => json_encode($options),
@@ -207,11 +210,10 @@ class QuizIndex extends Component
         }
     }
 
-
-
     //saveQuestion
     public function saveQuestion()
     {
+
         // ================= Validation =================
         $rules = [
             'questionType'  => 'required|in:trueOrFalse,choose',
@@ -224,7 +226,7 @@ class QuizIndex extends Component
         }
 
         if ($this->questionType === 'choose') {
-            $rules['questionAnswers'] = 'required|array|min:2';
+            $rules['questionAnswers']    = 'required|array|min:2';
             $rules['correctAnswerIndex'] = 'required|integer';
             foreach ($this->questionAnswers as $key => $answer) {
                 $rules["questionAnswers.$key.title"] = 'required|string|min:1';
@@ -234,12 +236,12 @@ class QuizIndex extends Component
         $this->validate($rules);
 
         // ================= Prepare Data =================
-        $options = [];
+        $options       = [];
         $correctAnswer = null;
 
         // TRUE / FALSE
         if ($this->questionType === 'trueOrFalse') {
-            $options = ['true', 'false'];
+            $options       = ['true', 'false'];
             $correctAnswer = $this->questionAnswers[0]['correct'];
         }
 
@@ -286,7 +288,6 @@ class QuizIndex extends Component
         $this->switchAction('create-quiz-questions', false, [], []);
     }
 
-
     public function addQuestionAnswer()
     {
         if ($this->questionType === 'choose') {
@@ -300,11 +301,11 @@ class QuizIndex extends Component
 
             // أضف choose جديد
             $this->questionAnswers[] = [
-                'id' => count($this->questionAnswers) + 1,
-                'title' => '',
-                'score' => '',
+                'id'      => count($this->questionAnswers) + 1,
+                'title'   => '',
+                'score'   => '',
                 'correct' => '',
-                'type' => 'choose',
+                'type'    => 'choose',
             ];
         }
 
@@ -312,11 +313,11 @@ class QuizIndex extends Component
 
             // trueOrFalse لازم يكون عنصر واحد فقط
             $this->questionAnswers = [[
-                'id' => 1,
-                'title' => '',
-                'score' => '',
+                'id'      => 1,
+                'title'   => '',
+                'score'   => '',
                 'correct' => '',
-                'type' => 'trueOrFalse',
+                'type'    => 'trueOrFalse',
             ]];
         }
     }
@@ -329,7 +330,7 @@ class QuizIndex extends Component
     public function createQuizQuestions($id)
     {
         $this->quiz_id = $id;
-        $this->quiz = exam_questions::query()->where('exam_id', $id)->get();
+        $this->quiz    = exam_questions::query()->where('exam_id', $id)->get();
         session(['create-quiz-questions-id' => $id]);
         $this->switchAction('create-quiz-questions', false, [], []);
     } // create Quiz Questions
@@ -337,23 +338,22 @@ class QuizIndex extends Component
     public function save()
     {
         $this->validate([
-            'quizTitle' => 'required|string|max:255',
+            'quizTitle'    => 'required|string|max:255',
             'quizDuration' => 'required|integer|min:1',
             // 'quizQuestionsCount' => 'required|integer|min:1',
             // 'quizTotalScore' => 'required|integer|min:1',
-            'teacher_id' => 'required|integer|exists:teachers,id',
+            'teacher_id'   => 'required|integer|exists:teachers,id',
         ]);
-
 
         exam::query()->updateOrCreate(
             ['id' => $this->quiz_id],
             [
-                'title' => $this->quizTitle,
-                'duration' => $this->quizDuration,
+                'title'           => $this->quizTitle,
+                'duration'        => $this->quizDuration,
                 'questions_count' => 0,
-                'total_score' => 0,
-                'teacher_id' => $this->teacher_id,
-                'user_id' => Auth::id(),
+                'total_score'     => 0,
+                'teacher_id'      => $this->teacher_id,
+                'user_id'         => Auth::id(),
             ]
         );
 
@@ -366,7 +366,6 @@ class QuizIndex extends Component
     {
         $this->switchAction($action, false, $reset, $session);
     } // back Redirect
-
 
     public function mount()
     {
@@ -390,9 +389,9 @@ class QuizIndex extends Component
     {
         session()->forget('quiz_teacher_id');
         session(['quiz_teacher_id' => $id]);
-        $this->teacher_id = $id;
-        $this->teacher = Teacher::find($id);
-        $this->teacherQuizes = exam::query()->where('teacher_id', $id)->get();;
+        $this->teacher_id    = $id;
+        $this->teacher       = Teacher::find($id);
+        $this->teacherQuizes = exam::query()->where('teacher_id', $id)->get();
         $this->switchAction('show-teacher-quizs', false, [], []);
     } // show Teacher Quizes
 
@@ -405,16 +404,16 @@ class QuizIndex extends Component
 
     public function editQuiz($id)
     {
-        $this->quiz_id = $id;
-        $this->quiz = exam::find($id);
-        $this->quizTitle = $this->quiz->title;
+        $this->quiz_id      = $id;
+        $this->quiz         = exam::find($id);
+        $this->quizTitle    = $this->quiz->title;
         $this->quizDuration = $this->quiz->duration;
         $this->switchAction('create-quiz', true, [], []);
     } // edit Quiz
 
     public function render()
     {
-        $quizes = exam::all();
+        $quizes   = exam::all();
         $teachers = Teacher::query()
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
