@@ -182,7 +182,6 @@ class AdsIndex extends Component
             'governorate_id' => 'required',
             'city_id' => 'nullable',
             'inOrOut' => 'required|in:out,in',
-
         ];
 
         switch ($this->typeOfAdPostingSelected) {
@@ -265,12 +264,15 @@ class AdsIndex extends Component
             ads::updateOrCreate(['id' => $this->id], $data);
         } elseif ($this->typeOfAdPostingSelected == 'notifications') {
             Notification::send($this->getStudentsToSendNotification(), new AdsNotification($notificationBody));
+            Students::sendNotification($this->getStudentsToSendNotification()->whereNotNull('fcm_token')->pluck('fcm_token')->toArray(), $this->notification_title, $this->notification_text, $notificationBody);
+
         } elseif ($this->typeOfAdPostingSelected == 'adsAndNotifications') {
             $data['image'] = $imagePath;
             $data['start_date'] = $this->start_date;
             $data['end_date'] = $this->end_date;
             ads::updateOrCreate(['id' => $this->id], $data);
             Notification::send($this->getStudentsToSendNotification(), new AdsNotification($notificationBody));
+            Students::sendNotification($this->getStudentsToSendNotification()->whereNotNull('fcm_token')->pluck('fcm_token')->toArray(), $this->notification_title, $this->notification_text, $notificationBody);
         }
         $this->dispatch('message', message: $this->id ? __('Ads updated!') : __('Ads created!'));
         $this->index();

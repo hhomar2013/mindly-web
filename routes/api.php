@@ -7,10 +7,12 @@ use App\Http\Controllers\Api\CountriesController;
 use App\Http\Controllers\Api\coursesCotroller;
 use App\Http\Controllers\Api\enrollController;
 use App\Http\Controllers\Api\MainDataController;
+use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\searchController;
 use App\Http\Controllers\Api\TeachersController;
 use App\Http\Controllers\Api\TermsAndCondetionsController;
+use App\Models\Students;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
@@ -22,13 +24,25 @@ Route::prefix('v1')->group(function () {
             'message' => __('welcome'), // تأكد إن المفتاح ده موجود في ملفات الترجمة
         ]);
     });
+
+    Route::get('/send-to-all', function () {
+        $title = 'إعلان جديد 📢';
+        $body = 'يا شباب عندنا عرض جديد لكل مستخدمي التطبيق!';
+        $tokens = Students::query()->whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
+        $result = Students::sendNotification($tokens, $title, $body, ['type' => 'offer']);
+
+        return response()->json([
+            'message' => 'تمت عملية الإرسال الجماعي',
+            'details' => $result,
+        ]);
+    });
+
     // Students register
     Route::prefix('students')->group(function () {
         // Route::post('/send-otp', [AuthController::class, 'sendOtp']);
         // Route::post('/register', [AuthController::class, 'register']);
         Route::post('/check-email-exists', [AuthController::class, 'checkIfEmailExists']);
         Route::post('/send-another-one-otp', [AuthController::class, 'sendAnotherOneOtp']);
-        Route::post('/fcm-token', [AuthController::class, 'storeFcmToken']);
         Route::post('/store', [AuthController::class, 'store']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/login-send-otp', [AuthController::class, 'loginSendOtp']);
@@ -56,6 +70,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/center-profile', [TeachersController::class, 'CenterProfile']);       // Center-profile
             Route::post('/change-password', [AuthController::class, 'changePassword']);         // change-password
             Route::post('/delete-account', [AuthController::class, 'deleteAccount']);           // delete-account
+            Route::get('/notifications', [NotificationsController::class, 'index']);          // notifications
+            Route::post('/notifications/read', [NotificationsController::class, 'read']);     // notifications/read
         });
     }); // End Students
     Route::prefix('quiz')->group(function () {

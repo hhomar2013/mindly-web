@@ -1,15 +1,19 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification as FCMNotification;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Translatable\HasTranslations;
 
 class Students extends Model
 {
-    use HasFactory, HasTranslations, HasApiTokens, Notifiable;
+    use HasApiTokens, HasFactory, HasTranslations, Notifiable;
 
     protected $fillable = [
         'name',
@@ -27,9 +31,12 @@ class Students extends Model
         'education_id',
         'education_type',
         'status',
+        'fcm_token',
     ];
+
     protected $appends = ['is_online'];
-    protected $hidden  = ['password'];
+
+    protected $hidden = ['password'];
 
     protected $casts = [
         'name' => 'array',
@@ -42,7 +49,7 @@ class Students extends Model
 
     public function getImageAttribute($value)
     {
-        return $value ? asset('storage/' . $value) : null;
+        return $value ? asset('storage/'.$value) : null;
     }
 
     public function hasAcceptedCurrentTerms()
@@ -78,5 +85,31 @@ class Students extends Model
     public function exams()
     {
         return $this->hasMany(student_exam::class, 'student_id', 'id');
+    }
+
+    public static function sendNotification($tokens, $title, $body, $data = [])
+    {
+        if (empty($tokens)) {
+            return 'No tokens found!';
+        }
+
+        $messaging = Firebase::messaging();
+
+        $message = CloudMessage::new()
+            ->withNotification(FCMNotification::create($title, $body))
+            ->withData($data)
+            ->withDefaultSounds();
+        try {
+            $report = $messaging->sendMulticast($message, $tokens);
+
+            return [
+                'success' => $report->successes()->count(),
+                'failures' => $report->failures()->count(),
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Global Notification Error: '.$e->getMessage());
+
+            return false;
+        }
     }
 }

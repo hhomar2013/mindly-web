@@ -513,11 +513,13 @@ class AuthController extends Controller
 
     public function storeFcmToken(Request $request)
     {
+
         $request->validate([
             'fcm_token' => 'required|string',
         ]);
 
-        $student = Students::query()->where('id', $request->user()->id)->first();
+        $student = Students::query()->where('id', $request->user('student')->id)->get();
+
         if (! $student) {
             return response()->json(['message' => __('This email is not registered')], 400);
         }
