@@ -187,7 +187,7 @@ class QuizIndex extends Component
         $update = $this->quizQuestions->update([
             'text'           => $this->questionTitle,
             'image'          => $imagePath,
-            'options'        => json_encode($options),
+            'options'        => $options,
             'type'           => $this->questionType,
             'correct_answer' => $correctAnswer,
             'score'          => $this->answerScore,
@@ -266,7 +266,7 @@ class QuizIndex extends Component
             'exam_id'        => $this->quiz_id,
             'text'           => $this->questionTitle,
             'image'          => $imagePath,
-            'options'        => json_encode($options),
+            'options'        => $options,
             'type'           => $this->questionType,
             'correct_answer' => $correctAnswer,
             'score'          => $this->answerScore,
