@@ -44,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Schema::defaultStringLength(191);
         TeacherCourseOverview::observe(TeacherCourseOverviewObserver::class);
+        \App\Models\exam_questions::observe(\App\Observers\ExamQuestionObserver::class);
         Relation::morphMap([
             'stage_grades'               => StageGrade::class,
             'secondary'                  => secondary_student_details::class,
