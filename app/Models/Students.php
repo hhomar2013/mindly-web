@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification as FCMNotification;
@@ -11,9 +11,12 @@ use Kreait\Laravel\Firebase\Facades\Firebase;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Translatable\HasTranslations;
 
-class Students extends Model
+class Students extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasTranslations, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use HasTranslations;
+    use Notifiable;
 
     protected $fillable = [
         'name',

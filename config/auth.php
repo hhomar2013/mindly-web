@@ -19,6 +19,11 @@ return [
             'provider' => 'students',
         ],
 
+        'student_web' => [
+            'driver' => 'session',
+            'provider' => 'students',
+        ],
+
 
         'api' => [
             'driver' => 'sanctum',

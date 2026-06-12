@@ -71,6 +71,9 @@ Route::group(
             return 'Storage link created successfully!';
         });
 
+        Route::get('/redeem', [App\Http\Controllers\website\StudentRedeemController::class, 'showRedeemForm'])->name('student.redeem.show');
+        Route::post('/redeem', [App\Http\Controllers\website\StudentRedeemController::class, 'redeem'])->name('student.redeem.submit');
+
         Route::middleware('guest:web')->group(function () {
             Route::get('/', [HomeController::class, 'index'])->name('website.home');
             Route::get('/teacher-profile/{id}', [HomeController::class, 'teacherProfile'])->name('website.teacher.profile');
