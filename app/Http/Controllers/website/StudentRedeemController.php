@@ -14,6 +14,18 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class StudentRedeemController extends Controller
 {
+    protected function redeemFailureResponse(Request $request, string $message, int $status = 400)
+    {
+        if (! $request->expectsJson()) {
+            return redirect()->route('website.home')->with('error', $message);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+        ], $status);
+    }
+
     /**
      * Show the redeem code form or the unauthenticated page.
      */
@@ -67,10 +79,11 @@ class StudentRedeemController extends Controller
     {
         // Must be authenticated via student_web
         if (!Auth::guard('student_web')->check()) {
-            return response()->json([
-                'success' => false,
-                'message' => __('You must be logged in to redeem a code.'),
-            ], 401);
+            return $this->redeemFailureResponse(
+                $request,
+                __('You must be logged in to redeem a code.'),
+                401
+            );
         }
 
         $request->validate([
@@ -88,10 +101,10 @@ class StudentRedeemController extends Controller
             ->first();
 
         if (!$check_code) {
-            return response()->json([
-                'success' => false,
-                'message' => __('This code is invalid or has already been used! 🚫'),
-            ], 400);
+            return $this->redeemFailureResponse(
+                $request,
+                __('This code is invalid or has already been used! 🚫')
+            );
         }
 
         // Check if the student is already enrolled in this specific course overview to prevent duplicate enrollment
@@ -106,10 +119,10 @@ class StudentRedeemController extends Controller
                 ->exists();
 
             if ($alreadyEnrolled) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('You are already enrolled in this course! 📚'),
-                ], 400);
+                return $this->redeemFailureResponse(
+                    $request,
+                    __('You are already enrolled in this course! 📚')
+                );
             }
         }
 
