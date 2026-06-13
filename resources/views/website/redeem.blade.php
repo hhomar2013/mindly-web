@@ -377,7 +377,7 @@
                     fetch(redeemForm.action, {
                             method: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value ||
+                                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value ||
                                     '{{ csrf_token() }}',
                                 'Accept': 'application/json'
                             },
@@ -396,6 +396,10 @@
                             successSection.style.display = 'block';
                             successCourseName.textContent = data.course_name;
                             successDeepLink.href = data.deep_link;
+                            successDeepLink.target = '_self';
+
+                            // Open the app immediately after a successful redeem.
+                            window.location.assign(data.deep_link);
                         })
                         .catch(error => {
                             errorMessage.textContent = error.message;

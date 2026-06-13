@@ -19,6 +19,9 @@ class StudentRedeemController extends Controller
      */
     public function showRedeemForm(Request $request)
     {
+        $appScheme = config('app.url_scheme', env('MINDLY_APP_URL_SCHEME', 'mindly'));
+        $welcomeDeepLink = "{$appScheme}://welcome";
+
         // 1. Check for token in query parameter (automatic login from app)
         if ($request->has('token')) {
             $plainToken = $request->query('token');
@@ -31,6 +34,16 @@ class StudentRedeemController extends Controller
                 // Redirect to the clean page to remove the token from the URL bar
                 return redirect()->route('student.redeem.show');
             }
+
+            // Invalid token means this deeplink should fall back to the app welcome screen.
+            return redirect()->away($welcomeDeepLink);
+        }
+
+        $student = Auth::guard('student_web')->user();
+
+        // If the user is not already authenticated, send the deeplink to the app welcome screen.
+        if (! $student) {
+            return redirect()->away($welcomeDeepLink);
         }
 
         // 2. Fetch platform main settings data required by the main layout footer
@@ -40,12 +53,10 @@ class StudentRedeemController extends Controller
         $mainData = $settings->getMainData();
 
         // 3. Render page according to auth status
-        $student = Auth::guard('student_web')->user();
-
         return view('website.redeem', [
             'mainData' => $mainData,
             'student' => $student,
-            'appScheme' => config('app.url_scheme', env('MINDLY_APP_URL_SCHEME', 'mindly')),
+            'appScheme' => $appScheme,
         ]);
     }
 
@@ -126,13 +137,18 @@ class StudentRedeemController extends Controller
         $courseName = $courseOverview ? $courseOverview->getTranslation('name', App::getLocale()) : __('Course');
         $courseId = $courseOverview ? $courseOverview->id : 0;
         $appScheme = config('app.url_scheme', env('MINDLY_APP_URL_SCHEME', 'mindly'));
+        $deepLink = "{$appScheme}://course/{$courseId}";
+
+        if (! $request->expectsJson()) {
+            return redirect()->away($deepLink);
+        }
 
         return response()->json([
             'success' => true,
             'message' => __('Course enrolled successfully ✔️👌'),
             'course_name' => $courseName,
             'course_id' => $courseId,
-            'deep_link' => "{$appScheme}://course/{$courseId}",
+            'deep_link' => $deepLink,
         ], 200);
     }
 }
